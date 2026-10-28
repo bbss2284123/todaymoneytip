@@ -1,4 +1,4 @@
-id: severance-tax-example
+id: severance-tax
 facts:
   - id: F1
     value: "근속연수공제. 5년 이하 100만 원 곱하기. 10년 이하 500만 원 더하기 200만 원. 20년 이하 1,500만 원 더하기 250만 원. 20년 초과 4,000만 원 더하기 300만 원."
@@ -13,7 +13,7 @@ facts:
     source: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7880&mi=6444"
     checkedAt: "2026-10-28T09:00:00+09:00"
   - id: F4
-    value: "소득세법 제129조 제5호의3. 연금 실제 수령연차 10년 이하 70%, 10년 초과 20년 이하 60%, 20년 초과 50%."
+    value: "소득세법 제129조 제5호의3. 연금 실제 수령연차 10년 이하 70%, 10년 초과 20년 이하 60%, 20년 초과 50%. 10년 이하로 받으면 일시금으로 낼 퇴직소득세의 30%를 덜 냅니다. 70%만 내기 때문입니다."
     source: "https://www.law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsId=001565&lsJoLnkSeq=1000821176&print=print"
     checkedAt: "2026-10-28T09:00:00+09:00"
   - id: F5

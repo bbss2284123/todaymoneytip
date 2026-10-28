@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "tsx scripts/thumbnails.ts && astro build && pagefind --site dist",
+    "build": "tsx scripts/thumbnails.ts && astro build && pagefind --site dist && tsx scripts/check-html.ts",
     "preview": "astro preview",
     "check": "tsx --test scripts/content-check.test.ts scripts/keywords.test.ts scripts/indexing.test.ts scripts/formulas.test.ts scripts/schedule.test.ts scripts/thumbnails.test.ts && tsx scripts/check-content.ts",
     "schedule": "tsx scripts/schedule.ts",

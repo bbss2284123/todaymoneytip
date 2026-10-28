@@ -208,6 +208,42 @@ export function boldWithoutNumbers(body: string): string[] {
   return hits;
 }
 
+export function keywordPlacementErrors(data: PostFrontmatter, body: string): string[] {
+  const keyword = data.검색어.trim();
+  const errors: string[] = [];
+  const at = data.serpTitle.indexOf(keyword);
+  const before = at < 0 ? 99 : [...data.serpTitle.slice(0, at)].length;
+  if (at < 0 || before >= 15) {
+    errors.push(`검색어 "${keyword}"가 SERP 제목 앞 15자 안에 없습니다.`);
+  }
+  if (!data.title.includes(keyword)) errors.push("H1에 대표 검색어가 없습니다.");
+  if (!data.description.includes(keyword)) errors.push("메타 설명에 대표 검색어가 없습니다.");
+  const descLen = [...data.description].length;
+  if (descLen < 120 || descLen > 150) {
+    errors.push(`메타 설명은 120~150자여야 합니다. 지금 ${descLen}자입니다.`);
+  }
+  const first = body
+    .replace(/<[^>]+>/g, " ")
+    .trim()
+    .split(/\n\s*\n/)[0]
+    ?.replace(/\s+/g, " ")
+    .trim();
+  if (!first?.includes(keyword)) errors.push("첫 문단에 대표 검색어가 없습니다.");
+  return errors;
+}
+
+export function markdownMarkersInVisibleHtml(html: string): string[] {
+  const visible = html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&(?:#\d+|#x[\da-f]+|[a-z]+);/gi, " ");
+  const hits: string[] = [];
+  if (visible.includes("**")) hits.push("**");
+  if (visible.includes("__")) hits.push("__");
+  return hits;
+}
+
 export function emojiCount(text: string): number {
   const found = text.match(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu);
   return found?.length ?? 0;
@@ -362,6 +398,9 @@ export function checkPosts(posts: LoadedPost[], root = process.cwd()): CheckIssu
     }
     for (const term of glossaryMisses(`${post.data.title}\n${post.body}`)) {
       issues.push({ level: "error", file: post.id, message: `용어 설명 없음: ${term}. <Term>으로 처음 풀어 주세요.` });
+    }
+    for (const message of keywordPlacementErrors(post.data, post.body)) {
+      issues.push({ level: "error", file: post.id, message });
     }
     if (post.raw.includes("백세영")) {
       issues.push({ level: "error", file: post.id, message: "실명을 쓰지 않습니다. 필명은 백현입니다." });

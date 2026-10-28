@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import satori from "satori";
 import sharp from "sharp";
-import { fitLines } from "./fit";
+import { thumbLines } from "./fit";
 
 export interface ThumbInput {
   title: string;
@@ -14,204 +14,224 @@ export interface ThumbInput {
   height: number;
 }
 
-const PALETTE: Record<string, { from: string; to: string; chip: string; chipText: string; icon: string }> = {
-  prepare: { from: "#1f5fbf", to: "#163e86", chip: "#dbe8ff", chipText: "#12356e", icon: "calendar" },
-  pension: { from: "#1f5fbf", to: "#0f3f86", chip: "#ffe7a3", chipText: "#5c3b00", icon: "landmark" },
-  severance: { from: "#2457a8", to: "#17386e", chip: "#ffd7c2", chipText: "#6a2e12", icon: "receipt" },
-  basic: { from: "#1c5cad", to: "#12407a", chip: "#d9f5ea", chipText: "#0e4a38", icon: "users" },
-  health: { from: "#1a6aa8", to: "#0e3f6e", chip: "#d7f3e8", chipText: "#0d4a36", icon: "heart-pulse" },
-  job: { from: "#1f5fbf", to: "#1a3f78", chip: "#e7e0ff", chipText: "#2c2170", icon: "briefcase" },
-  housing: { from: "#1e5a9e", to: "#143860", chip: "#ffe8c4", chipText: "#6a3e08", icon: "house" },
-  tax: { from: "#274e96", to: "#1a305f", chip: "#fde2e1", chipText: "#6d2420", icon: "banknote" },
-  assets: { from: "#1f5fbf", to: "#18457a", chip: "#e5f4d8", chipText: "#24520f", icon: "coins" },
-  business: { from: "#2a568f", to: "#173252", chip: "#fdecc8", chipText: "#6a4a10", icon: "shield" },
+const THEME: Record<string, { accent: string; wash: string; icons: string[] }> = {
+  prepare: { accent: "#1b3a6b", wash: "#e7eef8", icons: ["calendar", "landmark"] },
+  pension: { accent: "#1b3a6b", wash: "#e7eef8", icons: ["landmark", "coins"] },
+  severance: { accent: "#7a2e3a", wash: "#f8ecee", icons: ["receipt", "banknote"] },
+  basic: { accent: "#0f6e6b", wash: "#e5f4f3", icons: ["users", "shield"] },
+  health: { accent: "#0f6e6b", wash: "#e5f4f3", icons: ["heart-pulse", "shield"] },
+  job: { accent: "#1f6b45", wash: "#e7f4ec", icons: ["briefcase", "calendar"] },
+  housing: { accent: "#7a2e3a", wash: "#f8ecee", icons: ["house", "coins"] },
+  tax: { accent: "#1f6b45", wash: "#e7f4ec", icons: ["banknote", "receipt"] },
+  assets: { accent: "#1f6b45", wash: "#e7f4ec", icons: ["coins", "landmark"] },
+  business: { accent: "#7a2e3a", wash: "#f8ecee", icons: ["briefcase", "shield"] },
 };
 
 let fontData: Buffer | null = null;
 const iconCache = new Map<string, string>();
 
 function font(): Buffer {
-  if (!fontData) {
-    fontData = readFileSync(path.join(process.cwd(), "assets/fonts/Pretendard-SemiBold.otf"));
-  }
+  if (!fontData) fontData = readFileSync(path.join(process.cwd(), "assets/fonts/Pretendard-SemiBold.otf"));
   return fontData;
 }
 
-async function iconSrc(name: string): Promise<string> {
-  const cached = iconCache.get(name);
+async function iconSrc(name: string, color: string): Promise<string> {
+  const key = `${name}:${color}`;
+  const cached = iconCache.get(key);
   if (cached) return cached;
-  const svg = readFileSync(path.join(process.cwd(), "src/thumbnails/icons", `${name}.svg`), "utf8").replace(
-    /currentColor/g,
-    "#ffffff",
-  );
-  const png = await sharp(Buffer.from(svg)).resize(128, 128).png().toBuffer();
+  const svg = readFileSync(path.join(process.cwd(), "src/thumbnails/icons", `${name}.svg`), "utf8")
+    .replace(/currentColor/g, color)
+    .replace(/stroke-width="2"/g, 'stroke-width="1.6"');
+  const png = await sharp(Buffer.from(svg)).resize(160, 160).png().toBuffer();
   const uri = `data:image/png;base64,${png.toString("base64")}`;
-  iconCache.set(name, uri);
+  iconCache.set(key, uri);
   return uri;
 }
 
-function node(style: Record<string, unknown>, children: unknown): unknown {
+function el(style: Record<string, unknown>, children: unknown): unknown {
   return { type: "div", props: { style: { display: "flex", ...style }, children } };
 }
 
-export async function renderThumb(input: ThumbInput): Promise<Buffer> {
-  const palette = PALETTE[input.category] ?? PALETTE.pension;
-  const pad = Math.round(input.width * 0.045);
-  const inner = input.width - pad * 2;
-  const fitted = fitLines(input.title, inner, input.width >= 1000 ? 68 : 54, 36);
-  const icon = await iconSrc(palette.icon);
-  const svg = await satori(card(input, palette, pad, fitted, icon) as React.ReactNode, {
-    width: input.width,
-    height: input.height,
-    fonts: [{ name: "Pretendard", data: font(), weight: 600, style: "normal" }],
-  });
-  return sharp(Buffer.from(svg)).png().toBuffer();
+type Tone = "minus" | "plus" | "neutral";
+const TONE = {
+  minus: { bg: "#f8d4ce", fg: "#6e1b12" },
+  plus: { bg: "#d9e7ff", fg: "#0d3d86" },
+  neutral: { bg: "#ffffff", fg: "#111111" },
+} as const;
+
+export function figurePanels(number: string | undefined, keyword: string): { label: string; figure: string; tone: Tone }[] {
+  if (!number?.trim()) return [];
+  if (number.includes("/")) {
+    const [left, right] = number.split("/").map((part) => part.trim());
+    return [
+      { label: "1년 일찍", figure: signedFigure(left, "minus", true), tone: "minus" },
+      { label: "1년 늦게", figure: signedFigure(right, "plus", true), tone: "plus" },
+    ];
+  }
+  const minus = /^[−-]/.test(number) || /감소|덜/.test(number);
+  const plus = /^\+/.test(number) || /증가|더/.test(number);
+  if (minus || plus) {
+    return [{ label: minus ? "줄어드는 금액" : "늘어나는 금액", figure: signedFigure(number, minus ? "minus" : "plus", false), tone: minus ? "minus" : "plus" }];
+  }
+  return [{ label: keyword, figure: number.trim(), tone: "neutral" }];
 }
 
-function card(
-  input: ThumbInput,
-  palette: { from: string; to: string; chip: string; chipText: string },
-  pad: number,
-  fitted: { lines: string[]; size: number },
-  icon: string,
-): unknown {
-  const title = node(
-    { flexDirection: "column", gap: 6 },
-    fitted.lines.map((line) =>
-      node(
-        { fontSize: fitted.size, fontWeight: 700, color: "#ffffff", lineHeight: 1.25, letterSpacing: -0.5 },
-        line,
-      ),
-    ),
-  );
-  const chip = node(
-    {
-      background: palette.chip,
-      color: palette.chipText,
-      fontSize: 28,
-      fontWeight: 700,
-      padding: "10px 18px",
-      borderRadius: 999,
-    },
-    input.keyword,
-  );
-  const mark = node({ alignItems: "center", gap: 10 }, [
-    node(
-      { width: 36, height: 36, borderRadius: 10, background: "rgba(255,255,255,0.18)", alignItems: "center", justifyContent: "center" },
-      { type: "img", props: { src: icon, width: 22, height: 22 } },
-    ),
-    node({ fontSize: 24, color: "#ffffff" }, "오늘의 머니팁"),
-  ]);
-  const top = node({ flexDirection: "column", alignItems: "flex-start", gap: 14, marginBottom: 8 }, [chip, mark]);
+function signedFigure(raw: string, tone: "minus" | "plus", perYear: boolean): string {
+  const body = raw.replace(/^[+−-]\s*/, "").replace(/\s*\/\s*년$/, "").trim();
+  const sign = tone === "minus" ? "−" : "+";
+  return perYear ? `${sign}${body} / 년` : `${sign}${body}`;
+}
 
-  let body: unknown = node({ flexDirection: "column", gap: 20 }, [top, title]);
-  if (input.style === "number" && input.number) {
-    body = node({ flexDirection: "column", gap: 18 }, [
-      top,
-      node({ fontSize: input.width >= 1000 ? 108 : 84, fontWeight: 700, color: "#ffffff", letterSpacing: -2 }, input.number),
-      title,
-    ]);
-  } else if (input.style === "compare" && input.number?.includes("/")) {
-    const [left, right] = input.number.split("/").map((part) => part.trim());
-    body = node({ flexDirection: "column", gap: 22 }, [
-      top,
-      node({ gap: 16 }, [
-        pillar("일찍", left, "rgba(255,255,255,0.14)"),
-        pillar("미룸", right, "rgba(255,255,255,0.24)"),
-      ]),
-      title,
-    ]);
-  } else if (input.style === "checklist") {
-    body = node({ flexDirection: "column", gap: 16 }, [
-      top,
-      title,
-      node({ flexDirection: "column", gap: 10, marginTop: 8 }, ["기준일을 봐요", "내 숫자를 넣어요", "공식 안내와 맞춰요"].map((item) =>
-        node({ fontSize: 30, color: "#ffffff", alignItems: "center", gap: 12 }, [
-          node({ width: 28, height: 28, borderRadius: 8, background: "#ffffff", color: palette.to, alignItems: "center", justifyContent: "center", fontSize: 20 }, "✓"),
-          item,
-        ]),
-      )),
-    ]);
-  } else if (input.style === "timeline") {
-    body = node({ flexDirection: "column", gap: 18 }, [
-      top,
-      node({ gap: 18, alignItems: "center" }, ["퇴직 전", "당일", "이후"].map((label, index) =>
-        node({ flexDirection: "column", alignItems: "center", gap: 8 }, [
-          node({ width: 22, height: 22, borderRadius: 11, background: index === 1 ? "#ffffff" : "rgba(255,255,255,0.45)" }, ""),
-          node({ fontSize: 26, color: "#ffffff" }, label),
-        ]),
-      )),
-      title,
-    ]);
-  }
-
-  return node(
+export async function renderThumb(input: ThumbInput): Promise<Buffer> {
+  const theme = THEME[input.category] ?? THEME.pension;
+  const dark = input.style === "timeline";
+  const ink = dark ? "#f6f5f2" : "#111111";
+  const icons = await Promise.all(theme.icons.map((name) => iconSrc(name, dark ? "#f6f5f2" : theme.accent)));
+  const lines = thumbLines(input.title).slice(0, 2);
+  const longest = Math.max(...lines.map((line) => [...line].length), 1);
+  const textWidth = input.width - 96 - (dark ? 80 : 340);
+  const titleSize = Math.max(40, Math.min(62, Math.floor(textWidth / longest / 0.98)));
+  const panels = figurePanels(input.number, input.keyword);
+  const svg = await satori(
+    layout(input, theme, dark, ink, icons, lines, titleSize, panels) as React.ReactNode,
     {
       width: input.width,
       height: input.height,
-      padding: pad,
-      flexDirection: "column",
-      backgroundImage: `linear-gradient(145deg, ${palette.from} 0%, ${palette.to} 100%)`,
-      color: "#ffffff",
+      fonts: [{ name: "Pretendard", data: font(), weight: 600, style: "normal" }],
+    },
+  );
+  return sharp(Buffer.from(svg)).png().toBuffer();
+}
+
+function layout(
+  input: ThumbInput,
+  theme: { accent: string; wash: string },
+  dark: boolean,
+  ink: string,
+  icons: string[],
+  lines: string[],
+  titleSize: number,
+  panels: { label: string; figure: string; tone: Tone }[],
+): unknown {
+  const title = el(
+    { flexDirection: "column", gap: 2 },
+    lines.map((line) => el({ fontSize: titleSize, fontWeight: 700, color: ink, letterSpacing: -1.5, lineHeight: 1.15 }, line)),
+  );
+  const badges = panels.length
+    ? el(
+        { gap: 12, marginTop: 20 },
+        panels.map((panel) => {
+          const colors = dark && panel.tone === "neutral" ? { bg: "#243656", fg: "#f6f5f2" } : TONE[panel.tone];
+          return el(
+            { flexDirection: "column", background: colors.bg, borderRadius: 16, padding: "12px 16px", gap: 2 },
+            [
+              el({ fontSize: 20, fontWeight: 700, color: colors.fg }, panel.label),
+              el({ fontSize: input.style === "number" && panels.length === 1 ? 48 : 36, fontWeight: 700, color: colors.fg }, panel.figure),
+            ],
+          );
+        }),
+      )
+    : el({ fontSize: 22, color: theme.accent, marginTop: 16 }, "기준일과 출처");
+  const checks =
+    input.style === "checklist"
+      ? el(
+          { flexDirection: "column", gap: 10, marginTop: 18 },
+          ["조건", "금액", "기한"].map((item) =>
+            el({ alignItems: "center", gap: 10, fontSize: 24, color: ink }, [
+              el({ width: 22, height: 22, borderRadius: 6, background: theme.accent, color: "#fff", alignItems: "center", justifyContent: "center", fontSize: 16 }, "✓"),
+              item,
+            ]),
+          ),
+        )
+      : null;
+  const steps =
+    input.style === "timeline"
+      ? el(
+          { gap: 18, marginTop: 22, alignItems: "center" },
+          ["퇴직 전", "당일", "이후"].map((label, index) =>
+            el({ flexDirection: "column", alignItems: "center", gap: 8 }, [
+              el({ width: 16, height: 16, borderRadius: 8, background: index === 1 ? "#f6f5f2" : "#8ea0c0" }, ""),
+              el({ fontSize: 22, color: ink }, label),
+            ]),
+          ),
+        )
+      : null;
+  const left = el({ flexDirection: "column", flexGrow: 1, height: input.height - 96, paddingRight: 16 }, [
+    el({ fontSize: 22, fontWeight: 700, color: dark ? "#d9e7ff" : theme.accent, marginBottom: 16 }, input.keyword),
+    title,
+    badges,
+    checks,
+    steps,
+    el({ flexGrow: 1 }, " "),
+    el({ fontSize: 18, color: dark ? "#c5d0e0" : "#5c584f" }, "오늘의 머니팁"),
+  ].filter(Boolean));
+  const art = dark
+    ? el({ width: 220, height: input.height - 96, alignItems: "center", justifyContent: "center" }, [
+        el(
+          { width: 160, height: 160, borderRadius: 80, background: "#243656", alignItems: "center", justifyContent: "center" },
+          { type: "img", props: { src: icons[0], width: 72, height: 72 } },
+        ),
+      ])
+    : illustration(theme, icons, input.style, input.height - 96);
+  return el(
+    {
+      width: input.width,
+      height: input.height,
+      background: dark ? "#1b2a4a" : "#f6f5f2",
+      color: ink,
       fontFamily: "Pretendard",
     },
-      [body],
+    [
+      el({ width: 12, height: input.height, background: dark ? "#d9e7ff" : theme.accent }, " "),
+      el(
+        { width: input.width - 12, height: input.height, padding: 48, justifyContent: "space-between" },
+        [left, art],
+      ),
+    ],
   );
 }
 
-function pillar(label: string, value: string, bg: string): unknown {
-  return node(
-    {
-      flexDirection: "column",
-      background: bg,
-      borderRadius: 18,
-      padding: "18px 22px",
-      minWidth: 240,
-      gap: 6,
-    },
-    [node({ fontSize: 24, color: "#ffffff" }, label), node({ fontSize: 54, fontWeight: 700, color: "#ffffff" }, value)],
-  );
+function illustration(theme: { accent: string; wash: string }, icons: string[], style: string, height: number): unknown {
+  const bars = style === "compare" ? [48, 96] : style === "number" ? [40, 72, 104] : [56, 80, 64];
+  const mark = style === "question" ? el({ fontSize: 92, color: theme.accent, marginRight: 8 }, "?") : null;
+  return el({ width: 300, height, alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 16 }, [
+    el({ width: 248, height: 248, borderRadius: 124, background: theme.wash, alignItems: "center", justifyContent: "center" }, [
+      mark,
+      el({ flexDirection: "column", alignItems: "center" }, [
+        { type: "img", props: { src: icons[0], width: 88, height: 88 } },
+        icons[1] ? el({ marginTop: -20, marginLeft: 48 }, { type: "img", props: { src: icons[1], width: 64, height: 64 } }) : el({}, " "),
+      ]),
+    ].filter(Boolean)),
+    el(
+      { gap: 8, alignItems: "flex-end", background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e6e4df" },
+      bars.map((height) => el({ width: 16, height, background: theme.accent, borderRadius: 4 }, " ")),
+    ),
+  ]);
 }
 
-export async function renderExplainer(
-  title: string,
-  rows: { left: string; right: string }[],
-): Promise<Buffer> {
+export async function renderExplainer(title: string, rows: { left: string; right: string }[]): Promise<Buffer> {
   const svg = await satori(
-    node(
-      {
-        width: 1200,
-        height: 675,
-        background: "#ffffff",
-        padding: 48,
-        flexDirection: "column",
-        fontFamily: "Pretendard",
-        color: "#111111",
-      },
+    el(
+      { width: 1200, height: 675, background: "#f6f5f2", padding: 48, flexDirection: "column", fontFamily: "Pretendard", color: "#111111" },
       [
-        node({ fontSize: 40, fontWeight: 700, marginBottom: 28, color: "#1f5fbf" }, title),
+        el({ fontSize: 40, fontWeight: 700, marginBottom: 28 }, title),
         ...rows.map((row) =>
-          node(
-            {
-              width: "100%",
-              justifyContent: "space-between",
-              borderTop: "1px solid #e6e6e6",
-              padding: "18px 0",
-              fontSize: 32,
-            },
-            [
-              node({ color: "#111111", width: 420 }, row.left),
-              node({ color: "#1f5fbf", fontWeight: 700, width: 520, justifyContent: "flex-end" }, row.right),
-            ],
+          el(
+            { width: "100%", justifyContent: "space-between", borderTop: "1px solid #e6e4df", padding: "18px 0", fontSize: 32 },
+            [el({ width: 420 }, row.left), el({ width: 420, justifyContent: "flex-end", color: "#1f5fbf", fontWeight: 700 }, row.right)],
           ),
         ),
       ],
     ) as React.ReactNode,
-    {
-      width: 1200,
-      height: 675,
-      fonts: [{ name: "Pretendard", data: font(), weight: 600, style: "normal" }],
-    },
+    { width: 1200, height: 675, fonts: [{ name: "Pretendard", data: font(), weight: 600, style: "normal" }] },
+  );
+  return sharp(Buffer.from(svg)).png().toBuffer();
+}
+
+export async function renderCaption(text: string, width: number): Promise<Buffer> {
+  const svg = await satori(
+    el({ width, height: 36, alignItems: "center", fontSize: 20, color: "#111111", fontFamily: "Pretendard" }, text) as React.ReactNode,
+    { width, height: 36, fonts: [{ name: "Pretendard", data: font(), weight: 600, style: "normal" }] },
   );
   return sharp(Buffer.from(svg)).png().toBuffer();
 }

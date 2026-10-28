@@ -10,7 +10,7 @@ export const titleFrames = ["결과형", "숫자형", "질문형", "대비형", 
 export const postSchema = z
   .object({
     title: z.string().min(8),
-    serpTitle: z.string().min(12).max(70),
+    serpTitle: z.string().min(12).max(90),
     description: z.string().min(40).max(180),
     date: dateString,
     updated: dateString,
@@ -47,6 +47,7 @@ export const postSchema = z
     검색어: z.string().min(2),
     근거: z.array(z.string().regex(/^F\d+$/)).min(1),
     thumbStyle: z.enum(["number", "question", "compare", "checklist", "timeline"]).optional(),
+    thumbTitle: z.string().min(4).max(40).optional(),
     thumbNumber: z.string().max(16).optional(),
     thumbImage: z.string().optional(),
   })
