@@ -1,0 +1,34 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="검색" description="오늘의 머니팁 글 검색" path="/search/">
+  <main id="content" class="article">
+    <h1>검색</h1>
+    <input id="q" class="search-input" type="search" aria-label="검색어" />
+    <div id="out"></div>
+  </main>
+</Base>
+<script is:inline>
+  const input = document.querySelector("#q");
+  const out = document.querySelector("#out");
+  const params = new URLSearchParams(location.search);
+  if (params.get("q")) input.value = params.get("q") ?? "";
+  async function run() {
+    if (!out) return;
+    const query = input.value.trim();
+    if (!query) {
+      out.textContent = "단어를 입력하세요.";
+      return;
+    }
+    try {
+      const pagefind = await import("/pagefind/pagefind.js");
+      const found = await pagefind.search(query);
+      const rows = await Promise.all(found.results.slice(0, 8).map((row) => row.data()));
+      out.innerHTML = rows.map((row) => `<p><a href="${row.url}">${row.meta.title}</a></p>`).join("") || "<p>해당하는 글이 없어요.</p>";
+    } catch {
+      out.textContent = "검색 색인은 사이트를 빌드한 뒤에 생깁니다.";
+    }
+  }
+  input.addEventListener("change", run);
+  if (input.value) run();
+</script>

@@ -1,0 +1,67 @@
+---
+import "../styles/global.css";
+import { siteConfig, absoluteUrl } from "../../site.config";
+import Seo from "../components/Seo.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  ogImage?: string;
+  type?: "website" | "article";
+  jsonLd?: unknown[];
+  published?: string;
+  modified?: string;
+}
+const { title, description, path, ogImage, type = "website", jsonLd = [], published, modified } = Astro.props;
+const canonical = absoluteUrl(path);
+---
+<html lang={siteConfig.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/fonts/pretendard/pretendard.css" />
+    <Seo
+      title={title}
+      description={description}
+      canonical={canonical}
+      ogImage={ogImage}
+      type={type}
+      published={published}
+      modified={modified}
+      jsonLd={jsonLd}
+    />
+  </head>
+  <body>
+    <a class="skip" href="#content">본문으로</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="logo" href="/"><span class="logo-mark">오</span>{siteConfig.logoText}</a>
+        <nav class="nav-links" aria-label="주요">
+          <a href="/roadmap/">퇴직 일정</a>
+          <a href="/search/">검색</a>
+          {siteConfig.categories.slice(0, 6).map((category) => (
+            <a href={`/category/${category.id}/`}>{category.name}</a>
+          ))}
+        </nav>
+      </div>
+    </header>
+    <slot />
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <strong>{siteConfig.name}</strong>
+        <p>{siteConfig.description}</p>
+        <nav class="footer-links">
+          <a href="/about/">소개</a>
+          <a href="/author/">글쓴이</a>
+          <a href="/privacy/">개인정보처리방침</a>
+          <a href="/terms/">이용약관</a>
+          <a href="/contact/">문의</a>
+          <a href="/rss.xml">RSS</a>
+        </nav>
+        <p>© {new Date().getFullYear()} {siteConfig.url.replace("https://", "")}</p>
+      </div>
+    </footer>
+  </body>
+</html>

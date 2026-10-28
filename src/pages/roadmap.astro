@@ -1,0 +1,53 @@
+---
+import Base from "../layouts/Base.astro";
+import { siteConfig, absoluteUrl } from "../../site.config";
+import Calculator from "../components/mdx/Calculator.astro";
+
+const steps = [
+  { name: "퇴직 전", text: "연금 예상액과 건강보험, 퇴직금 수령 방식을 적어 둡니다." },
+  { name: "퇴직 당일", text: "퇴직금 입금 계좌와 보험 자격을 확인합니다." },
+  { name: "한 달 뒤", text: "피부양자나 지역보험료, 실업급여 신청이 빠지지 않았는지 봅니다." },
+  { name: "석 달 뒤", text: "생활비와 연금의 차이를 다시 계산합니다." },
+  { name: "여섯 달 뒤", text: "재취업이나 주택연금이 필요한지 공식 안내와 대조합니다." },
+  { name: "일 년 뒤", text: "기초연금 나이와 세금 정산을 미리 표시해 둡니다." },
+];
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "퇴직 전후 돈 일정",
+    step: steps.map((step) => ({ "@type": "HowToStep", name: step.name, text: step.text })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "국민연금", url: absoluteUrl("/pension-early-defer/") },
+      { "@type": "ListItem", position: 2, name: "건강보험", url: absoluteUrl("/health-dependent/") },
+      { "@type": "ListItem", position: 3, name: "퇴직금 세금", url: absoluteUrl("/severance-tax/") },
+    ],
+  },
+];
+---
+<Base title="퇴직 전후 일정" description="퇴직 전, 당일, 그 뒤에 볼 돈 문제를 한 페이지에 모았습니다." path="/roadmap/" jsonLd={jsonLd}>
+  <main id="content" class="article">
+    <h1>퇴직 전후, 무엇을 먼저 볼까요</h1>
+    <p>결론부터 말하면, 연금 액수와 건강보험, 퇴직금 세금부터 적어요. 아래 순서는 공식 신청을 대신하지 않아요.</p>
+    <ol>
+      {steps.map((step) => (
+        <li><strong>{step.name}</strong> {step.text}</li>
+      ))}
+    </ol>
+    <ul>
+      <li><a href="/pension-early-defer/">국민연금 조기수령과 연기연금</a></li>
+      <li><a href="/health-dependent/">피부양자 탈락과 건강보험료</a></li>
+      <li><a href="/severance-tax/">퇴직금 일시금과 연금의 세금</a></li>
+      <li><a href="/category/housing/">주택연금 분류</a></li>
+      <li><a href="/category/basic/">기초연금 분류</a></li>
+    </ul>
+    <h2>은퇴 후 생활비는 얼마나 비나요</h2>
+    <Calculator preset="living-gap" />
+    <h2>주택연금 표에 있는 칸</h2>
+    <Calculator preset="housing" />
+  </main>
+</Base>

@@ -1,0 +1,13 @@
+---
+import Base from "../layouts/Base.astro";
+import { siteConfig } from "../../site.config";
+---
+<Base title="개인정보처리방침" description="쿠키, 광고, 분석 도구를 어떻게 쓰는지 알립니다." path="/privacy/">
+  <main id="content" class="article">
+    <h1>개인정보처리방침</h1>
+    <p>기준일 {siteConfig.legalUpdated}.</p>
+    <p>이 사이트는 회원 가입을 받지 않습니다. 이름, 전화, 주소를 저장하지 않습니다.</p>
+    <p>광고가 켜지면 구글 애드센스가 쿠키를 쓸 수 있습니다. 분석이 켜지면 구글 애널리틱스 또는 클라우드플레어 웹 분석이 방문 기록을 처리할 수 있습니다. 식별자가 비어 있으면 해당 스크립트는 넣지 않습니다.</p>
+    <p>문의 메일은 {siteConfig.contactEmail} 입니다.</p>
+  </main>
+</Base>

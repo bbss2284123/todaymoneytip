@@ -1,0 +1,33 @@
+---
+import Base from "../../layouts/Base.astro";
+import { allPublished, postPath } from "../../lib/posts";
+import { formatKo } from "../../lib/dates";
+
+export async function getStaticPaths() {
+  const posts = await allPublished();
+  const tags = [...new Set(posts.flatMap((post) => post.data.tags))];
+  return tags.map((tag) => ({
+    params: { tag },
+    props: { posts: posts.filter((post) => post.data.tags.includes(tag)) },
+  }));
+}
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+<Base title={`#${tag}`} description={`${tag} 글 목록`} path={`/tag/${tag}/`}>
+  <main id="content" class="page home">
+    <h1>#{tag}</h1>
+    <div class="feed">
+      {posts.map((post) => (
+        <a class="feed-item" href={postPath(post.id)}>
+          <img src={`/thumb/${post.id}/feed.png`} alt="" width="1200" height="675" />
+          <div>
+            <h2>{post.data.title}</h2>
+            <p class="summary">{post.data.description}</p>
+            <p class="meta">{formatKo(post.data.date)}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </main>
+</Base>

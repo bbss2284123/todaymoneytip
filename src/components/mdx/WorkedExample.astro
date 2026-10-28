@@ -1,0 +1,21 @@
+---
+interface Step { label: string; calc: string; result: string; why: string; }
+interface Props { title: string; oneLiner: string; steps: Step[]; meaning: string; }
+const { title, oneLiner, steps, meaning } = Astro.props;
+---
+<section class="worked">
+  <h2>직접 계산해보기</h2>
+  <p>{oneLiner}</p>
+  <p><strong>예시.</strong> {title}</p>
+  <ol>
+    {steps.map((step, index) => (
+      <li>
+        <p>{index + 1}. {step.label}</p>
+        <p>{step.calc}</p>
+        <p><strong>{step.result}</strong></p>
+        <p>{step.why}</p>
+      </li>
+    ))}
+  </ol>
+  <p>{meaning}</p>
+</section>
