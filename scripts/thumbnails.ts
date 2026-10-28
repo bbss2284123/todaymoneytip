@@ -7,7 +7,13 @@ import { renderCaption, renderExplainer, renderThumb, type ThumbInput } from "..
 const postsDir = path.join(process.cwd(), "src/content/posts");
 const outDir = path.join(process.cwd(), "public/thumb");
 const explainDir = path.join(process.cwd(), "public/explain");
-const artifactDir = "/opt/cursor/artifacts";
+
+/** Extra review copies. Unset on Cloudflare so the build never touches a machine path. */
+function artifactsDir(): string | null {
+  const raw = process.env.ARTIFACTS_DIR?.trim();
+  if (!raw) return null;
+  return path.resolve(raw);
+}
 
 const styles = ["number", "compare", "question", "checklist", "timeline"] as const;
 const styleName: Record<(typeof styles)[number], string> = {
@@ -95,11 +101,18 @@ async function sheet(cells: { caption: string; png: Buffer }[], cols: number, ce
   return sharp({ create: { width, height, channels: 3, background: "#ffffff" } }).composite(composites).png().toBuffer();
 }
 
+function writeArtifact(dir: string | null, name: string, data: Buffer) {
+  if (!dir) return;
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(path.join(dir, name), data);
+}
+
 async function main() {
   if (!readdirSync(postsDir).length) return;
+  const artifactDir = artifactsDir();
   mkdirSync(outDir, { recursive: true });
   mkdirSync(explainDir, { recursive: true });
-  mkdirSync(artifactDir, { recursive: true });
+  if (!artifactDir) console.log("ARTIFACTS_DIR is unset; skipping extra artifact copies");
   const sheetCells: { caption: string; png: Buffer }[] = [];
   const smallCells: { caption: string; png: Buffer }[] = [];
 
@@ -130,14 +143,14 @@ async function main() {
       writeFileSync(path.join(dir, `${style}.png`), png);
       const caption = `${data.검색어} · ${styleName[style]}`;
       sheetCells.push({ caption, png });
-      smallCells.push({ caption, png: await sharp(png).resize(300).png().toBuffer() });
+      if (artifactDir) smallCells.push({ caption, png: await sharp(png).resize(300).png().toBuffer() });
       if (style === (data.thumbStyle ?? "question")) {
         writeFileSync(path.join(dir, "og.png"), png);
         const discover = await renderThumb({ ...base, style, width: 1200, height: 675 });
         writeFileSync(path.join(dir, "discover.png"), discover);
         writeFileSync(path.join(dir, "feed.png"), discover);
-        writeFileSync(path.join(artifactDir, `${id}-og.png`), png);
-        writeFileSync(path.join(artifactDir, `${id}-w300.png`), await sharp(png).resize(300).png().toBuffer());
+        writeArtifact(artifactDir, `${id}-og.png`, png);
+        if (artifactDir) writeArtifact(artifactDir, `${id}-w300.png`, await sharp(png).resize(300).png().toBuffer());
       }
     }
     const diagram = explainers[id];
@@ -162,10 +175,11 @@ async function main() {
   );
 
   const contact = await sheet(sheetCells, 5, 680);
-  const contactSmall = await sheet(smallCells, 5, 300);
   writeFileSync(path.join(outDir, "contact-sheet.png"), contact);
-  writeFileSync(path.join(artifactDir, "contact-sheet.png"), contact);
-  writeFileSync(path.join(artifactDir, "contact-sheet-300.png"), contactSmall);
+  writeArtifact(artifactDir, "contact-sheet.png", contact);
+  if (artifactDir && smallCells.length) {
+    writeArtifact(artifactDir, "contact-sheet-300.png", await sheet(smallCells, 5, 300));
+  }
   console.log(`contact ${sheetCells.length}`);
 }
 
