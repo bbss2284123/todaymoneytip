@@ -9,6 +9,10 @@ import Calculator from "../components/mdx/Calculator.astro";
 import ApplyBox from "../components/mdx/ApplyBox.astro";
 import AdSlot from "../components/mdx/AdSlot.astro";
 import Figure from "../components/mdx/Figure.astro";
+import Mark from "../components/mdx/Mark.astro";
+import Num from "../components/mdx/Num.astro";
+import Callout from "../components/mdx/Callout.astro";
+import { headingSlug } from "../lib/slug";
 import { siteConfig, categoryById, absoluteUrl } from "../../site.config";
 import { allPublished, authorName, postPath, readingMinutes, relatedPosts, seriesMates } from "../lib/posts";
 import { formatKo, isPastDate, seoulToday } from "../lib/dates";
@@ -26,6 +30,7 @@ const related = relatedPosts(post, posts);
 const series = seriesMates(post, posts);
 const closed = post.data.status === "마감" || (post.data.applyPeriod ? isPastDate(post.data.applyPeriod.end, seoulToday()) : false);
 const minutes = readingMinutes(post.body ?? "");
+const toc = [...(post.body ?? "").matchAll(/^##\s+(.+)$/gm)].map((match) => match[1].trim());
 const url = absoluteUrl(postPath(post.id));
 const jsonLd = [
   {
@@ -90,8 +95,18 @@ const jsonLd = [
         {post.data.nextRound && <a href={post.data.nextRound.url}>{post.data.nextRound.title}</a>}
       </p>
     )}
+    {toc.length > 0 && (
+      <details class="toc">
+        <summary>이 글의 차례</summary>
+        <ol>
+          {toc.map((item) => (
+            <li><a href={`#${headingSlug(item)}`}>{item}</a></li>
+          ))}
+        </ol>
+      </details>
+    )}
     <div class="prose">
-      <Content components={{ AtAGlance, Term, EligibilityChecklist, WorkedExample, Calculator, ApplyBox, AdSlot, Figure }} />
+      <Content components={{ AtAGlance, Term, EligibilityChecklist, WorkedExample, Calculator, ApplyBox, AdSlot, Figure, Mark, Num, Callout }} />
     </div>
     {post.data.faq && (
       <section class="faq">

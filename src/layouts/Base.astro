@@ -19,8 +19,11 @@ const canonical = absoluteUrl(path);
 <html lang={siteConfig.lang}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/pretendard/Pretendard-Regular.subset.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/pretendard/Pretendard-ExtraBold.subset.woff2" as="font" type="font/woff2" crossorigin />
+    {type === "article" && <link rel="preload" href="/fonts/pretendard/Pretendard-Bold.subset.woff2" as="font" type="font/woff2" crossorigin />}
     <link rel="stylesheet" href="/fonts/pretendard/pretendard.css" />
     <Seo
       title={title}
@@ -38,15 +41,28 @@ const canonical = absoluteUrl(path);
     <header class="site-header">
       <div class="header-inner">
         <a class="logo" href="/"><span class="logo-mark">오</span>{siteConfig.logoText}</a>
-        <nav class="nav-links" aria-label="주요">
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+          <span class="menu-icon" aria-hidden="true"></span>
+          메뉴
+        </button>
+        <nav id="site-menu" class="nav-links" aria-label="주요">
           <a href="/roadmap/">퇴직 일정</a>
           <a href="/search/">검색</a>
-          {siteConfig.categories.slice(0, 6).map((category) => (
+          {siteConfig.categories.map((category) => (
             <a href={`/category/${category.id}/`}>{category.name}</a>
           ))}
         </nav>
       </div>
     </header>
+    <script is:inline>
+      const menuButton = document.querySelector(".menu-toggle");
+      const menu = document.querySelector("#site-menu");
+      menuButton?.addEventListener("click", () => {
+        const open = menuButton.getAttribute("aria-expanded") === "true";
+        menuButton.setAttribute("aria-expanded", String(!open));
+        menu?.classList.toggle("is-open", !open);
+      });
+    </script>
     <slot />
     <footer class="site-footer">
       <div class="footer-inner">

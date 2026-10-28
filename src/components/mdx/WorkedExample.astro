@@ -3,16 +3,21 @@ interface Step { label: string; calc: string; result: string; why: string; }
 interface Props { title: string; oneLiner: string; steps: Step[]; meaning: string; }
 const { title, oneLiner, steps, meaning } = Astro.props;
 ---
-<section class="worked">
-  <h2>직접 계산해보기</h2>
+<section class="callout callout-example worked">
+  <p class="callout-label">
+    <span class="callout-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h5" /></svg>
+    </span>
+    예시 계산
+  </p>
+  <p class="glance-lead">{title}</p>
   <p>{oneLiner}</p>
-  <p><strong>예시.</strong> {title}</p>
   <ol>
-    {steps.map((step, index) => (
+    {steps.map((step) => (
       <li>
-        <p>{index + 1}. {step.label}</p>
+        <p class="step-label">{step.label}</p>
         <p>{step.calc}</p>
-        <p><strong>{step.result}</strong></p>
+        <p class="step-result">{step.result}</p>
         <p>{step.why}</p>
       </li>
     ))}

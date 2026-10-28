@@ -200,12 +200,30 @@ export function paragraphSentenceCounts(body: string): number[] {
     .filter((n) => n > 0);
 }
 
-export function boldWithoutNumbers(body: string): string[] {
-  const hits: string[] = [];
-  for (const match of body.matchAll(/\*\*([^*]+)\*\*/g)) {
-    if (!/\d/.test(match[1])) hits.push(match[1]);
+const HIGHLIGHT_RE = /<Mark\b[^>]*>[\s\S]*?<\/Mark>|==[^=\n]+==/g;
+const BOLD_RE = /<strong\b[^>]*>[\s\S]*?<\/strong>|\*\*[^*\n]+\*\*/g;
+
+export function emphasisWarnings(body: string): string[] {
+  const warnings: string[] = [];
+  const highlights = body.match(HIGHLIGHT_RE) ?? [];
+  if (highlights.length > 3) {
+    warnings.push(`형광펜은 글당 3개까지입니다. 지금 ${highlights.length}개입니다.`);
   }
-  return hits;
+  const bolds = body.match(BOLD_RE) ?? [];
+  if (bolds.length > 4) {
+    warnings.push(`볼드는 답 구절에만 씁니다. 글에 ${bolds.length}개입니다. 4개까지가 한도입니다.`);
+  }
+  for (const section of body.split(/^##\s+.+$/m)) {
+    const sectionMarks = section.match(HIGHLIGHT_RE) ?? [];
+    if (sectionMarks.length > 1) {
+      warnings.push(`한 구간에 형광펜이 ${sectionMarks.length}개입니다. 구간당 1개가 한도입니다.`);
+    }
+    const sectionBolds = section.match(BOLD_RE) ?? [];
+    if (sectionBolds.length > 1) {
+      warnings.push(`한 구간에 볼드가 ${sectionBolds.length}개입니다. 답 구절 하나만 씁니다.`);
+    }
+  }
+  return warnings;
 }
 
 export function keywordPlacementErrors(data: PostFrontmatter, body: string): string[] {
@@ -435,8 +453,8 @@ export function checkPosts(posts: LoadedPost[], root = process.cwd()): CheckIssu
         issues.push({ level: "info", file: post.id, message: `한 문단에 문장이 ${count}개입니다. 2~3개가 목표입니다.` });
       }
     }
-    for (const bold of boldWithoutNumbers(post.body)) {
-      issues.push({ level: "info", file: post.id, message: `숫자에만 볼드를 씁니다: ${bold}` });
+    for (const message of emphasisWarnings(post.body)) {
+      issues.push({ level: "info", file: post.id, message });
     }
     if (post.data.series) {
       const key = post.data.series.id;

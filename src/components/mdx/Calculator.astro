@@ -15,6 +15,9 @@ const prices = housing.pricesWon.join(",");
   <p>기준일 {meta.baseDate}. 칸의 시작 숫자는 예시입니다.</p>
   {preset === "pension-timing" && (
     <>
+      <label class="calc-field">월 금액
+        <input inputmode="numeric" data-input="monthly" value="1000000" />
+      </label>
       <div class="stepper">
         <button type="button" data-field="monthly" data-step="-100000">−</button>
         <output data-show="monthly">100만 원</output>
@@ -33,6 +36,9 @@ const prices = housing.pricesWon.join(",");
   )}
   {preset === "severance" && (
     <>
+      <label class="calc-field">퇴직소득
+        <input inputmode="numeric" data-input="income" value="100000000" />
+      </label>
       <div class="stepper">
         <button type="button" data-field="income" data-step="-10000000">−</button>
         <output data-show="income">1억 원</output>
@@ -46,6 +52,9 @@ const prices = housing.pricesWon.join(",");
     </>
   )}
   {preset === "health" && (
+    <label class="calc-field">연 소득
+      <input inputmode="numeric" data-input="annual" value="12000000" />
+    </label>
     <div class="stepper">
       <button type="button" data-field="annual" data-step="-1000000">−</button>
       <output data-show="annual">1,200만 원</output>
@@ -96,6 +105,11 @@ const prices = housing.pricesWon.join(",");
     };
     const result = box.querySelector("[data-result]");
     const paint = () => {
+      box.querySelectorAll<HTMLInputElement>("[data-input]").forEach((input) => {
+        const key = input.dataset.input as "monthly" | "income" | "annual" | "spend" | undefined;
+        if (!key || document.activeElement === input) return;
+        input.value = String(state[key]);
+      });
       box.querySelectorAll("[data-show]").forEach((node) => {
         const key = node.getAttribute("data-show");
         if (key === "monthly") node.textContent = money(state.monthly);
@@ -118,6 +132,14 @@ const prices = housing.pricesWon.join(",");
         }).sentence;
       }
     };
+    box.addEventListener("input", (event) => {
+      const target = event.target as HTMLInputElement;
+      const field = target.dataset.input;
+      if (!field || !(field in state)) return;
+      const key = field as "monthly" | "income" | "annual" | "spend";
+      state[key] = Math.max(0, Number(String(target.value).replace(/[^\d]/g, "")) || 0);
+      paint();
+    });
     box.addEventListener("click", (event) => {
       const target = event.target as HTMLElement;
       const step = target.dataset.step;

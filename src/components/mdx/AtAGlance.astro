@@ -2,11 +2,16 @@
 interface Props { who: string; amount: string; until: string; where: string; }
 const { who, amount, until, where } = Astro.props;
 ---
-<section class="answer-box">
-  <h2>한눈에 보기</h2>
+<section class="callout callout-summary answer-box">
+  <p class="callout-label">
+    <span class="callout-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M5 12.5 9.2 17 19 7" /></svg>
+    </span>
+    핵심 요약
+  </p>
+  <p class="glance-lead">{amount}</p>
   <div class="glance">
     <p><strong>누가</strong> {who}</p>
-    <p><strong>얼마</strong> {amount}</p>
     <p><strong>언제까지</strong> {until}</p>
     <p><strong>어디서</strong> {where}</p>
   </div>
