@@ -1,0 +1,12 @@
+id: basic-pension-apply
+facts:
+  - id: F1
+    value: "만 65세 생일이 속하는 달의 1개월 전부터 신청할 수 있습니다. 2026년에 65세가 되는 1961년생부터 새 신청 대상으로 보도자료가 적습니다. 읍면동 행정복지센터, 국민연금공단 지사, 복지로, 정부24에서 신청합니다."
+    source: "https://www.gov.kr/portal/service/serviceInfo/SSE000000170"
+    checkedAt: "2026-10-28T21:00:00+09:00"
+    note: "1961년생 문장은 보건복지부 보도자료입니다. https://www.mohw.go.kr/board.es?act=view&bid=0027&list_no=1488478&mid=a10503010100"
+  - id: F2
+    value: "보건복지상담센터 129. 국민연금공단 고객센터 1355. 구비서류는 신분증, 사회복지서비스 및 급여 제공 신청서, 소득 재산 신고서, 금융정보 제공 동의서, 통장 사본입니다. 기준일 2026-10-28."
+    source: "https://www.gov.kr/portal/service/serviceInfo/SSE000000170"
+    checkedAt: "2026-10-28T21:00:00+09:00"
+    note: "1355는 같은 보도자료가 국민연금공단 고객센터로 적습니다."

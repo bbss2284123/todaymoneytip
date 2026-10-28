@@ -1,0 +1,31 @@
+name: Scheduled publish
+
+on:
+  schedule:
+    # 07:00–08:30 KST
+    - cron: "0,30 22-23 * * *"
+    # 09:00–22:30 KST
+    - cron: "0,30 0-13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Deploy when a post becomes due
+        env:
+          CF_PAGES_DEPLOY_HOOK: ${{ secrets.CF_PAGES_DEPLOY_HOOK }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: npx tsx scripts/scheduled-publish.ts

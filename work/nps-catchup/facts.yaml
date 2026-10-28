@@ -1,0 +1,11 @@
+id: nps-catchup
+facts:
+  - id: F1
+    value: "추납은 10년 미만의 범위에서 신청합니다. 군복무기간을 포함해도 최대 119개월입니다. 납부예외 기간과 연금보험료를 1개월 이상 낸 뒤의 적용제외 기간이 대상입니다. 분할은 최대 60회입니다."
+    source: "https://www.nps.or.kr/pnsinfo/ntpsklg/getOHAF0047M0.do"
+    checkedAt: "2026-10-28T21:00:00+09:00"
+    note: "10년 미만은 국민연금법 제92조입니다. https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1033331241"
+  - id: F2
+    value: "추납보험료는 신청일이 속하는 달의 기준소득월액에 납부기한이 속하는 달의 보험료율을 곱하고, 다시 추납 월수를 곱합니다. 임의가입자 상한의 A값은 2026년 월 3,193,511원입니다. 신청한 달의 다음 달 11일에서 15일경 고지되고 말일까지 냅니다. 고객센터 1355. 기준일 2026-10-28."
+    source: "https://www.nps.or.kr/pnsinfo/ntpsklg/getOHAF0047M0.do"
+    checkedAt: "2026-10-28T21:00:00+09:00"

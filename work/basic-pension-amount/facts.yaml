@@ -1,0 +1,11 @@
+id: basic-pension-amount
+facts:
+  - id: F1
+    value: "2026년 기준연금액은 349,700원입니다. 정부24는 단독 최고 349,700원, 부부 최고 559,520원으로 적습니다. 국민연금 가입기간과 급여액, 가구, 소득인정액에 따라 줄어들 수 있습니다."
+    source: "https://www.law.go.kr/LSW/flDownload.do?flSeq=167626689"
+    checkedAt: "2026-10-28T21:00:00+09:00"
+    note: "부부 최고 559,520원은 정부24 기초연금 안내입니다. https://www.gov.kr/portal/service/serviceInfo/SSE000000170"
+  - id: F2
+    value: "2026년 선정기준액은 단독 월 247만 원, 부부 월 395만 2,000원입니다. 만 65세 이상입니다. 기준일 2026-10-28."
+    source: "https://www.mohw.go.kr/board.es?act=view&bid=0027&list_no=1488478&mid=a10503010100"
+    checkedAt: "2026-10-28T21:00:00+09:00"

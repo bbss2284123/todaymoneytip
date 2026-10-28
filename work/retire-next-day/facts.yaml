@@ -1,0 +1,7 @@
+id: retire-next-day
+facts:
+  - id: F1
+    value: "임의계속가입 신청은 지역가입자가 된 뒤 최초 지역보험료 납부기한에서 2개월이 지나기 전입니다. 건강보험공단 전화 1577-1000. 퇴직금은 지급사유가 발생한 날부터 14일 이내입니다. 기준일 2026-10-28."
+    source: "https://www.nhis.or.kr/nhis/policy/wbhada05500m01.do"
+    checkedAt: "2026-10-28T21:00:00+09:00"
+    note: "14일은 근로자퇴직급여 보장법 제9조입니다. https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1030452787"

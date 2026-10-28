@@ -1,0 +1,11 @@
+id: irp-pension
+facts:
+  - id: F1
+    value: "연금저축 세액공제 한도는 600만 원, 퇴직연금을 포함하면 900만 원입니다. 총급여 5,500만 원 또는 종합소득금액 4,500만 원 이하면 15%, 넘으면 12%. 연금계좌 납입 상한은 연 1,800만 원입니다."
+    source: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7875"
+    checkedAt: "2026-10-28T21:00:00+09:00"
+    note: "1,800만 원과 55세, 5년은 국세청 연금소득 안내입니다. https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7885&mi=6449"
+  - id: F2
+    value: "일반 연금수령은 55세 이후 개시 신청과 가입일부터 5년입니다. 이연퇴직소득을 연금계좌에서 인출하는 경우에는 5년 요건이 적용되지 않는다고 국세청이 적습니다. 기준일 2026-10-28."
+    source: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7885&mi=6449"
+    checkedAt: "2026-10-28T21:00:00+09:00"

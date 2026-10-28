@@ -1,0 +1,11 @@
+id: health-premium
+facts:
+  - id: F1
+    value: "시행령 제44조. 보험료율 7.19%. 재산보험료부과점수당 211.5원. 지역보험료는 소득월액 곱하기 7.19%에 점수 곱하기 211.5원을 더합니다. 소득월액은 연 소득을 12로 나눈 값으로 이 글의 계산기가 다룹니다. 장기요양보험료율 0.9448%. 직장 보험료는 가입자와 사용자가 50%씩 나눕니다."
+    source: "https://www.law.go.kr/LSW/lsLinkCommonInfo.do?lspttninfSeq=69496"
+    checkedAt: "2026-10-28T21:00:00+09:00"
+    note: "장기요양 0.9448%는 국민건강보험공단 2026년 보험료율 안내와 같습니다. https://edi.nhis.or.kr/portal/images/popup/20251204_pop01longdesc.html"
+  - id: F2
+    value: "고객센터 1577-1000. 기준일 2026-10-28."
+    source: "https://www.nhis.or.kr/nhis/policy/wbhada01700m01.do"
+    checkedAt: "2026-10-28T21:00:00+09:00"

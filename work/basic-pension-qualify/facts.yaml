@@ -1,0 +1,12 @@
+id: basic-pension-qualify
+facts:
+  - id: F1
+    value: "2026년 선정기준액은 배우자가 없으면 월 소득인정액 2,470,000원, 배우자가 있으면 3,952,000원입니다. 보도자료는 단독 월 247만 원, 부부 월 395만 2,000원으로 적습니다. 만 65세 이상이고, 수급자가 노인 인구의 70% 수준이 되도록 정합니다."
+    source: "https://www.law.go.kr/LSW/flDownload.do?flSeq=167626689"
+    checkedAt: "2026-10-28T21:00:00+09:00"
+    note: "247만 원과 395만 2,000원 표기는 보건복지부 2026년 1월 1일 보도자료입니다. https://www.mohw.go.kr/board.es?act=view&bid=0027&list_no=1488478&mid=a10503010100"
+  - id: F2
+    value: "근로소득 기본공제는 월 116만 원이고, 그 뒤를 뺀 금액의 30%를 더 뺍니다. 공무원연금, 사학연금, 군인연금, 별정우체국연금 수급권자와 그 배우자는 원칙적으로 제외입니다. 기준일 2026-10-28."
+    source: "https://www.gov.kr/portal/service/serviceInfo/SSE000000170"
+    checkedAt: "2026-10-28T21:00:00+09:00"
+    note: "116만 원과 30%는 고시 제6조와 정부24가 같습니다."
