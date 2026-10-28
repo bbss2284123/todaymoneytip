@@ -1,0 +1,5 @@
+---
+interface Props { sign?: "minus" | "plus" | "key"; }
+const { sign = "key" } = Astro.props;
+---
+<span class:list={["num", `num-${sign}`]}><slot /></span>

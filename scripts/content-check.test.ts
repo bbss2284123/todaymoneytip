@@ -2,15 +2,18 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   compositionStreakErrors,
+  emphasisWarnings,
   findBanned,
   glossaryMisses,
   keywordPlacementErrors,
+  loadPosts,
   markdownMarkersInVisibleHtml,
   missingNumbers,
   stripIgnored,
   titleFrameErrors,
   type LoadedPost,
 } from "../src/lib/check";
+import { highlightParts } from "../src/lib/highlight";
 
 const fact = [{ id: "F1", value: "연 2,000만 원", source: "https://example.com", checkedAt: "2026-10-28T00:00:00+09:00" }];
 
@@ -64,6 +67,29 @@ test("대표 검색어는 제목 앞, H1, 설명, 첫 문단에 있어야 함", 
   post.data.description = "설명에도 검색어가 없고 길이만 맞추려고 글을 늘린 문장입니다. 숫자와 결론이 없습니다. 더 적습니다. 더 적습니다.";
   const errors = keywordPlacementErrors(post.data, "첫 문단에도 검색어가 없어요.");
   assert.ok(errors.length >= 3);
+});
+
+test("형광펜과 볼드가 많으면 경고", () => {
+  const crowded = `==하나==\n\n## 가\n\n==둘== ==셋==\n\n<strong>답</strong> <strong>또</strong>\n\n## 나\n\n==넷==`;
+  const warnings = emphasisWarnings(crowded);
+  assert.ok(warnings.some((item) => item.includes("글당 3개")));
+  assert.ok(warnings.some((item) => item.includes("구간당 1개")));
+  assert.ok(warnings.some((item) => item.includes("답 구절 하나")));
+});
+
+test("발행 글의 강조는 한도를 넘지 않음", () => {
+  for (const post of loadPosts()) {
+    assert.deepEqual(emphasisWarnings(post.body), [], post.id);
+  }
+});
+
+test("==문장==은 형광펜으로 나뉨", () => {
+  assert.deepEqual(highlightParts("앞 ==핵심 문장== 뒤"), [
+    { mark: false, text: "앞 " },
+    { mark: true, text: "핵심 문장" },
+    { mark: false, text: " 뒤" },
+  ]);
+  assert.deepEqual(highlightParts("닫히지 않은 ==문장"), [{ mark: false, text: "닫히지 않은 ==문장" }]);
 });
 
 test("용어 설명이 없으면 목록에 남음", () => {
