@@ -5,6 +5,7 @@ dist/
 .env.*
 !.env.example
 data/keyword-cache/
+artifacts/
 .indexnow-state.json
 *.log
 .DS_Store
