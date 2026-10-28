@@ -1,0 +1,26 @@
+---
+import glossary from "../../data/glossary.json";
+interface Props { id: string; }
+const item = glossary.find((row) => row.id === Astro.props.id);
+---
+{item && (
+  <span class="term">
+    <button type="button" class="term-btn" aria-expanded="false">{item.term}</button>
+    <span class="term-pop" hidden>{item.plain}</span>
+  </span>
+)}
+<script>
+  document.querySelectorAll(".term").forEach((term) => {
+    const button = term.querySelector("button");
+    const pop = term.querySelector(".term-pop");
+    button?.addEventListener("click", () => {
+      const open = pop?.hasAttribute("hidden");
+      document.querySelectorAll(".term-pop").forEach((node) => node.setAttribute("hidden", ""));
+      document.querySelectorAll(".term-btn").forEach((node) => node.setAttribute("aria-expanded", "false"));
+      if (open) {
+        pop?.removeAttribute("hidden");
+        button.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+</script>

@@ -1,0 +1,28 @@
+---
+interface Item { label: string; hint?: string; }
+interface Props { items: Item[]; }
+const { items } = Astro.props;
+---
+<section class="check" data-check>
+  <h2>나도 해당될까</h2>
+  {items.map((item) => (
+    <label>
+      <input type="checkbox" />
+      <span>{item.label}{item.hint ? ` ${item.hint}` : ""}</span>
+    </label>
+  ))}
+  <p data-result>항목을 눌러 보세요. 이건 자가 점검이고, 최종 판단은 기관이 합니다.</p>
+</section>
+<script>
+  document.querySelectorAll("[data-check]").forEach((box) => {
+    box.addEventListener("change", () => {
+      const inputs = [...box.querySelectorAll("input")];
+      const on = inputs.filter((input) => input.checked).length;
+      const out = box.querySelector("[data-result]");
+      if (!out) return;
+      out.textContent = on === inputs.length
+        ? `${on}개를 모두 골랐어요. 신청 기관 심사가 최종입니다.`
+        : `${inputs.length}개 중 ${on}개를 골랐어요. 빈 항목이 있으면 대상이 아닐 수 있어요.`;
+    });
+  });
+</script>

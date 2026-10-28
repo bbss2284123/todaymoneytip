@@ -1,0 +1,23 @@
+id: severance-tax-example
+facts:
+  - id: F1
+    value: "근속연수공제. 5년 이하 100만 원 곱하기. 10년 이하 500만 원 더하기 200만 원. 20년 이하 1,500만 원 더하기 250만 원. 20년 초과 4,000만 원 더하기 300만 원."
+    source: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7880&mi=6444"
+    checkedAt: "2026-10-28T09:00:00+09:00"
+  - id: F2
+    value: "환산급여공제. 800만 원 이하 전액. 7,000만 원 이하 800만 원 더하기 60%. 1억 원 이하 4,520만 원 더하기 55%. 3억 원 이하 6,170만 원 더하기 45%. 3억 원 초과 15,170만 원 더하기 35%."
+    source: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7880&mi=6444"
+    checkedAt: "2026-10-28T09:00:00+09:00"
+  - id: F3
+    value: "기본세율 구간 1,400만 원 6%, 5,000만 원 15%, 8,800만 원 24%, 1억 5,000만 원 35%. 누진공제 126만 원, 576만 원, 1,544만 원."
+    source: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7880&mi=6444"
+    checkedAt: "2026-10-28T09:00:00+09:00"
+  - id: F4
+    value: "소득세법 제129조 제5호의3. 연금 실제 수령연차 10년 이하 70%, 10년 초과 20년 이하 60%, 20년 초과 50%."
+    source: "https://www.law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsId=001565&lsJoLnkSeq=1000821176&print=print"
+    checkedAt: "2026-10-28T09:00:00+09:00"
+  - id: F5
+    value: "예시 입력 퇴직소득 1억 원 100,000,000원, 근속 20년. 환산은 12개월로 펼칩니다. 소득세 1,120,000원 곧 112만 원. 70%를 곱하면 784,000원 곧 78만 4,000원. 기준일 2026-10-28. 국세청 전화 126."
+    source: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7880&mi=6444"
+    checkedAt: "2026-10-28T09:00:00+09:00"
+    note: "112만 원과 78만 4,000원은 국세청 계산 구조에 예시 입력을 넣어 직접 계산했습니다. 지방소득세는 넣지 않았습니다."

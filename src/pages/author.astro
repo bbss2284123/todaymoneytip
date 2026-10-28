@@ -1,0 +1,20 @@
+---
+import Base from "../layouts/Base.astro";
+import { siteConfig } from "../../site.config";
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: siteConfig.author.name,
+  url: `${siteConfig.url}/author/`,
+  jobTitle: siteConfig.author.role,
+  worksFor: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
+};
+---
+<Base title={siteConfig.author.name} description={siteConfig.author.bio} path="/author/" jsonLd={[person]}>
+  <main id="content" class="article">
+    <h1>{siteConfig.author.name}</h1>
+    <p>{siteConfig.author.bio}</p>
+    <p>전화번호와 주소는 올리지 않습니다. 문의는 사이트 메일로 주세요.</p>
+    <p><a href="/contact/">{siteConfig.contactEmail}</a></p>
+  </main>
+</Base>

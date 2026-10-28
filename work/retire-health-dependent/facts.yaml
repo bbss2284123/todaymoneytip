@@ -1,0 +1,23 @@
+id: retire-health-dependent
+facts:
+  - id: F1
+    value: "별표 1의2. 연간 합산소득 2,000만 원 이하. 사업소득은 없을 것. 다만 사업자등록이 없거나 장애인 등이고 사업소득이 500만 원 이하면 없는 것으로 봅니다. 기혼자는 부부 모두입니다. 주택임대소득이 있으면 제외되는 경우가 있습니다."
+    source: "https://www.law.go.kr/LSW/flDownload.do?flSeq=162807125"
+    checkedAt: "2026-10-28T09:00:00+09:00"
+  - id: F2
+    value: "재산세 과세표준 합계가 5억 4,000만 원 이하이면 재산 요건의 한 칸입니다. 5억 4,000만 원 초과 9억 원 이하이면서 소득이 1,000만 원 이하인 칸도 있습니다. 형제자매는 1억 8,000만 원 이하입니다."
+    source: "https://www.law.go.kr/LSW/flDownload.do?flSeq=162807125"
+    checkedAt: "2026-10-28T09:00:00+09:00"
+  - id: F3
+    value: "시행령 제44조. 보험료율 7.19%. 재산보험료부과점수당 금액 211.5원. 지역보험료는 소득월액 곱하기 7.19%에 점수 곱하기 211.5원을 더합니다. 장기요양보험료율 0.9448%. 직장 보험료는 가입자와 사용자가 50%씩 나눕니다."
+    source: "https://www.law.go.kr/LSW/lsLinkCommonInfo.do?lspttninfSeq=69496"
+    checkedAt: "2026-10-28T09:00:00+09:00"
+    note: "장기요양 비율 0.9448%는 국민건강보험공단 2026년 보험료율 안내와 같습니다. https://edi.nhis.or.kr/portal/images/popup/20251204_pop01longdesc.html"
+  - id: F4
+    value: "국민건강보험공단 대표전화 1577-1000. 평일 9시부터 18시. 해외 +82-33-811-2001."
+    source: "https://www.nhis.or.kr/nhis/policy/wbhada01700m01.do"
+    checkedAt: "2026-10-28T09:00:00+09:00"
+  - id: F5
+    value: "기준일 2026-10-28. 자격 취득 신고는 변동일부터 90일 이내와 그 다음을 규칙 제2조가 나눕니다."
+    source: "https://www.law.go.kr/LSW/lsLinkCommonInfo.do?lspttninfSeq=69276"
+    checkedAt: "2026-10-28T09:00:00+09:00"

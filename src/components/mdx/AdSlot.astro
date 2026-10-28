@@ -1,0 +1,19 @@
+---
+import { siteConfig } from "../../../site.config";
+interface Props { position?: "after-intro" | "mid" | "end"; }
+const position = Astro.props.position ?? "mid";
+const slot = position === "after-intro"
+  ? siteConfig.adsense.slots.afterIntro
+  : position === "end"
+    ? siteConfig.adsense.slots.endArticle
+    : siteConfig.adsense.slots.midArticle;
+const enabled = Boolean(siteConfig.adsense.publisherId && slot);
+---
+{enabled && (
+  <aside class="ad-slot" aria-label="광고">
+    <ins class="adsbygoogle" style="display:block" data-ad-client={siteConfig.adsense.publisherId} data-ad-slot={slot} data-ad-format="auto" data-full-width-responsive="true" />
+  </aside>
+)}
+{enabled && (
+  <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${siteConfig.adsense.publisherId}`} crossorigin="anonymous"></script>
+)}

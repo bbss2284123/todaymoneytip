@@ -1,0 +1,50 @@
+---
+import Base from "../../layouts/Base.astro";
+import { siteConfig, categoryById, absoluteUrl } from "../../../site.config";
+import { allPublished, postPath } from "../../lib/posts";
+import { formatKo } from "../../lib/dates";
+
+export async function getStaticPaths() {
+  const posts = await allPublished();
+  return siteConfig.categories.map((category) => ({
+    params: { category: category.id },
+    props: { posts: posts.filter((post) => post.data.category === category.id) },
+  }));
+}
+const { category } = Astro.params;
+const { posts } = Astro.props;
+const meta = categoryById(category ?? "");
+const pageSize = siteConfig.postsPerPage;
+const visible = posts.slice(0, pageSize);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: meta?.name,
+  itemListElement: visible.map((post, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: post.data.title,
+    url: absoluteUrl(postPath(post.id)),
+  })),
+};
+---
+<Base title={meta?.name ?? "분류"} description={meta?.description ?? siteConfig.description} path={`/category/${category}/`} jsonLd={[jsonLd]}>
+  <main id="content" class="page home">
+    <h1>{meta?.name}</h1>
+    <p class="lede">{meta?.description}</p>
+    <div class="feed">
+      {visible.map((post) => (
+        <a class="feed-item" href={postPath(post.id)}>
+          <img src={`/thumb/${post.id}/feed.png`} alt="" width="1200" height="675" />
+          <div>
+            <h2>{post.data.title}</h2>
+            <p class="summary">{post.data.description}</p>
+            <p class="meta">{formatKo(post.data.date)}</p>
+          </div>
+        </a>
+      ))}
+      {visible.length === 0 && <p>이 분류의 글은 아직 없어요.</p>}
+    </div>
+    {posts.length > pageSize && <p><a class="btn" href={`/category/${category}/2/`}>다음</a></p>}
+  </main>
+</Base>

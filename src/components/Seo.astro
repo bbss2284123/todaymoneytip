@@ -1,0 +1,55 @@
+---
+import { siteConfig, absoluteUrl } from "../../site.config";
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogImage?: string;
+  type?: "website" | "article";
+  published?: string;
+  modified?: string;
+  jsonLd?: unknown[];
+}
+const { title, description, canonical, ogImage, type = "website", published, modified, jsonLd = [] } = Astro.props;
+const image = ogImage ? absoluteUrl(ogImage) : absoluteUrl("/thumb/default/og.png");
+const fullTitle = title === siteConfig.name ? title : `${title} | ${siteConfig.name}`;
+---
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<meta property="og:type" content={type} />
+<meta property="og:locale" content={siteConfig.locale} />
+<meta property="og:site_name" content={siteConfig.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={image} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+{published && <meta property="article:published_time" content={published} />}
+{modified && <meta property="article:modified_time" content={modified} />}
+{siteConfig.verification.google && <meta name="google-site-verification" content={siteConfig.verification.google} />}
+{siteConfig.verification.naver && <meta name="naver-site-verification" content={siteConfig.verification.naver} />}
+{siteConfig.verification.bing && <meta name="msvalidate.01" content={siteConfig.verification.bing} />}
+<link rel="alternate" type="application/rss+xml" title={siteConfig.name} href={absoluteUrl("/rss.xml")} />
+{siteConfig.ga4Id && (
+  <script async src={`https://www.googletagmanager.com/gtag/js?id=${siteConfig.ga4Id}`}></script>
+  <script is:inline define:vars={{ id: siteConfig.ga4Id }}>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){window.dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", id);
+  </script>
+)}
+{siteConfig.cloudflareWebAnalyticsToken && (
+  <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={`{"token":"${siteConfig.cloudflareWebAnalyticsToken}"}`}></script>
+)}
+{jsonLd.map((block) => (
+  <script type="application/ld+json" set:html={JSON.stringify(block).replace(/</g, "\\u003c")} />
+))}

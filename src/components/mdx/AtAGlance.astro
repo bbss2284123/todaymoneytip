@@ -1,0 +1,13 @@
+---
+interface Props { who: string; amount: string; until: string; where: string; }
+const { who, amount, until, where } = Astro.props;
+---
+<section class="answer-box">
+  <h2>한눈에 보기</h2>
+  <div class="glance">
+    <p><strong>누가</strong> {who}</p>
+    <p><strong>얼마</strong> {amount}</p>
+    <p><strong>언제까지</strong> {until}</p>
+    <p><strong>어디서</strong> {where}</p>
+  </div>
+</section>

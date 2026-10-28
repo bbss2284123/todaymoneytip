@@ -1,0 +1,66 @@
+---
+import Base from "../layouts/Base.astro";
+import { siteConfig } from "../../site.config";
+import { allPublished, postPath } from "../lib/posts";
+import { formatKo } from "../lib/dates";
+
+const posts = await allPublished();
+const featured = posts.filter((post) => post.data.featured).slice(0, 3);
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${siteConfig.url}/search/?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteConfig.name,
+    url: siteConfig.url,
+  },
+];
+---
+<Base title={siteConfig.name} description={siteConfig.description} path="/" ogImage={featured[0] ? `/thumb/${featured[0].id}/og.png` : undefined} jsonLd={jsonLd}>
+  <main id="content" class="page home">
+    <h1>퇴직 전후에 꼭 필요한 돈 정보, 쉽고 정확하게</h1>
+    <p class="lede">국민연금과 건강보험, 퇴직금을 공식 자료로 확인한 뒤 쉬운 말로 정리해요.</p>
+    <nav class="pills" aria-label="분류">
+      <a href="/" aria-current="page">전체</a>
+      {siteConfig.categories.map((category) => (
+        <a href={`/category/${category.id}/`}>{category.name}</a>
+      ))}
+    </nav>
+    <h2 class="section-title">이번 주 꼭 읽을 글</h2>
+    <div class="featured">
+      {featured.map((post) => (
+        <a class="feature-card" href={postPath(post.id)}>
+          <img src={`/thumb/${post.id}/feed.png`} alt="" width="1200" height="675" />
+          <h2>{post.data.title}</h2>
+          <p class="summary">{post.data.description}</p>
+          <p class="meta">{formatKo(post.data.date)}</p>
+        </a>
+      ))}
+    </div>
+    <h2 class="section-title">최신 글</h2>
+    <div class="feed">
+      {posts.map((post) => (
+        <a class="feed-item" href={postPath(post.id)}>
+          <img src={`/thumb/${post.id}/feed.png`} alt="" width="1200" height="675" />
+          <div>
+            <p class="meta">{siteConfig.categories.find((item) => item.id === post.data.category)?.name}</p>
+            <h2>{post.data.title}</h2>
+            <p class="summary">{post.data.description}</p>
+            <p class="meta">{formatKo(post.data.date)}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+    <p><a class="btn more" href="/category/pension/">글 더 보기</a></p>
+  </main>
+</Base>

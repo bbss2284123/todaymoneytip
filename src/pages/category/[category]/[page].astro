@@ -1,0 +1,39 @@
+---
+import Base from "../../../layouts/Base.astro";
+import { siteConfig, categoryById } from "../../../../site.config";
+import { allPublished, postPath } from "../../../lib/posts";
+import { formatKo } from "../../../lib/dates";
+
+export async function getStaticPaths() {
+  const posts = await allPublished();
+  const size = siteConfig.postsPerPage;
+  return siteConfig.categories.flatMap((category) => {
+    const rows = posts.filter((post) => post.data.category === category.id);
+    const pages = Math.ceil(rows.length / size);
+    return Array.from({ length: Math.max(0, pages - 1) }, (_, index) => {
+      const page = index + 2;
+      return { params: { category: category.id, page: String(page) }, props: { slice: rows.slice((page - 1) * size, page * size), page } };
+    });
+  });
+}
+const { category } = Astro.params;
+const { slice, page } = Astro.props;
+const meta = categoryById(category ?? "");
+---
+<Base title={`${meta?.name} ${page}`} description={meta?.description ?? ""} path={`/category/${category}/${page}/`}>
+  <main id="content" class="page home">
+    <h1>{meta?.name}</h1>
+    <div class="feed">
+      {slice.map((post) => (
+        <a class="feed-item" href={postPath(post.id)}>
+          <img src={`/thumb/${post.id}/feed.png`} alt="" width="1200" height="675" />
+          <div>
+            <h2>{post.data.title}</h2>
+            <p class="summary">{post.data.description}</p>
+            <p class="meta">{formatKo(post.data.date)}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </main>
+</Base>

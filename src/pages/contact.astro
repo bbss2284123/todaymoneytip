@@ -1,0 +1,12 @@
+---
+import Base from "../layouts/Base.astro";
+import { siteConfig } from "../../site.config";
+---
+<Base title="문의" description="사이트 운영 문의 메일입니다." path="/contact/">
+  <main id="content" class="article">
+    <h1>문의</h1>
+    <p>고친 점이나 틀린 출처를 알려 주세요.</p>
+    <p><a class="btn primary" href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a></p>
+    <p>연금과 보험 상담 전화는 각 글의 신청 방법에 있는 기관 번호입니다.</p>
+  </main>
+</Base>

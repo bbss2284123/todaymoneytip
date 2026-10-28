@@ -1,0 +1,20 @@
+---
+interface Props {
+  officialName: string;
+  officialUrl: string;
+  phone: string;
+  phoneLabel: string;
+  documents: string[];
+  pitfalls: string[];
+}
+const { officialName, officialUrl, phone, phoneLabel, documents, pitfalls } = Astro.props;
+---
+<section class="apply">
+  <h2>신청 방법</h2>
+  <p><a class="btn primary" href={officialUrl}>{officialName} 바로가기</a></p>
+  <p><a class="btn" href={`tel:${phone}`}>{phoneLabel}</a></p>
+  <h3>가져갈 것</h3>
+  <ul>{documents.map((item) => <li>{item}</li>)}</ul>
+  <h3>자주 막히는 곳</h3>
+  <ul>{pitfalls.map((item) => <li>{item}</li>)}</ul>
+</section>

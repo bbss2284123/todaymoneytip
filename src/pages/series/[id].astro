@@ -1,0 +1,28 @@
+---
+import Base from "../../layouts/Base.astro";
+import { allPublished, postPath } from "../../lib/posts";
+
+export async function getStaticPaths() {
+  const posts = await allPublished();
+  const ids = [...new Set(posts.map((post) => post.data.series?.id).filter(Boolean))] as string[];
+  return ids.map((id) => ({
+    params: { id },
+    props: {
+      title: posts.find((post) => post.data.series?.id === id)?.data.series?.title ?? id,
+      posts: posts.filter((post) => post.data.series?.id === id).sort((a, b) => (a.data.series?.order ?? 0) - (b.data.series?.order ?? 0)),
+    },
+  }));
+}
+const { id } = Astro.params;
+const { title, posts } = Astro.props;
+---
+<Base title={title} description={`${title} 시리즈`} path={`/series/${id}/`}>
+  <main id="content" class="page home">
+    <h1>{title}</h1>
+    <ol>
+      {posts.map((post) => (
+        <li><a href={postPath(post.id)}>{post.data.series?.order}. {post.data.title}</a></li>
+      ))}
+    </ol>
+  </main>
+</Base>

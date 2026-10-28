@@ -1,0 +1,158 @@
+---
+import housing from "../../data/housing-pension-2026-03-01.json";
+import { formulaMeta } from "../../lib/formulas";
+
+interface Props {
+  preset: "pension-timing" | "severance" | "health" | "housing" | "living-gap";
+}
+const { preset } = Astro.props;
+const meta = formulaMeta[preset];
+const ages = housing.ages.join(",");
+const prices = housing.pricesWon.join(",");
+---
+<section class="calc" data-preset={preset} data-ages={ages} data-prices={prices} data-base={meta.baseDate}>
+  <p>{meta.oneLiner}</p>
+  <p>기준일 {meta.baseDate}. 칸의 시작 숫자는 예시입니다.</p>
+  {preset === "pension-timing" && (
+    <>
+      <div class="stepper">
+        <button type="button" data-field="monthly" data-step="-100000">−</button>
+        <output data-show="monthly">100만 원</output>
+        <button type="button" data-field="monthly" data-step="100000">+</button>
+      </div>
+      <div class="choice-row">
+        <button type="button" class="choice" data-months="12" aria-pressed="true">12개월</button>
+        <button type="button" class="choice" data-months="24">24개월</button>
+        <button type="button" class="choice" data-months="60">60개월</button>
+      </div>
+      <div class="choice-row">
+        <button type="button" class="choice" data-direction="early" aria-pressed="true">일찍</button>
+        <button type="button" class="choice" data-direction="defer">미루기</button>
+      </div>
+    </>
+  )}
+  {preset === "severance" && (
+    <>
+      <div class="stepper">
+        <button type="button" data-field="income" data-step="-10000000">−</button>
+        <output data-show="income">1억 원</output>
+        <button type="button" data-field="income" data-step="10000000">+</button>
+      </div>
+      <div class="choice-row">
+        <button type="button" class="choice" data-years="10">10년</button>
+        <button type="button" class="choice" data-years="20" aria-pressed="true">20년</button>
+        <button type="button" class="choice" data-years="30">30년</button>
+      </div>
+    </>
+  )}
+  {preset === "health" && (
+    <div class="stepper">
+      <button type="button" data-field="annual" data-step="-1000000">−</button>
+      <output data-show="annual">1,200만 원</output>
+      <button type="button" data-field="annual" data-step="1000000">+</button>
+    </div>
+  )}
+  {preset === "housing" && (
+    <>
+      <div class="choice-row" data-age-row>
+        {housing.ages.map((age) => (
+          <button type="button" class="choice" data-age={age} aria-pressed={age === 70 ? "true" : "false"}>{age}세</button>
+        ))}
+      </div>
+      <div class="choice-row">
+        <button type="button" class="choice" data-price="300000000" aria-pressed="true">3억 원</button>
+        <button type="button" class="choice" data-price="600000000">6억 원</button>
+        <button type="button" class="choice" data-price="1200000000">12억 원</button>
+      </div>
+    </>
+  )}
+  {preset === "living-gap" && (
+    <div class="stepper">
+      <button type="button" data-field="spend" data-step="-100000">−</button>
+      <output data-show="spend">생활비 250만 원</output>
+      <button type="button" data-field="spend" data-step="100000">+</button>
+    </div>
+  )}
+  <p class="calc-result" data-result></p>
+  <p>{meta.meaning}</p>
+</section>
+<script>
+  import { healthPremium, housingPension, livingGap, pensionTiming, plainMoney, severanceTax } from "../../lib/formulas";
+
+  const money = (value: number) => plainMoney(value);
+
+  document.querySelectorAll(".calc").forEach((box) => {
+    const preset = box.getAttribute("data-preset");
+    const state = {
+      monthly: 1_000_000,
+      months: 12,
+      direction: "early" as "early" | "defer",
+      income: 100_000_000,
+      years: 20,
+      annual: 12_000_000,
+      age: 70,
+      price: 300_000_000,
+      spend: 2_500_000,
+    };
+    const result = box.querySelector("[data-result]");
+    const paint = () => {
+      box.querySelectorAll("[data-show]").forEach((node) => {
+        const key = node.getAttribute("data-show");
+        if (key === "monthly") node.textContent = money(state.monthly);
+        if (key === "income") node.textContent = money(state.income);
+        if (key === "annual") node.textContent = money(state.annual);
+        if (key === "spend") node.textContent = `생활비 ${money(state.spend)}`;
+      });
+      if (!result) return;
+      if (preset === "pension-timing") result.textContent = pensionTiming(state).sentence;
+      if (preset === "severance") result.textContent = severanceTax(state).sentence;
+      if (preset === "health") result.textContent = healthPremium({ annualIncome: state.annual, propertyScore: 0 }).sentence;
+      if (preset === "housing") result.textContent = housingPension({ age: state.age, priceWon: state.price }).sentence;
+      if (preset === "living-gap") {
+        result.textContent = livingGap({
+          spend: state.spend,
+          pension: 1_000_000,
+          basic: 0,
+          personal: 300_000,
+          other: 0,
+        }).sentence;
+      }
+    };
+    box.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement;
+      const step = target.dataset.step;
+      const field = target.dataset.field;
+      if (step && field && field in state) {
+        const key = field as "monthly" | "income" | "annual" | "spend";
+        state[key] = Math.max(0, state[key] + Number(step));
+      }
+      if (target.dataset.months) {
+        state.months = Number(target.dataset.months);
+        box.querySelectorAll("[data-months]").forEach((button) => button.setAttribute("aria-pressed", "false"));
+        target.setAttribute("aria-pressed", "true");
+      }
+      if (target.dataset.direction === "early" || target.dataset.direction === "defer") {
+        state.direction = target.dataset.direction;
+        box.querySelectorAll("[data-direction]").forEach((button) => button.setAttribute("aria-pressed", "false"));
+        target.setAttribute("aria-pressed", "true");
+      }
+      if (target.dataset.years) {
+        state.years = Number(target.dataset.years);
+        box.querySelectorAll("[data-years]").forEach((button) => button.setAttribute("aria-pressed", "false"));
+        target.setAttribute("aria-pressed", "true");
+      }
+      if (target.dataset.age) {
+        state.age = Number(target.dataset.age);
+        box.querySelectorAll("[data-age]").forEach((button) => button.setAttribute("aria-pressed", "false"));
+        target.setAttribute("aria-pressed", "true");
+      }
+      if (target.dataset.price) {
+        state.price = Number(target.dataset.price);
+        box.querySelectorAll("[data-price]").forEach((button) => button.setAttribute("aria-pressed", "false"));
+        target.setAttribute("aria-pressed", "true");
+      }
+      paint();
+    });
+    paint();
+  });
+</script>
