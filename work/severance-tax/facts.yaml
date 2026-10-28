@@ -21,3 +21,8 @@ facts:
     source: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7880&mi=6444"
     checkedAt: "2026-10-28T09:00:00+09:00"
     note: "112만 원과 78만 4,000원은 국세청 계산 구조에 예시 입력을 넣어 직접 계산했습니다. 지방소득세는 넣지 않았습니다."
+  - id: F6
+    value: "국세청 연금소득 안내. 이연퇴직소득을 연금으로 받으면 분리과세이고, 세율은 연금 외 수령 세율의 70%, 10년 초과 20년 이하는 60%, 20년 초과는 50%입니다. 세액공제 납입금과 운용수익을 연금으로 받는 합계가 연 1,500만 원 이하면 분리과세 또는 종합과세를 고릅니다. 1,500만 원을 넘으면 종합과세 또는 15% 분리과세를 고릅니다. IRP 등 연금계좌에서 퇴직소득 원금과 세액공제·운용수익은 과세 칸이 다릅니다."
+    source: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7888&mi=6608"
+    checkedAt: "2026-10-28T12:00:00+09:00"
+    note: "1,500만 원 선택 규정은 국세청 연금소득 페이지와 소득세법 제14조 안내가 같습니다. https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7889&mi=6609"

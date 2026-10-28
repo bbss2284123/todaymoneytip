@@ -19,6 +19,11 @@ facts:
     source: "https://www.nhis.or.kr/nhis/policy/wbhada01700m01.do"
     checkedAt: "2026-10-28T09:00:00+09:00"
   - id: F5
-    value: "기준일 2026-10-28. 자격 취득 신고는 변동일부터 90일 이내와 그 다음을 규칙 제2조가 나눕니다."
+    value: "기준일 2026-10-28. 자격 취득 신고는 변동일부터 90일 이내와 그 다음을 규칙 제2조가 나눕니다. 요건을 못 맞추면 공단이 확인한 날의 다음 날 자격이 사라집니다."
     source: "https://www.law.go.kr/LSW/lsLinkCommonInfo.do?lspttninfSeq=69276"
     checkedAt: "2026-10-28T09:00:00+09:00"
+  - id: F6
+    value: "금융소득은 이자와 배당입니다. 공단 피부양자 안내는 사업, 금융, 연금, 기타, 근로소득을 합해 연 2,000만 원 이하로 봅니다. 2022년 9월 소득요건 강화로 지역가입자가 된 사람의 한시 경감은 1년차 80%, 2년차 60%, 3년차 40%, 4년차 20%이고 2026년 8월까지입니다."
+    source: "https://www.nhis.or.kr/nhis/minwon/wbhapa01000m01.do?articleNo=10946887&mode=view"
+    checkedAt: "2026-10-28T12:00:00+09:00"
+    note: "한시 경감 80, 60, 40, 20과 2026년 8월은 보건복지부 2022년 8월 30일 보도자료입니다. 기준일 2026-10-28은 그 기간 다음입니다. https://www.mohw.go.kr/board.es?act=view&bid=0027&list_no=372730&mid=a10503000000"

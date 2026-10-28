@@ -17,3 +17,8 @@ facts:
     source: "https://www.nps.or.kr/pnsinfo/ntpsklg/getOHAF0056M0.do"
     checkedAt: "2026-10-28T09:00:00+09:00"
     note: "6%와 7.2%는 공단과 법 조문 비율입니다. 100만 원은 예시 입력입니다. 1355는 보건복지부 기초연금 안내가 국민연금공단 고객센터로 적은 번호입니다. https://www.mohw.go.kr/board.es?act=view&bid=0027&list_no=1488478&mid=a10503010100"
+  - id: F5
+    value: "소득이 있는 업무는 근로소득금액과 사업소득금액(부동산임대 포함)을 그해 종사 월수로 나눈 금액이 2026년 A값 3,193,511원보다 큰 경우입니다. 그 기간에는 조기노령연금 지급이 정지됩니다. 종사 시작과 중단은 30일 안에 신고합니다. 청구 기본 서류는 노령연금 지급청구서, 신분증, 예금계좌입니다. 혼인관계증명서는 공단이 자료를 가진 경우 갈음할 수 있습니다. 신청은 지사 방문, 우편, 팩스, 인터넷, 모바일입니다."
+    source: "https://www.nps.or.kr/pnsinfo/ntpsklg/getOHAF0056M0.do"
+    checkedAt: "2026-10-28T12:00:00+09:00"
+    note: "A값 3,193,511원은 공단 노령연금 페이지가 2026년 값으로 적은 숫자입니다. 30일은 국민연금법 시행규칙 제26조입니다. https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lspttninfSeq=70105"

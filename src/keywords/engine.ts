@@ -432,11 +432,28 @@ export function suggestComposition(keyword: string): QueueItem["composition"] {
   return "해설";
 }
 
-export function questionH2s(keywords: string[]): string[] {
-  return keywords
-    .filter((k) => /(언제|얼마|조건|신청|대상|계산)/.test(k))
-    .slice(0, 4)
-    .map((k) => (k.endsWith("?") ? k : `${k}은 무엇인가요?`.replace("은은", "은")));
+/** 자동완성 하위 검색어를 질문형 소제목 후보로 바꿉니다. */
+export function toQuestionH2(keyword: string): string {
+  const text = keyword.trim().replace(/\s+/g, " ").replace(/[?？]\s*$/, "");
+  if (!text) return "";
+  if (/(요|까)$/.test(keyword.trim()) && /(어떻게|무엇|얼마|몇|언제)/.test(text)) return keyword.trim();
+  if (/계산기$/.test(text)) return `${text}는 어떻게 하나요`;
+  if (/(계산방법|계산|신청방법|확인하는 법|피하는 법|방법)$/.test(text)) return `${text}은 어떻게 하나요`;
+  if (/나이$/.test(text)) return `${text}는 몇 살인가요`;
+  if (/(감액|세율|한도|수령액|액)$/.test(text)) return `${text}은 얼마인가요`;
+  return `${text}은 무엇인가요`;
+}
+
+export function questionH2s(keywords: string[], autocomplete: string[] = []): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of [...autocomplete, ...keywords]) {
+    const h2 = toQuestionH2(raw);
+    if (!h2 || seen.has(h2)) continue;
+    seen.add(h2);
+    out.push(h2);
+  }
+  return out;
 }
 
 export function coverMatch(keyword: string, posts: PostCover[]): string | null {
@@ -563,7 +580,10 @@ export async function buildQueue(options: {
       category: primary.category,
       primary: primary.keyword,
       secondaries: sorted.slice(1, 6).map((row) => row.keyword),
-      h2s: questionH2s(sorted.map((row) => row.keyword)),
+      h2s: questionH2s(
+        [primary.keyword, ...sorted.slice(1).map((row) => row.keyword)],
+        related,
+      ),
       score: primary.score,
       titleFrame: suggestFrame(primary.keyword),
       composition: suggestComposition(primary.keyword),
