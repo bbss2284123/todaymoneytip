@@ -26,7 +26,7 @@ const meta = categoryById(category ?? "");
     <div class="feed">
       {slice.map((post) => (
         <a class="feed-item" href={postPath(post.id)}>
-          <img src={`/thumb/${post.id}/feed.png`} alt="" width="1200" height="675" />
+          <img src={`/thumb/${post.id}/feed.png`} alt={`${post.data.title} 썸네일`} width="1200" height="675" />
           <div>
             <h2>{post.data.title}</h2>
             <p class="summary">{post.data.description}</p>

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   blocked,
+  expandSeeds,
   questionH2s,
   buildQueue,
   fitScore,
@@ -48,6 +49,14 @@ test("자동완성 하위 질문은 소제목 후보가 됨", () => {
     "피부양자 탈락 확인하는 법은 어떻게 하나요",
     "국민연금 조기수령은 무엇인가요",
   ]);
+});
+
+test("조건과 계산 꼬리를 시드에 붙이지 않음", () => {
+  const keywords = expandSeeds("pension").map((row) => row.keyword);
+  assert.ok(keywords.includes("국민연금 반납"));
+  assert.equal(keywords.includes("국민연금 반납 조건"), false);
+  assert.equal(keywords.includes("국민연금 반납 계산"), false);
+  assert.ok(keywords.includes("국민연금 반납 얼마"));
 });
 
 test("키 없이 대기열을 만듦", async () => {

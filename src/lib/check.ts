@@ -237,8 +237,8 @@ export function keywordPlacementErrors(data: PostFrontmatter, body: string): str
   if (!data.title.includes(keyword)) errors.push("H1에 대표 검색어가 없습니다.");
   if (!data.description.includes(keyword)) errors.push("메타 설명에 대표 검색어가 없습니다.");
   const descLen = [...data.description].length;
-  if (descLen < 120 || descLen > 150) {
-    errors.push(`메타 설명은 120~150자여야 합니다. 지금 ${descLen}자입니다.`);
+  if (descLen < 80 || descLen > 120) {
+    errors.push(`메타 설명은 80~120자여야 합니다. 지금 ${descLen}자입니다.`);
   }
   const first = body
     .replace(/<[^>]+>/g, " ")
