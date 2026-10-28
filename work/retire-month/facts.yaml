@@ -1,0 +1,6 @@
+id: retire-month
+facts:
+  - id: F1
+    value: "퇴직금은 지급사유가 발생한 날부터 14일 이내에 지급합니다. 특별한 사정이 있으면 당사자 합의로 그 날을 늦출 수 있습니다. 기준일 2026-10-28."
+    source: "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1030452787"
+    checkedAt: "2026-10-28T21:00:00+09:00"

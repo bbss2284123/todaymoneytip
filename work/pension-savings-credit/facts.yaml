@@ -1,0 +1,11 @@
+id: pension-savings-credit
+facts:
+  - id: F1
+    value: "연금계좌 세액공제. 종합소득금액 4,500만 원 또는 총급여 5,500만 원 이하면 연금저축 600만 원, 퇴직연금을 포함하면 900만 원까지 15%. 그 금액을 넘으면 12%."
+    source: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7875"
+    checkedAt: "2026-10-28T21:00:00+09:00"
+  - id: F2
+    value: "연금계좌 납입한도는 연 1,800만 원. 연금수령은 55세 이후 개시 신청, 가입일부터 5년이 지난 뒤가 일반 요건입니다. ISA 만기 잔액은 전환금액의 10%, 300만 원 한도로 그해 세액공제 한도가 늘어납니다. 기준일 2026-10-28."
+    source: "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7885&mi=6449"
+    checkedAt: "2026-10-28T21:00:00+09:00"
+    note: "국세청 연금소득 안내의 납입 요건과 연금수령 요건입니다."

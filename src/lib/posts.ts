@@ -1,6 +1,6 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import { siteConfig } from "../../site.config";
-import { seoulToday } from "./dates";
+import { isReleased } from "./dates";
 
 export type PostEntry = CollectionEntry<"posts">;
 
@@ -9,10 +9,9 @@ export function publishDate(post: PostEntry): string {
 }
 
 export async function allPublished(): Promise<PostEntry[]> {
-  const today = seoulToday();
   const posts = await getCollection("posts");
   return posts
-    .filter((post) => publishDate(post) <= today)
+    .filter((post) => isReleased(publishDate(post)))
     .sort((a, b) => publishDate(b).localeCompare(publishDate(a)) || b.data.date.localeCompare(a.data.date));
 }
 

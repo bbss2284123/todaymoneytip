@@ -127,7 +127,8 @@ export const siteConfig = {
       sidebar: "",
     },
   },
-  ga4Id: "",
+  ga4Id: "G-DBSXETGNQV",
+  // Pages 프로젝트가 비콘을 이미 넣습니다. 여기 토큰을 채우면 비콘이 두 번 나갑니다.
   cloudflareWebAnalyticsToken: "",
   verification: {
     google: "",

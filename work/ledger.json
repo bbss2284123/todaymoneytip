@@ -4,25 +4,611 @@
       "stage": "published",
       "publishedTitle": "피부양자 탈락 기준, 퇴직 후 건강보험료를 안 내는 방법",
       "history": [
-        { "stage": "facts", "at": "2026-10-26T00:00:00.000Z" },
-        { "stage": "published", "at": "2026-10-26T01:00:00.000Z" }
+        {
+          "stage": "facts",
+          "at": "2026-10-26T00:00:00.000Z"
+        },
+        {
+          "stage": "published",
+          "at": "2026-10-26T01:00:00.000Z"
+        }
       ]
     },
     "severance-tax": {
       "stage": "published",
       "publishedTitle": "퇴직금 일시금 vs 연금수령, 세금 30% 아끼는 법",
       "history": [
-        { "stage": "facts", "at": "2026-10-27T00:00:00.000Z" },
-        { "stage": "published", "at": "2026-10-27T01:00:00.000Z" }
+        {
+          "stage": "facts",
+          "at": "2026-10-27T00:00:00.000Z"
+        },
+        {
+          "stage": "published",
+          "at": "2026-10-27T01:00:00.000Z"
+        }
       ]
     },
     "pension-early-defer": {
       "stage": "published",
       "publishedTitle": "국민연금 조기수령 vs 연기연금, 언제 받는 게 이득일까요",
       "history": [
-        { "stage": "facts", "at": "2026-10-28T00:00:00.000Z" },
-        { "stage": "published", "at": "2026-10-28T01:00:00.000Z" }
+        {
+          "stage": "facts",
+          "at": "2026-10-28T00:00:00.000Z"
+        },
+        {
+          "stage": "published",
+          "at": "2026-10-28T01:00:00.000Z"
+        }
       ]
+    },
+    "basic-pension-amount": {
+      "stage": "published",
+      "keyword": "기초연금 금액 조건",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.058Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.059Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.059Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.059Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.060Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.060Z"
+        },
+        {
+          "stage": "published",
+          "at": "2026-10-28T12:10:28.070Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "9dabd34ad3797be9d77c644958478bbf46176b50a4f69024a66e1bd3453624ef"
+    },
+    "basic-pension-apply": {
+      "stage": "scheduled",
+      "keyword": "기초연금 신청 언제",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.071Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.071Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.071Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.071Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.072Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.072Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "21b91c42c254940bf98444f40b06292d0539c8cb9d85c494e87185e40c1ba8ad"
+    },
+    "basic-pension-qualify": {
+      "stage": "published",
+      "keyword": "기초연금 조건",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.072Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.073Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.073Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.073Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.074Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.074Z"
+        },
+        {
+          "stage": "published",
+          "at": "2026-10-28T12:10:28.074Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "c9dabbce9a767d054abf4557ce6680b5c7dcd0c1e144835f10685524f21a6e13"
+    },
+    "health-premium": {
+      "stage": "scheduled",
+      "keyword": "퇴직 건강보험료 조건",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.074Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.075Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.075Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.075Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.075Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.076Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "cedafc1ffe2d04f42b580be02a4217823b3b009c754130ebfadd9073b9eb2af1"
+    },
+    "health-voluntary": {
+      "stage": "published",
+      "keyword": "임의계속가입 계산",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.076Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.076Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.077Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.077Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.077Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.077Z"
+        },
+        {
+          "stage": "published",
+          "at": "2026-10-28T12:10:28.078Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "002ad21fdaf0428b2f96e7b0b1e6d8c5fd20f983230695f4249033a67a61cf0f"
+    },
+    "housing-monthly": {
+      "stage": "scheduled",
+      "keyword": "주택연금 월수령액 조건",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.078Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.078Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.078Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.078Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.079Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.079Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "ed6f79f04e1cf488f1714b6724fa3d5eb059678defb50ae75a8120d246e3e320"
+    },
+    "housing-qualify": {
+      "stage": "scheduled",
+      "keyword": "주택연금 조건",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.079Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.079Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.080Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.080Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.080Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.080Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "201fea2106410ccc54ffc2f8913bbc67e233fef63129e9280d094e0215899ef9"
+    },
+    "irp-pension": {
+      "stage": "scheduled",
+      "keyword": "IRP 연금 조건",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.080Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.081Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.081Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.081Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.081Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.082Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "8e730cd8efb7b8b315019c0de0c5391252569ef45f6f411f6171f2d9d42f3bb0"
+    },
+    "nps-catchup": {
+      "stage": "published",
+      "keyword": "국민연금 추납 조건",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.082Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.082Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.082Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.083Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.083Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.083Z"
+        },
+        {
+          "stage": "published",
+          "at": "2026-10-28T12:10:28.083Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "90442524044cd4b16cd2041ad681247099580c17fa4a0ea7b69f3f9f8f2793e2"
+    },
+    "nps-refund": {
+      "stage": "scheduled",
+      "keyword": "국민연금 반납 조건",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.084Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.084Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.084Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.084Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.085Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.085Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "b1059382c05534434385bda1797a764b619a131a6dfe69c9137d3f334b6f99f5"
+    },
+    "nps-split": {
+      "stage": "scheduled",
+      "keyword": "국민연금 분할연금",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.085Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.086Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.086Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.086Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.086Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.086Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "5a8c4c105f9a5cc8c50ba1c0045c883d6f80523a16ede26ad0eed4db013d9c0f"
+    },
+    "nps-start-age": {
+      "stage": "scheduled",
+      "keyword": "국민연금 수령액 조건",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.087Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.087Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.087Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.088Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.088Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.088Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "db5989484ec6e351e29e284a6cf9a137347d39e6c9fe6b4eb33d5b443e49882a"
+    },
+    "pension-savings-credit": {
+      "stage": "published",
+      "keyword": "연금저축 세액공제 조건",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.089Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.089Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.089Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.090Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.090Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.090Z"
+        },
+        {
+          "stage": "published",
+          "at": "2026-10-28T12:10:28.090Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "8dfd7b11b110bdced25e7c2c9d86261719e3dc5d76690a68573ebf95a6f2f6c9"
+    },
+    "retire-checklist": {
+      "stage": "scheduled",
+      "keyword": "퇴직 체크리스트 계산",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.091Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.091Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.091Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.092Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.092Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.092Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "212f6ff74417aa0411335e23c2ae218d39e2a82a924b8a357e22942353f2c6dc"
+    },
+    "retire-month": {
+      "stage": "scheduled",
+      "keyword": "퇴직 한 달 전",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.093Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.093Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.094Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.094Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.094Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.094Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "8865942879674c0c539f74d77d3bd0693e1c58d3e76dde619e1ea9c0101c95f0"
+    },
+    "retire-next-day": {
+      "stage": "scheduled",
+      "keyword": "퇴직 다음 날",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.095Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.096Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.096Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.096Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.096Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.097Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "d955d94ff9b972a90979f5d1ad951e41a5994a58eb5eb60dadb6854400afa97a"
+    },
+    "unemployment-benefit": {
+      "stage": "published",
+      "keyword": "실업급여 중장년 계산",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-10-28T12:10:28.097Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-10-28T12:10:28.098Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-10-28T12:10:28.098Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-10-28T12:10:28.099Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-10-28T12:10:28.099Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-10-28T12:10:28.099Z"
+        },
+        {
+          "stage": "published",
+          "at": "2026-10-28T12:10:28.100Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "b5ed8d5385476ea9ef37ec8e1cc3b436facafb28e1b816b3105835272c7d706c"
     }
   }
 }

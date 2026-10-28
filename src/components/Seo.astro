@@ -12,6 +12,8 @@ interface Props {
   jsonLd?: unknown[];
 }
 const { title, description, canonical, ogImage, type = "website", published, modified, jsonLd = [] } = Astro.props;
+const envGa = import.meta.env.PUBLIC_GA_ID?.trim();
+const ga4Id = envGa || siteConfig.ga4Id;
 const image = ogImage ? absoluteUrl(ogImage) : absoluteUrl("/thumb/default/og.png");
 const fullTitle = title === siteConfig.name ? title : `${title} | ${siteConfig.name}`;
 ---
@@ -38,9 +40,9 @@ const fullTitle = title === siteConfig.name ? title : `${title} | ${siteConfig.n
 {siteConfig.verification.naver && <meta name="naver-site-verification" content={siteConfig.verification.naver} />}
 {siteConfig.verification.bing && <meta name="msvalidate.01" content={siteConfig.verification.bing} />}
 <link rel="alternate" type="application/rss+xml" title={siteConfig.name} href={absoluteUrl("/rss.xml")} />
-{siteConfig.ga4Id && (
-  <script async src={`https://www.googletagmanager.com/gtag/js?id=${siteConfig.ga4Id}`}></script>
-  <script is:inline define:vars={{ id: siteConfig.ga4Id }}>
+{ga4Id && (
+  <script async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}></script>
+  <script is:inline define:vars={{ id: ga4Id }}>
     window.dataLayer = window.dataLayer || [];
     function gtag(){window.dataLayer.push(arguments);}
     gtag("js", new Date());

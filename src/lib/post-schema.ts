@@ -14,7 +14,7 @@ export const postSchema = z
     description: z.string().min(40).max(180),
     date: dateString,
     updated: dateString,
-    publishAt: dateString.optional(),
+    publishAt: z.string().regex(/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?$/, "publishAt은 날짜 또는 날짜와 시각").optional(),
     category: z.enum(categoryIds),
     tags: z.array(z.string().min(1)).min(1),
     sources: z

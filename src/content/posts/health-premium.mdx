@@ -1,0 +1,80 @@
+---
+title: '퇴직 건강보험료 조건, 소득에 7.19%'
+serpTitle: '퇴직 건강보험료 조건, 소득월액에 7.19%'
+description: '퇴직 건강보험료 조건에서 지역가입자는 소득월액에 7.19%를 곱합니다. 재산 점수가 있으면 한 점마다 211.5원을 더합니다. 장기요양보험료율은 0.9448%입니다. 고지서 금액이 최종입니다. 직장에 다닐 때와 다릅니다.'
+date: "2026-11-01"
+updated: "2026-11-01"
+publishAt: "2026-11-01T14:28"
+category: health
+tags:
+  - 건강보험
+  - 지역가입자
+검색어: 퇴직 건강보험료 조건
+구성: 계산
+제목틀: 질문형
+근거:
+  - F1
+  - F2
+featured: false
+baseDate: "2026-10-28"
+thumbStyle: number
+thumbTitle: '지역보험료 소득에 7.19%'
+thumbNumber: "7.19%"
+sources:
+  - title: 국민건강보험법 시행령 제44조
+    url: 'https://www.law.go.kr/LSW/lsLinkCommonInfo.do?lspttninfSeq=69496'
+  - title: 국민건강보험공단 보험료율 안내
+    url: 'https://edi.nhis.or.kr/portal/images/popup/20251204_pop01longdesc.html'
+faq:
+  - q: 퇴직하면 회사와 반반으로 내나요
+    a: 지역가입자가 되면 그 반반이 사라집니다. 직장에 다닐 때 보험료는 가입자와 사용자가 50%씩 나눕니다.
+  - q: 재산 점수를 모르면요
+    a: 소득분만 먼저 보세요. 점수는 고지서에 있고, 한 점마다 211.5원입니다.
+  - q: 피부양자로 남으면요
+    a: 자격 요건을 유지하면 이 지역보험료 계산으로 가지 않습니다. 피부양자 글을 보세요.
+---
+
+<Mark>퇴직 건강보험료 조건에서 <Term id="regional">지역가입자</Term>는 소득월액에 <Num>7.19%</Num>를 곱합니다.</Mark>
+
+<AtAGlance
+  who="퇴직 뒤 지역 보험료를 가늠하는 사람"
+  amount="소득에 7.19%. 점수당 211.5원"
+  until="고지서의 재산 점수를 받기 전에는 소득분만 봅니다"
+  where="건강보험공단. 전화 1577-1000"
+/>
+
+<AdSlot position="after-intro" />
+
+## 퇴직 건강보험료는 어떻게 계산하나요
+
+연 소득을 12로 나누면 소득월액이 됩니다. 거기에 7.19%를 곱합니다. <Term id="property-score">재산보험료부과점수</Term>가 있으면 한 점마다 211.5원을 더합니다.
+
+장기요양보험료율은 0.9448%입니다. 건강 보험료 위에 따로 붙습니다.
+
+## 직장에 다닐 때와 뭐가 다른가요
+
+<strong>반반이 아닙니다.</strong> 직장 보험료는 가입자와 사용자가 50%씩 나눕니다. 지역가입자는 그 나눔이 없습니다.
+
+<Mark>회사 다닐 때 급여에서 빠지던 금액의 두 배라고 단정하지 마세요. 소득과 재산 구조가 다릅니다.</Mark>
+
+<Calculator preset="health" example />
+
+<Callout type="tip" title="비교 전에">
+<Term id="voluntary">임의계속가입</Term>이 되면 이 지역 계산 대신 퇴직 전 보수월액으로 갈 수 있습니다. [임의계속가입](/health-voluntary)의 기한을 먼저 보세요.
+</Callout>
+
+## 피부양자로 남으면 이 계산인가요
+
+아닙니다. <Term id="dependent">피부양자</Term> 자격을 유지하면 지역보험료 고지서가 이 공식으로 나오지 않습니다. 탈락 기준은 [피부양자 글](/health-dependent)에 있습니다.
+
+<WorkedExample
+  example
+  title="연 소득 1,200만 원, 재산 점수 없음"
+  oneLiner="연 소득을 12로 나눈 뒤 7.19%를 곱합니다."
+  steps={[
+    { label: "월 소득", calc: "1,200만 원 나누기 12", result: "100만 원", why: "예시 입력입니다." },
+    { label: "소득분", calc: "100만 원 곱하기 7.19%", result: "71,900원", why: "재산 점수는 빼 두었습니다." },
+    { label: "장기요양", calc: "건강 보험료에 0.9448%", result: "함께 고지", why: "비율만 확인합니다." },
+  ]}
+  meaning="점수가 있으면 211.5원을 곱해 더하세요. 숫자는 고지서가 최종입니다."
+/>
