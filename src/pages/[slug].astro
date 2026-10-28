@@ -86,7 +86,7 @@ const jsonLd = [
     <h1>{post.data.title}</h1>
     <p class="dates">
       {post.data.baseDate && <>기준일 {formatKo(post.data.baseDate)}. </>}
-      수정일 {formatKo(post.data.updated)}. 읽는 시간 {minutes}분. {authorName(post)}
+      업데이트 {formatKo(post.data.updated)}. 읽는 시간 {minutes}분. {authorName(post)}
     </p>
     {closed && (
       <p class="answer-box">
@@ -143,8 +143,8 @@ const jsonLd = [
       </nav>
     )}
     {related.length > 0 && (
-      <section>
-        <h2>이어서 읽기</h2>
+      <section class="related" aria-label="관련 글">
+        <h2>관련 글</h2>
         <ul>
           {related.map((item) => (
             <li><a href={postPath(item.id)}>{item.data.title}</a></li>

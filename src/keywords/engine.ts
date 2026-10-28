@@ -570,7 +570,8 @@ export async function buildQueue(options: {
 
   const items: QueueItem[] = [];
   for (const [key, group] of clusterKeywords(scored)) {
-    const sorted = [...group].sort((a, b) => b.score - a.score);
+    const tailPenalty = (keyword: string) => (/ (조건|계산)$/.test(keyword) ? 1 : 0);
+    const sorted = [...group].sort((a, b) => tailPenalty(a.keyword) - tailPenalty(b.keyword) || b.score - a.score);
     const primary = sorted[0];
     const coveredBy = coverMatch(primary.keyword, options.posts ?? []);
     const season = seasonality(primary.keyword);

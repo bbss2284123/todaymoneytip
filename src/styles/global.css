@@ -276,7 +276,7 @@ button { cursor: pointer; }
 .crumbs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
 .crumbs a { color: var(--text); }
 .dates { margin: 0 0 18px; }
-.answer-box, .apply, .author, .faq, .sources, .check, .worked, .calc, .term-pop {
+.answer-box, .apply, .author, .faq, .sources, .related, .check, .worked, .calc, .term-pop {
   border: 1px solid #e6e4df;
   border-left: 3px solid #111;
   border-radius: var(--radius);
@@ -288,13 +288,13 @@ button { cursor: pointer; }
   font-weight: 800;
   color: #000;
 }
-.answer-box h2, .apply h2, .author h2, .faq h2, .sources h2, .check h2, .worked h2 {
+.answer-box h2, .apply h2, .author h2, .faq h2, .sources h2, .related h2, .check h2, .worked h2 {
   font-size: 22px;
   margin: 0 0 8px;
   padding-left: 0;
   border: 0;
 }
-.answer-box h2::before, .apply h2::before, .author h2::before, .faq h2::before, .sources h2::before, .check h2::before, .worked h2::before {
+.answer-box h2::before, .apply h2::before, .author h2::before, .faq h2::before, .sources h2::before, .related h2::before, .check h2::before, .worked h2::before {
   content: none;
 }
 .glance { display: grid; gap: 10px; margin: 0; }
@@ -335,6 +335,7 @@ button { cursor: pointer; }
 .article .author h2,
 .article .faq h2,
 .article .sources h2,
+.article .related h2,
 .article .check h2,
 .article .worked h2 {
   font-size: 22px;
@@ -346,6 +347,7 @@ button { cursor: pointer; }
 .article .author h2::before,
 .article .faq h2::before,
 .article .sources h2::before,
+.article .related h2::before,
 .article .check h2::before,
 .article .worked h2::before {
   content: none;
@@ -435,7 +437,11 @@ th { font-weight: 800; }
   font-size: 22px;
   background: #fff;
 }
+.calc { max-width: 100%; }
 .calc-field { display: grid; gap: 6px; margin: 8px 0 12px; font-weight: 800; }
+@media (max-width: 420px) {
+  .choice { flex-basis: calc(50% - 8px); font-size: 18px; padding: 0 10px; }
+}
 .stepper output { font-size: 22px; font-weight: 800; min-height: 48px; display: inline-flex; align-items: center; }
 .choice { flex: 1 1 46%; font-size: 20px; font-weight: 800; }
 .mark, .prose mark {

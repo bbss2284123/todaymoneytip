@@ -40,7 +40,7 @@ const jsonLd = [
     <div class="featured">
       {featured.map((post) => (
         <a class="feature-card" href={postPath(post.id)}>
-          <img src={`/thumb/${post.id}/feed.png`} alt="" width="1200" height="675" />
+          <img src={`/thumb/${post.id}/feed.png`} alt={`${post.data.title} 썸네일`} width="1200" height="675" />
           <p class="kicker">{siteConfig.categories.find((item) => item.id === post.data.category)?.name}</p>
           <h2>{post.data.title}</h2>
           <p class="summary">{post.data.description}</p>
@@ -52,7 +52,7 @@ const jsonLd = [
     <div class="feed">
       {posts.map((post) => (
         <a class="feed-item" href={postPath(post.id)}>
-          <img src={`/thumb/${post.id}/feed.png`} alt="" width="1200" height="675" />
+          <img src={`/thumb/${post.id}/feed.png`} alt={`${post.data.title} 썸네일`} width="1200" height="675" />
           <div>
             <p class="kicker">{siteConfig.categories.find((item) => item.id === post.data.category)?.name}</p>
             <h2>{post.data.title}</h2>
