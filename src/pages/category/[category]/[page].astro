@@ -23,6 +23,7 @@ const meta = categoryById(category ?? "");
 <Base title={`${meta?.name} ${page}`} description={meta?.description ?? ""} path={`/category/${category}/${page}/`}>
   <main id="content" class="page home">
     <h1>{meta?.name}</h1>
+    <p class="lede">{meta?.description}</p>
     <div class="feed">
       {slice.map((post) => (
         <a class="feed-item" href={postPath(post.id)}>
