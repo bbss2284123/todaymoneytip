@@ -4,6 +4,14 @@ import satori from "satori";
 import sharp from "sharp";
 import { thumbLines } from "./fit";
 
+export interface ThumbCompare {
+  leftLabel: string;
+  left: string;
+  rightLabel: string;
+  right: string;
+  signed?: boolean;
+}
+
 export interface ThumbInput {
   title: string;
   keyword: string;
@@ -12,40 +20,39 @@ export interface ThumbInput {
   number?: string;
   width: number;
   height: number;
+  lines?: [string, string];
+  caption?: string;
+  hero?: string;
+  heroLabel?: string;
+  compare?: ThumbCompare;
+  checks?: [string, string, string];
+  steps?: string[];
 }
 
-const THEME: Record<string, { accent: string; wash: string; icons: string[] }> = {
-  prepare: { accent: "#1b3a6b", wash: "#e7eef8", icons: ["calendar", "landmark"] },
-  pension: { accent: "#1b3a6b", wash: "#e7eef8", icons: ["landmark", "coins"] },
-  severance: { accent: "#7a2e3a", wash: "#f8ecee", icons: ["receipt", "banknote"] },
-  basic: { accent: "#0f6e6b", wash: "#e5f4f3", icons: ["users", "shield"] },
-  health: { accent: "#0f6e6b", wash: "#e5f4f3", icons: ["heart-pulse", "shield"] },
-  job: { accent: "#1f6b45", wash: "#e7f4ec", icons: ["briefcase", "calendar"] },
-  housing: { accent: "#7a2e3a", wash: "#f8ecee", icons: ["house", "coins"] },
-  tax: { accent: "#1f6b45", wash: "#e7f4ec", icons: ["banknote", "receipt"] },
-  assets: { accent: "#1f6b45", wash: "#e7f4ec", icons: ["coins", "landmark"] },
-  business: { accent: "#7a2e3a", wash: "#f8ecee", icons: ["briefcase", "shield"] },
+const THEME: Record<string, { accent: string }> = {
+  prepare: { accent: "#1b3a6b" },
+  pension: { accent: "#1b3a6b" },
+  severance: { accent: "#7a2e3a" },
+  basic: { accent: "#0f6e6b" },
+  health: { accent: "#0f6e6b" },
+  job: { accent: "#1f6b45" },
+  housing: { accent: "#7a2e3a" },
+  tax: { accent: "#1f6b45" },
+  assets: { accent: "#1f6b45" },
+  business: { accent: "#7a2e3a" },
 };
 
-let fontData: Buffer | null = null;
-const iconCache = new Map<string, string>();
+const PAPER = "#f6f5f2";
+const INK = "#111111";
+const fonts = new Map<number, Buffer>();
 
-function font(): Buffer {
-  if (!fontData) fontData = readFileSync(path.join(process.cwd(), "assets/fonts/Pretendard-SemiBold.otf"));
-  return fontData;
-}
-
-async function iconSrc(name: string, color: string): Promise<string> {
-  const key = `${name}:${color}`;
-  const cached = iconCache.get(key);
+function font(weight: 600 | 700): Buffer {
+  const cached = fonts.get(weight);
   if (cached) return cached;
-  const svg = readFileSync(path.join(process.cwd(), "src/thumbnails/icons", `${name}.svg`), "utf8")
-    .replace(/currentColor/g, color)
-    .replace(/stroke-width="2"/g, 'stroke-width="1.6"');
-  const png = await sharp(Buffer.from(svg)).resize(160, 160).png().toBuffer();
-  const uri = `data:image/png;base64,${png.toString("base64")}`;
-  iconCache.set(key, uri);
-  return uri;
+  const file = weight === 700 ? "Pretendard-Bold.otf" : "Pretendard-SemiBold.otf";
+  const data = readFileSync(path.join(process.cwd(), "assets/fonts", file));
+  fonts.set(weight, data);
+  return data;
 }
 
 function el(style: Record<string, unknown>, children: unknown): unknown {
@@ -82,156 +89,211 @@ function signedFigure(raw: string, tone: "minus" | "plus", perYear: boolean): st
   return perYear ? `${sign}${body} / 년` : `${sign}${body}`;
 }
 
-export async function renderThumb(input: ThumbInput): Promise<Buffer> {
-  const theme = THEME[input.category] ?? THEME.pension;
-  const dark = input.style === "timeline";
-  const ink = dark ? "#f6f5f2" : "#111111";
-  const icons = await Promise.all(theme.icons.map((name) => iconSrc(name, dark ? "#f6f5f2" : theme.accent)));
-  const lines = thumbLines(input.title).slice(0, 2);
+function titlePx(lines: string[], boxWidth: number): number {
   const longest = Math.max(...lines.map((line) => [...line].length), 1);
-  const textWidth = input.width - 96 - (dark ? 80 : 340);
-  const titleSize = Math.max(40, Math.min(62, Math.floor(textWidth / longest / 0.98)));
-  const panels = figurePanels(input.number, input.keyword);
-  const svg = await satori(
-    layout(input, theme, dark, ink, icons, lines, titleSize, panels) as React.ReactNode,
-    {
-      width: input.width,
-      height: input.height,
-      fonts: [{ name: "Pretendard", data: font(), weight: 600, style: "normal" }],
-    },
-  );
+  return Math.max(72, Math.min(88, Math.floor(boxWidth / longest)));
+}
+
+function heroPx(text: string, maxWidth: number): number {
+  const units = [...text].reduce((sum, ch) => sum + (/[0-9%+−.,]/.test(ch) ? 0.62 : 1), 0);
+  return Math.max(120, Math.min(160, Math.floor(maxWidth / Math.max(units, 1))));
+}
+
+function satoriFonts() {
+  return [
+    { name: "Pretendard", data: font(600), weight: 600 as const, style: "normal" as const },
+    { name: "Pretendard", data: font(700), weight: 700 as const, style: "normal" as const },
+  ];
+}
+
+export async function renderThumb(input: ThumbInput): Promise<Buffer> {
+  const accent = (THEME[input.category] ?? THEME.pension).accent;
+  const lines = input.lines ?? (thumbLines(input.title).slice(0, 2) as [string, string]);
+  const svg = await satori(layout(input, accent, lines) as React.ReactNode, {
+    width: input.width,
+    height: input.height,
+    fonts: satoriFonts(),
+  });
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
 
-function layout(
-  input: ThumbInput,
-  theme: { accent: string; wash: string },
-  dark: boolean,
-  ink: string,
-  icons: string[],
-  lines: string[],
-  titleSize: number,
-  panels: { label: string; figure: string; tone: Tone }[],
-): unknown {
-  const title = el(
-    { flexDirection: "column", gap: 2 },
-    lines.map((line) => el({ fontSize: titleSize, fontWeight: 700, color: ink, letterSpacing: -1.5, lineHeight: 1.15 }, line)),
-  );
-  const badges = panels.length
-    ? el(
-        { gap: 12, marginTop: 20 },
-        panels.map((panel) => {
-          const colors = dark && panel.tone === "neutral" ? { bg: "#243656", fg: "#f6f5f2" } : TONE[panel.tone];
-          return el(
-            { flexDirection: "column", background: colors.bg, borderRadius: 16, padding: "12px 16px", gap: 2 },
-            [
-              el({ fontSize: 20, fontWeight: 700, color: colors.fg }, panel.label),
-              el({ fontSize: input.style === "number" && panels.length === 1 ? 48 : 36, fontWeight: 700, color: colors.fg }, panel.figure),
-            ],
-          );
-        }),
-      )
-    : el({ fontSize: 22, color: theme.accent, marginTop: 16 }, "기준일과 출처");
-  const checks =
-    input.style === "checklist"
-      ? el(
-          { flexDirection: "column", gap: 10, marginTop: 18 },
-          ["조건", "금액", "기한"].map((item) =>
-            el({ alignItems: "center", gap: 10, fontSize: 24, color: ink }, [
-              el({ width: 22, height: 22, borderRadius: 6, background: theme.accent, color: "#fff", alignItems: "center", justifyContent: "center", fontSize: 16 }, "✓"),
-              item,
-            ]),
-          ),
-        )
-      : null;
-  const steps =
-    input.style === "timeline"
-      ? el(
-          { gap: 18, marginTop: 22, alignItems: "center" },
-          ["퇴직 전", "당일", "이후"].map((label, index) =>
-            el({ flexDirection: "column", alignItems: "center", gap: 8 }, [
-              el({ width: 16, height: 16, borderRadius: 8, background: index === 1 ? "#f6f5f2" : "#8ea0c0" }, ""),
-              el({ fontSize: 22, color: ink }, label),
-            ]),
-          ),
-        )
-      : null;
-  const left = el({ flexDirection: "column", flexGrow: 1, height: input.height - 96, paddingRight: 16 }, [
-    el({ fontSize: 22, fontWeight: 700, color: dark ? "#d9e7ff" : theme.accent, marginBottom: 16 }, input.keyword),
-    title,
-    badges,
-    checks,
-    steps,
-    el({ flexGrow: 1 }, " "),
-    el({ fontSize: 18, color: dark ? "#c5d0e0" : "#5c584f" }, "오늘의 머니팁"),
-  ].filter(Boolean));
-  const art = dark
-    ? el({ width: 220, height: input.height - 96, alignItems: "center", justifyContent: "center" }, [
-        el(
-          { width: 160, height: 160, borderRadius: 80, background: "#243656", alignItems: "center", justifyContent: "center" },
-          { type: "img", props: { src: icons[0], width: 72, height: 72 } },
-        ),
-      ])
-    : illustration(theme, icons, input.style, input.height - 96);
+function titleBlock(lines: string[], size: number, color: string): unknown {
   return el(
-    {
-      width: input.width,
-      height: input.height,
-      background: dark ? "#1b2a4a" : "#f6f5f2",
-      color: ink,
-      fontFamily: "Pretendard",
-    },
-    [
-      el({ width: 12, height: input.height, background: dark ? "#d9e7ff" : theme.accent }, " "),
-      el(
-        { width: input.width - 12, height: input.height, padding: 48, justifyContent: "space-between" },
-        [left, art],
-      ),
-    ],
+    { flexDirection: "column" },
+    lines.map((line) =>
+      el({ fontSize: size, fontWeight: 700, color, letterSpacing: -2.5, lineHeight: 1.08, whiteSpace: "nowrap" }, line),
+    ),
   );
 }
 
-function illustration(theme: { accent: string; wash: string }, icons: string[], style: string, height: number): unknown {
-  const bars = style === "compare" ? [48, 96] : style === "number" ? [40, 72, 104] : [56, 80, 64];
-  const mark = style === "question" ? el({ fontSize: 92, color: theme.accent, marginRight: 8 }, "?") : null;
-  return el({ width: 300, height, alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 16 }, [
-    el({ width: 248, height: 248, borderRadius: 124, background: theme.wash, alignItems: "center", justifyContent: "center" }, [
-      mark,
-      el({ flexDirection: "column", alignItems: "center" }, [
-        { type: "img", props: { src: icons[0], width: 88, height: 88 } },
-        icons[1] ? el({ marginTop: -20, marginLeft: 48 }, { type: "img", props: { src: icons[1], width: 64, height: 64 } }) : el({}, " "),
+function wordmark(color: string): unknown {
+  return el({ fontSize: 24, fontWeight: 700, color }, "오늘의 머니팁");
+}
+
+function layout(input: ThumbInput, accent: string, lines: string[]): unknown {
+  if (input.style === "compare") return compareLayout(input, accent, lines);
+  if (input.style === "question") return questionLayout(input, accent, lines);
+  if (input.style === "checklist") return checkLayout(input, accent, lines);
+  if (input.style === "timeline") return timeLayout(input, lines);
+  return numberLayout(input, accent, lines);
+}
+
+function numberLayout(input: ThumbInput, accent: string, lines: string[]): unknown {
+  const hero = input.hero ?? input.number ?? lines[0];
+  const textW = Math.round(input.width * 0.62);
+  const panel = input.width - textW;
+  const size = titlePx(lines, textW - 88);
+  return el({ width: input.width, height: input.height, background: PAPER, fontFamily: "Pretendard", color: INK }, [
+    el({ width: input.width - panel, height: input.height, flexDirection: "column", justifyContent: "space-between", padding: 48 }, [
+      el({ flexDirection: "column" }, [
+        el({ justifyContent: "space-between", alignItems: "center", marginBottom: 18 }, [
+          el({ fontSize: 30, fontWeight: 700, color: accent }, input.keyword),
+          wordmark("#5c584f"),
+        ]),
+        titleBlock(lines, size, INK),
       ]),
-    ].filter(Boolean)),
-    el(
-      { gap: 8, alignItems: "flex-end", background: "#ffffff", borderRadius: 12, padding: "12px 16px", border: "1px solid #e6e4df" },
-      bars.map((height) => el({ width: 16, height, background: theme.accent, borderRadius: 4 }, " ")),
-    ),
+      input.caption ? el({ fontSize: 30, fontWeight: 700, color: "#3f3a32" }, input.caption) : el({}, " "),
+    ]),
+    el({ width: panel, height: input.height, background: accent, flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 28 }, [
+      el({ fontSize: 32, fontWeight: 700, color: "#f3efe6", marginBottom: 8 }, input.heroLabel ?? "핵심"),
+      el({ fontSize: heroPx(hero, panel - 64), fontWeight: 700, color: "#ffffff", letterSpacing: -3, lineHeight: 1 }, hero),
+    ]),
+  ]);
+}
+
+function questionLayout(input: ThumbInput, accent: string, lines: string[]): unknown {
+  const panel = Math.round(input.width * 0.38);
+  const size = titlePx(lines, input.width - panel - 88);
+  return el({ width: input.width, height: input.height, background: PAPER, fontFamily: "Pretendard", color: INK }, [
+    el({ width: panel, height: input.height, background: accent, alignItems: "center", justifyContent: "center" }, [
+      el({ fontSize: 280, fontWeight: 700, color: "#ffffff", lineHeight: 1 }, "?"),
+    ]),
+    el({ width: input.width - panel, height: input.height, flexDirection: "column", justifyContent: "space-between", padding: 48 }, [
+      el({ flexDirection: "column" }, [
+        el({ justifyContent: "space-between", alignItems: "center", marginBottom: 18 }, [
+          el({ fontSize: 30, fontWeight: 700, color: accent }, input.keyword),
+          wordmark("#5c584f"),
+        ]),
+        titleBlock(lines, size, INK),
+      ]),
+      input.caption ? el({ fontSize: 30, fontWeight: 700, color: "#3f3a32" }, input.caption) : el({}, " "),
+    ]),
+  ]);
+}
+
+function compareLayout(input: ThumbInput, accent: string, lines: string[]): unknown {
+  const size = titlePx(lines, input.width - 96);
+  const panels = input.compare ?? {
+    leftLabel: "1년 일찍",
+    left: "−6%",
+    rightLabel: "1년 늦게",
+    right: "+7.2%",
+    signed: true,
+  };
+  const leftBg = panels.signed ? "#6e1b12" : accent;
+  const rightBg = panels.signed ? "#0d3d86" : "#111111";
+  const blockW = Math.round(input.width / 2) - 8;
+  return el({ width: input.width, height: input.height, flexDirection: "column", background: PAPER, fontFamily: "Pretendard", color: INK }, [
+    el({ flexDirection: "column", padding: "36px 48px 28px" }, [
+      el({ justifyContent: "space-between", alignItems: "center", marginBottom: 12 }, [
+        el({ fontSize: 30, fontWeight: 700, color: accent }, input.keyword),
+        wordmark("#5c584f"),
+      ]),
+      titleBlock(lines, size, INK),
+    ]),
+    el({ flexGrow: 1, width: input.width }, [
+      block(panels.leftLabel, panels.left, leftBg, blockW),
+      block(panels.rightLabel, panels.right, rightBg, blockW),
+    ]),
+  ]);
+}
+
+function block(label: string, figure: string, bg: string, width: number): unknown {
+  return el({ flexGrow: 1, height: "100%", background: bg, flexDirection: "column", justifyContent: "center", padding: "28px 40px" }, [
+    el({ fontSize: 32, fontWeight: 700, color: "#f3efe6", marginBottom: 6 }, label),
+    el({ fontSize: heroPx(figure, width - 80), fontWeight: 700, color: "#ffffff", letterSpacing: -3, lineHeight: 1 }, figure),
+  ]);
+}
+
+function checkLayout(input: ThumbInput, accent: string, lines: string[]): unknown {
+  const rows = input.checks ?? ["조건", "금액", "기한"];
+  const size = titlePx(lines, input.width - 96);
+  return el({ width: input.width, height: input.height, flexDirection: "column", background: PAPER, fontFamily: "Pretendard", color: INK }, [
+    el({ height: 14, background: accent }, " "),
+    el({ flexDirection: "column", padding: "28px 48px 32px", flexGrow: 1, justifyContent: "space-between" }, [
+      el({ flexDirection: "column" }, [
+        el({ justifyContent: "space-between", alignItems: "center", marginBottom: 12 }, [
+          el({ fontSize: 30, fontWeight: 700, color: accent }, input.keyword),
+          wordmark("#5c584f"),
+        ]),
+        titleBlock(lines, size, INK),
+      ]),
+      el({ flexDirection: "column", gap: 14, marginTop: 20 }, rows.map((row) => checkRow(row, accent))),
+    ]),
+  ]);
+}
+
+function checkRow(text: string, accent: string): unknown {
+  return el({ alignItems: "center", background: "#ffffff", border: "1px solid #e6e4df", borderRadius: 12, padding: "16px 22px", gap: 18 }, [
+    el({ width: 48, height: 48, borderRadius: 10, background: accent, alignItems: "center", justifyContent: "center" }, [
+      el({ width: 14, height: 24, borderBottom: "5px solid #ffffff", borderRight: "5px solid #ffffff", transform: "rotate(40deg)", marginBottom: 6 }, " "),
+    ]),
+    el({ fontSize: 36, fontWeight: 700, color: INK }, text),
+  ]);
+}
+
+function timeLayout(input: ThumbInput, lines: string[]): unknown {
+  const steps = input.steps ?? ["퇴직 전", "당일", "이후"];
+  const size = titlePx(lines, input.width - 96);
+  const last = steps.length - 1;
+  const inner = input.width - 96;
+  return el({ width: input.width, height: input.height, boxSizing: "border-box", flexDirection: "column", justifyContent: "space-between", background: "#1b2a4a", fontFamily: "Pretendard", color: "#f6f5f2", padding: 48 }, [
+    el({ width: inner, flexDirection: "column" }, [
+      el({ width: inner, justifyContent: "space-between", alignItems: "center", marginBottom: 14 }, [
+        el({ fontSize: 30, fontWeight: 700, color: "#d9e7ff" }, input.keyword),
+        wordmark("#c5d0e0"),
+      ]),
+      titleBlock(lines, size, "#f6f5f2"),
+    ]),
+    el({ width: inner, height: 130, alignItems: "flex-start" }, steps.map((label, index) => step(label, index, last, Math.floor(inner / steps.length)))),
+  ]);
+}
+
+function step(label: string, index: number, last: number, slot: number): unknown {
+  const line = (on: boolean) => el({ flexGrow: 1, height: 6, background: on ? "#c5d0e0" : "transparent" }, " ");
+  return el({ width: slot, height: 120, flexDirection: "column", alignItems: "center" }, [
+    el({ width: slot, height: 28, alignItems: "center" }, [
+      line(index > 0),
+      el({ width: 28, height: 28, borderRadius: 14, background: "#f6f5f2", margin: "0 10px" }, " "),
+      line(index < last),
+    ]),
+    el({ fontSize: 32, fontWeight: 700, color: "#ffffff", marginTop: 18 }, label),
   ]);
 }
 
 export async function renderExplainer(title: string, rows: { left: string; right: string }[]): Promise<Buffer> {
   const svg = await satori(
     el(
-      { width: 1200, height: 675, background: "#f6f5f2", padding: 48, flexDirection: "column", fontFamily: "Pretendard", color: "#111111" },
+      { width: 1200, height: 675, background: PAPER, padding: 48, flexDirection: "column", fontFamily: "Pretendard", color: INK },
       [
         el({ fontSize: 40, fontWeight: 700, marginBottom: 28 }, title),
         ...rows.map((row) =>
-          el(
-            { width: "100%", justifyContent: "space-between", borderTop: "1px solid #e6e4df", padding: "18px 0", fontSize: 32 },
-            [el({ width: 420 }, row.left), el({ width: 420, justifyContent: "flex-end", color: "#1f5fbf", fontWeight: 700 }, row.right)],
-          ),
+          el({ width: "100%", justifyContent: "space-between", borderTop: "1px solid #e6e4df", padding: "18px 0", fontSize: 32 }, [
+            el({ width: 460 }, row.left),
+            el({ width: 560, justifyContent: "flex-end", color: "#1b3a6b", fontWeight: 700 }, row.right),
+          ]),
         ),
       ],
     ) as React.ReactNode,
-    { width: 1200, height: 675, fonts: [{ name: "Pretendard", data: font(), weight: 600, style: "normal" }] },
+    { width: 1200, height: 675, fonts: satoriFonts() },
   );
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
 
 export async function renderCaption(text: string, width: number): Promise<Buffer> {
   const svg = await satori(
-    el({ width, height: 36, alignItems: "center", fontSize: 20, color: "#111111", fontFamily: "Pretendard" }, text) as React.ReactNode,
-    { width, height: 36, fonts: [{ name: "Pretendard", data: font(), weight: 600, style: "normal" }] },
+    el({ width, height: 40, alignItems: "center", fontSize: 22, fontWeight: 700, color: INK, fontFamily: "Pretendard" }, text) as React.ReactNode,
+    { width, height: 40, fonts: satoriFonts() },
   );
   return sharp(Buffer.from(svg)).png().toBuffer();
 }

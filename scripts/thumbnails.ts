@@ -18,6 +18,36 @@ const styleName: Record<(typeof styles)[number], string> = {
   timeline: "시간",
 };
 
+const cards: Record<string, Omit<ThumbInput, "title" | "keyword" | "category" | "style" | "width" | "height">> = {
+  "pension-early-defer": {
+    lines: ["1년 일찍 −6%", "미루면 +7.2%"],
+    caption: "비율은 평생 갑니다",
+    hero: "−6%",
+    heroLabel: "1년마다",
+    compare: { leftLabel: "1년 일찍", left: "−6%", rightLabel: "1년 늦게", right: "+7.2%", signed: true },
+    checks: ["가입 10년 이상", "감액은 평생", "부양가족연금 제외"],
+    steps: ["조기수령", "정상 개시", "1년 연기", "5년 한도"],
+  },
+  "severance-tax": {
+    lines: ["일시금 112만", "연금은 −30%"],
+    caption: "10년 안이면 세액의 70%",
+    hero: "−30%",
+    heroLabel: "10년 안",
+    compare: { leftLabel: "일시금", left: "112만", rightLabel: "10년 연금", right: "78만4천", signed: false },
+    checks: ["근속 연수 확인", "10년 안은 70%", "운용수익은 제외"],
+    steps: ["퇴직할 때", "일시금", "10년 연금", "20년 이후"],
+  },
+  "health-dependent": {
+    lines: ["소득 2,000만", "넘으면 탈락?"],
+    caption: "재산 9억 초과도 탈락",
+    hero: "9억",
+    heroLabel: "넘으면 탈락",
+    compare: { leftLabel: "소득 한도", left: "2,000만", rightLabel: "재산 한도", right: "9억", signed: false },
+    checks: ["소득 2,000만 원", "9억 넘으면 탈락", "사이는 1,000만"],
+    steps: ["퇴직 전", "퇴직 당일", "90일 신고", "지역보험"],
+  },
+};
+
 const explainers: Record<string, { title: string; rows: { left: string; right: string }[] }> = {
   "pension-early-defer": {
     title: "1년 차이, 평생 갑니다",
@@ -34,10 +64,11 @@ const explainers: Record<string, { title: string; rows: { left: string; right: s
     ],
   },
   "health-dependent": {
-    title: "피부양자, 두 칸만 먼저",
+    title: "피부양자 탈락, 두 기준",
     rows: [
-      { left: "연 소득", right: "2,000만 원 이하" },
-      { left: "재산세 과세표준", right: "5억 4,000만 원 이하" },
+      { left: "연 소득", right: "2,000만 원 초과면 탈락" },
+      { left: "과세표준 9억 초과", right: "소득과 관계없이 탈락" },
+      { left: "5억 4천만 초과, 9억 이하", right: "소득 1,000만 원 이하만" },
     ],
   },
 };
@@ -45,7 +76,7 @@ const explainers: Record<string, { title: string; rows: { left: string; right: s
 async function sheet(cells: { caption: string; png: Buffer }[], cols: number, cellWidth: number): Promise<Buffer> {
   const probed = await sharp(cells[0].png).metadata();
   const cellHeight = Math.round(((probed.height ?? 630) * cellWidth) / (probed.width ?? 1200));
-  const labelH = 36;
+  const labelH = 40;
   const gap = 16;
   const width = gap + cols * (cellWidth + gap);
   const rows = Math.ceil(cells.length / cols);
@@ -92,6 +123,7 @@ async function main() {
       keyword: data.검색어,
       category: data.category,
       number: data.thumbNumber,
+      ...cards[id],
     };
     for (const style of styles) {
       const png = await renderThumb({ ...base, style, width: 1200, height: 630 });
@@ -122,12 +154,14 @@ async function main() {
       keyword: "은퇴",
       category: "prepare",
       style: "timeline",
+      lines: ["퇴직 전후", "돈의 순서"],
+      steps: ["퇴직 전", "퇴직 당일", "다음 달", "그 이후"],
       width: 1200,
       height: 630,
     }),
   );
 
-  const contact = await sheet(sheetCells, 5, 460);
+  const contact = await sheet(sheetCells, 5, 680);
   const contactSmall = await sheet(smallCells, 5, 300);
   writeFileSync(path.join(outDir, "contact-sheet.png"), contact);
   writeFileSync(path.join(artifactDir, "contact-sheet.png"), contact);
