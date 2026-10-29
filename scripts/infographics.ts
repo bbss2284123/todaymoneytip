@@ -19,8 +19,8 @@ function artifactsDir(): string | null {
 }
 
 async function contactSheet(cells: { caption: string; png: Buffer }[]): Promise<Buffer> {
-  const cols = 4;
-  const cellWidth = 320;
+  const cols = 2;
+  const cellWidth = 640;
   const gap = 16;
   const labelH = 36;
   const sized = await Promise.all(
@@ -77,7 +77,7 @@ async function main() {
     for (const fig of figures[id]) {
       const missing = missingNumbers(figurePlain(fig), facts);
       if (missing.length) throw new Error(`${id}/${fig.id} 원장에 없는 숫자: ${missing.join(", ")}`);
-      const { png, webp } = await renderFigure(fig, accent);
+      const { png, webp } = await renderFigure(fig, accent, category);
       writeFileSync(path.join(dir, `${fig.id}.png`), png);
       writeFileSync(path.join(dir, `${fig.id}.webp`), webp);
       const { width, height } = FRAME[fig.ratio];
