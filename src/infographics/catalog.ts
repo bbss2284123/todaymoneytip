@@ -13,7 +13,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "국민연금 조기수령",
       lead: "1년에 −6% 또는 +7.2%",
       rows: [
@@ -44,7 +44,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "bars",
       kind: "bar",
-      ratio: "16:9",
+      ratio: "1:1",
       title: "월 100만 원 예시",
       bars: [
         { label: "1년 일찍", value: "94만 원", amount: 94, tone: "down" },
@@ -58,19 +58,19 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "vs",
       kind: "compare",
-      ratio: "16:9",
+      ratio: "4:5",
       title: "일찍 받을까, 미룰까",
       leftTitle: "조기수령",
       rightTitle: "연기",
       left: [
-        { text: "바로 연금이 나옵니다", ok: true },
-        { text: "1년에 6%가 줄어 평생", ok: false },
-        { text: "소득이 큰 업무 중엔 멈춤", ok: false },
+        { text: "바로 연금이 나옴", ok: true },
+        { text: "1년에 6% 감소", ok: false },
+        { text: "소득 있으면 멈춤", ok: false },
       ],
       right: [
-        { text: "1년에 7.2%가 늘어 평생", ok: true },
+        { text: "1년에 7.2% 증가", ok: true },
         { text: "최대 5년", ok: true },
-        { text: "미루는 동안은 돈이 없음", ok: false },
+        { text: "미루는 동안 없음", ok: false },
       ],
       source: nps,
       alt: "국민연금 조기수령과 연기연금 비교. 조기는 6% 감액, 연기는 7.2% 증액입니다.",
@@ -81,7 +81,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "퇴직금 일시금 예시",
       lead: "112만 원이 78만 원",
       rows: [
@@ -96,7 +96,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "bars",
       kind: "bar",
-      ratio: "16:9",
+      ratio: "1:1",
       title: "같은 퇴직소득, 다른 세액",
       bars: [
         { label: "일시금", value: "112만 원", amount: 112, tone: "base" },
@@ -109,7 +109,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "vs",
       kind: "compare",
-      ratio: "16:9",
+      ratio: "4:5",
       title: "한 번에, 또는 나눠서",
       leftTitle: "일시금",
       rightTitle: "10년 안 연금",
@@ -130,7 +130,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "rates",
       kind: "bar",
-      ratio: "16:9",
+      ratio: "1:1",
       title: "연금으로 받을 때 세액 비율",
       bars: [
         { label: "10년 이하", value: "70%", amount: 70, tone: "base" },
@@ -146,7 +146,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "피부양자 탈락",
       lead: "소득 2,000만 · 재산 9억",
       rows: [
@@ -161,7 +161,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "vs",
       kind: "compare",
-      ratio: "16:9",
+      ratio: "4:5",
       title: "남는 칸, 빠지는 칸",
       leftTitle: "자격 유지",
       rightTitle: "탈락",
@@ -199,7 +199,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "기초연금 금액 조건",
       lead: "혼자 349,700원",
       rows: [
@@ -214,7 +214,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "bars",
       kind: "bar",
-      ratio: "16:9",
+      ratio: "1:1",
       title: "2026년 최고액",
       bars: [
         { label: "혼자", value: "349,700원", amount: 349700, tone: "base" },
@@ -227,7 +227,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "vs",
       kind: "compare",
-      ratio: "16:9",
+      ratio: "4:5",
       title: "최고액과 실제 금액",
       leftTitle: "표의 최고",
       rightTitle: "더 적을 수 있음",
@@ -249,7 +249,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "기초연금 조건",
       lead: "혼자 월 247만 원",
       rows: [
@@ -279,7 +279,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "bars",
       kind: "bar",
-      ratio: "16:9",
+      ratio: "1:1",
       title: "2026년 선정기준액",
       bars: [
         { label: "혼자", value: "247만 원", amount: 247, tone: "base" },
@@ -294,7 +294,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "기초연금 신청 언제",
       lead: "생일 달의 1개월 전",
       rows: [
@@ -340,7 +340,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "국민연금 추납 조건",
       lead: "최대 119개월",
       rows: [
@@ -370,7 +370,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "vs",
       kind: "compare",
-      ratio: "16:9",
+      ratio: "4:5",
       title: "한 번에, 또는 나눠서",
       leftTitle: "일시납",
       rightTitle: "최대 60회",
@@ -391,7 +391,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "국민연금 반납",
       lead: "2026년 이율 2.2%",
       rows: [
@@ -406,7 +406,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "bars",
       kind: "bar",
-      ratio: "16:9",
+      ratio: "1:1",
       title: "예전 기간이 길수록 횟수",
       bars: [
         { label: "1년 미만", value: "3회", amount: 3, tone: "base" },
@@ -437,7 +437,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "국민연금 분할연금",
       lead: "혼인 5년, 절반",
       rows: [
@@ -485,7 +485,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "국민연금 예상수령액",
       lead: "10년부터",
       rows: [
@@ -516,7 +516,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "vs",
       kind: "compare",
-      ratio: "16:9",
+      ratio: "4:5",
       title: "10년이 갈림",
       leftTitle: "10년 이상",
       rightTitle: "10년 전",
@@ -537,7 +537,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "연금저축 세액공제 조건",
       lead: "600만 · 합산 900만",
       rows: [
@@ -552,7 +552,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "bars",
       kind: "bar",
-      ratio: "16:9",
+      ratio: "1:1",
       title: "한도는 세 칸",
       bars: [
         { label: "연금저축", value: "600만 원", amount: 600, tone: "base" },
@@ -566,7 +566,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "vs",
       kind: "compare",
-      ratio: "16:9",
+      ratio: "4:5",
       title: "공제율",
       leftTitle: "15%",
       rightTitle: "12%",
@@ -587,7 +587,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "IRP 연금수령 세금",
       lead: "한도와 퇴직소득은 따로",
       rows: [
@@ -602,7 +602,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "vs",
       kind: "compare",
-      ratio: "16:9",
+      ratio: "4:5",
       title: "한 통장, 두 칸",
       leftTitle: "세액공제 납입",
       rightTitle: "퇴직소득",
@@ -623,7 +623,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "bars",
       kind: "bar",
-      ratio: "16:9",
+      ratio: "1:1",
       title: "세액공제 칸만",
       bars: [
         { label: "연금저축", value: "600만 원", amount: 600, tone: "base" },
@@ -639,7 +639,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "실업급여 중장년 계산",
       lead: "50세 이상 최대 270일",
       rows: [
@@ -687,7 +687,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "임의계속가입 계산",
       lead: "최대 36개월",
       rows: [
@@ -717,7 +717,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "vs",
       kind: "compare",
-      ratio: "16:9",
+      ratio: "4:5",
       title: "어느 보험료로 낼까",
       leftTitle: "임의계속",
       rightTitle: "그대로 지역",
@@ -739,7 +739,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "퇴직 후 건강보험료",
       lead: "소득월액의 7.19%",
       rows: [
@@ -769,7 +769,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "vs",
       kind: "compare",
-      ratio: "16:9",
+      ratio: "4:5",
       title: "직장에 다닐 때와",
       leftTitle: "직장",
       rightTitle: "지역가입자",
@@ -791,7 +791,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "주택연금 월수령액",
       lead: "70세 · 3억 · 923,000원",
       rows: [
@@ -822,7 +822,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "vs",
       kind: "compare",
-      ratio: "16:9",
+      ratio: "4:5",
       title: "12억 원 칸",
       leftTitle: "12억 원 이하",
       rightTitle: "12억 원을 넘음",
@@ -843,7 +843,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "주택연금 가입조건",
       lead: "55세부터, 12억까지",
       rows: [
@@ -873,7 +873,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "vs",
       kind: "compare",
-      ratio: "16:9",
+      ratio: "4:5",
       title: "표에 있는 것",
       leftTitle: "읽어도 됩니다",
       rightTitle: "이 글이 만들지 않음",
@@ -894,7 +894,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "퇴직 전 준비",
       lead: "퇴직금은 14일",
       rows: [
@@ -940,7 +940,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "퇴직 후 할 일",
       lead: "14일과 2개월",
       rows: [
@@ -987,7 +987,7 @@ export const figures: Record<string, Figure[]> = {
     {
       id: "lead",
       kind: "summary",
-      ratio: "16:9",
+      ratio: "1:1",
       kicker: "퇴직금 수령",
       lead: "14일, 그리고 다른 달력",
       rows: [

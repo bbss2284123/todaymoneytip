@@ -1,9 +1,10 @@
-export type Ratio = "16:9" | "4:5";
+export type Ratio = "1:1" | "4:5";
 export type Tone = "up" | "down" | "base";
 
+/** 720px wide. On a 350px column (390px phone minus page padding) 38px type is about 18px CSS. */
 export const FRAME: Record<Ratio, { width: number; height: number }> = {
-  "16:9": { width: 800, height: 450 },
-  "4:5": { width: 800, height: 1000 },
+  "1:1": { width: 720, height: 720 },
+  "4:5": { width: 720, height: 900 },
 };
 
 type Common = {
