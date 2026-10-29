@@ -1,0 +1,31 @@
+---
+import { findFigure } from "../../infographics/catalog";
+import { FRAME, type Figure } from "../../infographics/types";
+
+interface Props {
+  id: string;
+  kinds: Figure["kind"][];
+}
+const { id, kinds } = Astro.props;
+const postId = Astro.params.slug ?? "";
+const found = findFigure(postId, id);
+if (!found) throw new Error(`그림 없음: ${postId}/${id}`);
+if (!kinds.includes(found.fig.kind)) throw new Error(`${postId}/${id}는 ${found.fig.kind} 그림입니다.`);
+const size = FRAME[found.fig.ratio];
+const base = `/figures/${postId}/${id}`;
+---
+<figure class="infofig">
+  <picture>
+    <source srcset={`${base}.webp`} type="image/webp" />
+    <img
+      src={`${base}.png`}
+      alt={found.fig.alt}
+      width={size.width}
+      height={size.height}
+      loading={found.eager ? "eager" : "lazy"}
+      decoding="async"
+      fetchpriority={found.eager ? "high" : "auto"}
+    />
+  </picture>
+  <figcaption>{found.fig.caption}</figcaption>
+</figure>

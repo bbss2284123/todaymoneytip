@@ -8,9 +8,9 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "tsx scripts/thumbnails.ts && astro build && pagefind --site dist && tsx scripts/check-html.ts",
+    "build": "tsx scripts/thumbnails.ts && tsx scripts/infographics.ts && astro build && pagefind --site dist && tsx scripts/check-html.ts",
     "preview": "astro preview",
-    "check": "tsx --test scripts/content-check.test.ts scripts/keywords.test.ts scripts/indexing.test.ts scripts/formulas.test.ts scripts/schedule.test.ts scripts/thumbnails.test.ts scripts/publish-due.test.ts && tsx scripts/check-content.ts",
+    "check": "tsx --test scripts/content-check.test.ts scripts/keywords.test.ts scripts/indexing.test.ts scripts/formulas.test.ts scripts/schedule.test.ts scripts/thumbnails.test.ts scripts/publish-due.test.ts scripts/infographics.test.ts && tsx scripts/check-content.ts",
     "test": "npm run check",
     "schedule": "tsx scripts/schedule.ts",
     "keywords": "tsx scripts/keywords.ts",

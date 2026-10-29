@@ -421,8 +421,9 @@ th { font-weight: 800; }
   line-height: 1.45;
   color: #111;
 }
-.figure { margin: 0 0 1em; }
-.figure img { border-radius: 12px; border: 1px solid var(--line); }
+.figure, .infofig { margin: 0 0 1.2em; }
+.figure img, .infofig img { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); background: #f6f5f2; }
+.infofig figcaption { margin: 8px 0 0; font-size: 17px; line-height: 1.5; color: #3d3a36; }
 .site-footer { background: var(--footer); padding: 32px 0 calc(28px + env(safe-area-inset-bottom)); }
 .footer-links { display: flex; flex-wrap: wrap; gap: 8px 16px; }
 .footer-links a { color: var(--text); min-height: 48px; display: inline-flex; align-items: center; font-weight: 800; }
