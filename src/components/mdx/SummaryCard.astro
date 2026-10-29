@@ -1,0 +1,6 @@
+---
+import InfoFigure from "./InfoFigure.astro";
+interface Props { id: string }
+const { id } = Astro.props;
+---
+<InfoFigure id={id} kinds={["summary"]} />
