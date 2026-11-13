@@ -19,6 +19,7 @@ import Compare from "../components/mdx/Compare.astro";
 import { figuresOf } from "../infographics/catalog";
 import { headingSlug } from "../lib/slug";
 import { siteConfig, categoryById, absoluteUrl } from "../../site.config";
+import { organizationJsonLd } from "../lib/organization";
 import { allPublished, authorName, postPath, readingMinutes, relatedPosts, seriesMates } from "../lib/posts";
 import { formatKo, isPastDate, seoulToday } from "../lib/dates";
 
@@ -46,7 +47,7 @@ const jsonLd = [
     datePublished: post.data.date,
     dateModified: post.data.updated,
     author: { "@type": "Person", name: siteConfig.author.name },
-    publisher: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
+    publisher: organizationJsonLd(),
     mainEntityOfPage: url,
     image: [
       absoluteUrl(`/thumb/${post.id}/discover.png`),
@@ -127,11 +128,6 @@ const jsonLd = [
         ))}
       </section>
     )}
-    <section class="author">
-      <h2>{siteConfig.author.name}</h2>
-      <p>{siteConfig.author.bio}</p>
-      <p><a href="/author/">글쓴이 소개</a></p>
-    </section>
     <section class="sources">
       <h2>출처</h2>
       <ul>

@@ -12,8 +12,9 @@ interface Props {
   jsonLd?: unknown[];
   published?: string;
   modified?: string;
+  robots?: string;
 }
-const { title, description, path, ogImage, type = "website", jsonLd = [], published, modified } = Astro.props;
+const { title, description, path, ogImage, type = "website", jsonLd = [], published, modified, robots } = Astro.props;
 const canonical = absoluteUrl(path);
 const here = Astro.url.pathname;
 const primaryIds = new Set(
@@ -48,6 +49,7 @@ function isCurrent(href: string): boolean {
       published={published}
       modified={modified}
       jsonLd={jsonLd}
+      robots={robots}
     />
   </head>
   <body>
@@ -121,8 +123,9 @@ function isCurrent(href: string): boolean {
         </nav>
         <nav class="footer-meta" aria-label="안내">
           <a href="/about/">소개</a>
-          <a href="/contact/">문의</a>
           <a href="/privacy/">개인정보처리방침</a>
+          <a href="/terms/">이용약관</a>
+          <a href="/contact/">문의</a>
           <a href="/rss.xml">RSS</a>
         </nav>
         <p class="footer-copy">© {new Date().getFullYear()} {siteConfig.url.replace("https://", "")}</p>
