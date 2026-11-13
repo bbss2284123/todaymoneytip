@@ -27,6 +27,7 @@ const BY_POST: Record<string, Motif> = {
   "severance-tax": "envelope",
   "health-dependent": "hospital",
   "health-premium": "calculator",
+  "health-insurance-adjustment": "calendar",
   "health-voluntary": "heart",
   "housing-monthly": "house",
   "housing-qualify": "houseCheck",
