@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import { siteConfig, absoluteUrl } from "../../site.config";
+import { siteConfig, categoriesInMenu, absoluteUrl } from "../../site.config";
 import Seo from "../components/Seo.astro";
 
 interface Props {
@@ -15,6 +15,19 @@ interface Props {
 }
 const { title, description, path, ogImage, type = "website", jsonLd = [], published, modified } = Astro.props;
 const canonical = absoluteUrl(path);
+const here = Astro.url.pathname;
+const primaryIds = new Set(
+  siteConfig.primaryNav
+    .map((item) => item.href.match(/^\/category\/([^/]+)\/$/)?.[1])
+    .filter((id): id is string => Boolean(id)),
+);
+const moreCategories = categoriesInMenu().filter((category) => !primaryIds.has(category.id));
+
+function isCurrent(href: string): boolean {
+  if (href.includes("#")) return false;
+  const target = href.endsWith("/") ? href : `${href}/`;
+  return here === target || (target !== "/" && here.startsWith(target));
+}
 ---
 <html lang={siteConfig.lang}>
   <head>
@@ -40,44 +53,79 @@ const canonical = absoluteUrl(path);
   <body>
     <a class="skip" href="#content">본문으로</a>
     <header class="site-header">
-      <div class="header-inner">
-        <a class="logo" href="/"><span class="logo-mark">오</span>{siteConfig.logoText}</a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
-          <span class="menu-icon" aria-hidden="true"></span>
-          메뉴
-        </button>
-        <nav id="site-menu" class="nav-links" aria-label="주요">
-          <a href="/roadmap/">퇴직 일정</a>
-          <a href="/search/">검색</a>
-          {siteConfig.categories.map((category) => (
-            <a href={`/category/${category.id}/`}>{category.name}</a>
-          ))}
-        </nav>
+      <div class="header-bar">
+        <div class="header-inner">
+          <a class="logo" href="/"><span class="logo-mark" aria-hidden="true">오</span><span class="logo-text">{siteConfig.logoText}</span></a>
+          <nav id="site-menu" class="site-nav" aria-label="주요">
+            {siteConfig.primaryNav.map((item) => (
+              <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>{item.label}</a>
+            ))}
+            <div class="nav-more">
+              <p class="nav-more-label">다른 주제</p>
+              {moreCategories.map((category) => (
+                <a href={`/category/${category.id}/`} aria-current={isCurrent(`/category/${category.id}/`) ? "page" : undefined}>{category.name}</a>
+              ))}
+              <a href="/roadmap/">퇴직 일정</a>
+            </div>
+          </nav>
+          <div class="header-actions">
+            <a class="icon-btn" href="/search/" aria-label="검색">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                <circle cx="11" cy="11" r="6.5"></circle>
+                <path d="M16 16.5 20 20.5"></path>
+              </svg>
+            </a>
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+              <span class="menu-icon" aria-hidden="true"></span>
+              <span class="menu-word">메뉴</span>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
     <script is:inline>
       const menuButton = document.querySelector(".menu-toggle");
       const menu = document.querySelector("#site-menu");
+      function setMenu(open) {
+        if (!menuButton || !menu) return;
+        menuButton.setAttribute("aria-expanded", String(open));
+        menu.classList.toggle("is-open", open);
+      }
       menuButton?.addEventListener("click", () => {
-        const open = menuButton.getAttribute("aria-expanded") === "true";
-        menuButton.setAttribute("aria-expanded", String(!open));
-        menu?.classList.toggle("is-open", !open);
+        setMenu(menuButton.getAttribute("aria-expanded") !== "true");
+      });
+      menu?.addEventListener("click", (event) => {
+        const target = event.target;
+        if (target instanceof Element && target.closest("a")) setMenu(false);
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setMenu(false);
+      });
+      document.addEventListener("click", (event) => {
+        if (!menu?.classList.contains("is-open")) return;
+        const target = event.target;
+        if (!(target instanceof Node)) return;
+        if (menu.contains(target) || menuButton?.contains(target)) return;
+        setMenu(false);
       });
     </script>
     <slot />
     <footer class="site-footer">
       <div class="footer-inner">
-        <strong>{siteConfig.name}</strong>
-        <p>{siteConfig.description}</p>
-        <nav class="footer-links">
+        <a class="logo footer-logo" href="/"><span class="logo-mark" aria-hidden="true">오</span><span class="logo-text">{siteConfig.name}</span></a>
+        <p class="footer-desc">{siteConfig.description}</p>
+        <nav class="footer-cats" aria-label="분류">
+          {categoriesInMenu().map((category) => (
+            <a href={`/category/${category.id}/`}>{category.name}</a>
+          ))}
+        </nav>
+        <nav class="footer-meta" aria-label="안내">
           <a href="/about/">소개</a>
-          <a href="/author/">글쓴이</a>
-          <a href="/privacy/">개인정보처리방침</a>
-          <a href="/terms/">이용약관</a>
           <a href="/contact/">문의</a>
+          <a href="/privacy/">개인정보처리방침</a>
           <a href="/rss.xml">RSS</a>
         </nav>
-        <p>© {new Date().getFullYear()} {siteConfig.url.replace("https://", "")}</p>
+        <p class="footer-copy">© {new Date().getFullYear()} {siteConfig.url.replace("https://", "")}</p>
       </div>
     </footer>
   </body>

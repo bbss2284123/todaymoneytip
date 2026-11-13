@@ -1,0 +1,21 @@
+---
+interface Props {
+  id: string;
+  alt: string;
+  /** 첫 화면에 실제로 걸릴 때만 true. 나머지는 스크롤 앞에서 받지 않습니다. */
+  eager?: boolean;
+}
+const { id, alt, eager = false } = Astro.props;
+---
+<picture>
+  <source srcset={`/thumb/${id}/feed.webp`} type="image/webp" />
+  <img
+    src={`/thumb/${id}/feed.png`}
+    alt={alt}
+    width="1200"
+    height="675"
+    loading={eager ? "eager" : "lazy"}
+    decoding="async"
+    fetchpriority={eager ? "high" : "low"}
+  />
+</picture>

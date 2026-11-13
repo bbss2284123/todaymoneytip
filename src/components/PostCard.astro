@@ -1,0 +1,36 @@
+---
+import FeedThumb from "./FeedThumb.astro";
+import { siteConfig } from "../../site.config";
+import { formatKo } from "../lib/dates";
+import { postPath, type PostEntry } from "../lib/posts";
+
+interface Props {
+  post: PostEntry;
+  eager?: boolean;
+}
+
+const ink: Record<string, string> = {
+  prepare: "#1b3a6b",
+  pension: "#1b3a6b",
+  severance: "#7a2e3a",
+  basic: "#0f6e6b",
+  health: "#0f6e6b",
+  job: "#1f6b45",
+  housing: "#7a2e3a",
+  tax: "#1f6b45",
+  assets: "#1f6b45",
+  business: "#7a2e3a",
+};
+
+const { post, eager = false } = Astro.props;
+const category = siteConfig.categories.find((item) => item.id === post.data.category);
+---
+<a class="post-card" href={postPath(post.id)}>
+  <FeedThumb id={post.id} alt={`${post.data.title} 썸네일`} eager={eager} />
+  <div class="post-card-body">
+    {category && <p class="post-badge" style={`color: ${ink[post.data.category] ?? "#1b3a6b"}`}>{category.name}</p>}
+    <h3>{post.data.title}</h3>
+    <p class="post-excerpt">{post.data.description}</p>
+    <p class="post-date">{formatKo(post.data.date)}</p>
+  </div>
+</a>

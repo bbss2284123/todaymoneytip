@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import FeedThumb from "../../components/FeedThumb.astro";
 import { siteConfig, categoryById, absoluteUrl } from "../../../site.config";
 import { allPublished, postPath } from "../../lib/posts";
 import { formatKo } from "../../lib/dates";
@@ -33,9 +34,9 @@ const jsonLd = {
     <h1>{meta?.name}</h1>
     <p class="lede">{meta?.description}</p>
     <div class="feed">
-      {visible.map((post) => (
+      {visible.map((post, index) => (
         <a class="feed-item" href={postPath(post.id)}>
-          <img src={`/thumb/${post.id}/feed.png`} alt={`${post.data.title} 썸네일`} width="1200" height="675" />
+          <FeedThumb id={post.id} alt={`${post.data.title} 썸네일`} eager={index === 0} />
           <div>
             <h2>{post.data.title}</h2>
             <p class="summary">{post.data.description}</p>
