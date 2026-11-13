@@ -131,5 +131,7 @@ function isCurrent(href: string): boolean {
         <p class="footer-copy">© {new Date().getFullYear()} {siteConfig.url.replace("https://", "")}</p>
       </div>
     </footer>
+    <script is:inline>(function(){function s(){try{var p=location.pathname;if(window.__mgsP===p)return;window.__mgsP=p;var u="https://mgs-counter.seedleaf11.workers.dev/hit",d=JSON.stringify({h:location.hostname,p:p});if(navigator.sendBeacon&&navigator.sendBeacon(u,new Blob([d],{type:"text/plain"})))return;fetch(u,{method:"POST",body:d,keepalive:true,mode:"no-cors",credentials:"omit"})}catch(e){}}s();document.addEventListener("astro:page-load",s)})();</script>
+    <noscript><img src={`https://mgs-counter.seedleaf11.workers.dev/hit.gif?p=${encodeURIComponent(Astro.url.pathname)}`} width="1" height="1" alt="" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;width:1px;height:1px;left:-9999px" /></noscript>
   </body>
 </html>
