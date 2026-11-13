@@ -4,6 +4,9 @@ import matter from "gray-matter";
 import { parse as parseYaml } from "yaml";
 import { postSchema, publishDateOf, type PostFrontmatter } from "./post-schema";
 import glossary from "../data/glossary.json";
+import { figuresOf } from "../infographics/catalog";
+import { figurePlain } from "../infographics/text";
+import { figureProblems } from "../infographics/validate";
 
 export interface Fact {
   id: string;
@@ -419,6 +422,13 @@ export function checkPosts(posts: LoadedPost[], root = process.cwd()): CheckIssu
     }
     for (const message of keywordPlacementErrors(post.data, post.body)) {
       issues.push({ level: "error", file: post.id, message });
+    }
+    for (const message of figureProblems(post.id, post.body, facts)) {
+      issues.push({ level: "error", file: post.id, message });
+    }
+    const figureCopy = figuresOf(post.id).map(figurePlain).join("\n");
+    for (const hit of findBanned(figureCopy, rules)) {
+      issues.push({ level: "error", file: post.id, message: `그림 금지 표현 "${hit.hit}": ${hit.rule.reason}` });
     }
     if (post.raw.includes("백세영")) {
       issues.push({ level: "error", file: post.id, message: "실명을 쓰지 않습니다. 필명은 백현입니다." });

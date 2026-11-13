@@ -12,6 +12,11 @@ import Figure from "../components/mdx/Figure.astro";
 import Mark from "../components/mdx/Mark.astro";
 import Num from "../components/mdx/Num.astro";
 import Callout from "../components/mdx/Callout.astro";
+import SummaryCard from "../components/mdx/SummaryCard.astro";
+import Chart from "../components/mdx/Chart.astro";
+import Steps from "../components/mdx/Steps.astro";
+import Compare from "../components/mdx/Compare.astro";
+import { figuresOf } from "../infographics/catalog";
 import { headingSlug } from "../lib/slug";
 import { siteConfig, categoryById, absoluteUrl } from "../../site.config";
 import { allPublished, authorName, postPath, readingMinutes, relatedPosts, seriesMates } from "../lib/posts";
@@ -43,7 +48,10 @@ const jsonLd = [
     author: { "@type": "Person", name: siteConfig.author.name },
     publisher: { "@type": "Organization", name: siteConfig.name, url: siteConfig.url },
     mainEntityOfPage: url,
-    image: absoluteUrl(`/thumb/${post.id}/discover.png`),
+    image: [
+      absoluteUrl(`/thumb/${post.id}/discover.png`),
+      ...figuresOf(post.id).map((fig) => absoluteUrl(`/figures/${post.id}/${fig.id}.webp`)),
+    ],
   },
   {
     "@context": "https://schema.org",
@@ -106,7 +114,7 @@ const jsonLd = [
       </details>
     )}
     <div class="prose">
-      <Content components={{ AtAGlance, Term, EligibilityChecklist, WorkedExample, Calculator, ApplyBox, AdSlot, Figure, Mark, Num, Callout }} />
+      <Content components={{ AtAGlance, Term, EligibilityChecklist, WorkedExample, Calculator, ApplyBox, AdSlot, Figure, Mark, Num, Callout, SummaryCard, Chart, Steps, Compare }} />
     </div>
     {post.data.faq && (
       <section class="faq">
