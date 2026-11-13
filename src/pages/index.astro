@@ -1,12 +1,36 @@
 ---
 import Base from "../layouts/Base.astro";
-import { siteConfig } from "../../site.config";
+import PostCard from "../components/PostCard.astro";
+import TopicIcon from "../components/TopicIcon.astro";
+import { siteConfig, categoriesInMenu } from "../../site.config";
 import { organizationJsonLd } from "../lib/organization";
-import { allPublished, postPath } from "../lib/posts";
-import { formatKo } from "../lib/dates";
+import { allPublished } from "../lib/posts";
 
 const posts = await allPublished();
 const featured = posts.filter((post) => post.data.featured).slice(0, 3);
+const counts = new Map(categoriesInMenu().map((category) => [category.id, 0]));
+for (const post of posts) {
+  if (counts.has(post.data.category)) counts.set(post.data.category, (counts.get(post.data.category) ?? 0) + 1);
+}
+
+const tiles: { href: string; label: string; icon: "landmark" | "receipt" | "heart" | "users" | "house" | "calendar"; ink: string; wash: string }[] = [
+  { href: "/category/pension/", label: "국민연금", icon: "landmark", ink: "#1b3a6b", wash: "#e7eef8" },
+  { href: "/category/severance/", label: "퇴직금·연금저축", icon: "receipt", ink: "#7a2e3a", wash: "#f8ecee" },
+  { href: "/category/health/", label: "건강보험", icon: "heart", ink: "#0f6e6b", wash: "#e5f4f3" },
+  { href: "/category/basic/", label: "기초연금", icon: "users", ink: "#0f6e6b", wash: "#e5f4f3" },
+  { href: "/category/housing/", label: "주택연금", icon: "house", ink: "#7a2e3a", wash: "#f8ecee" },
+  { href: "/category/prepare/", label: "은퇴준비", icon: "calendar", ink: "#1b3a6b", wash: "#e7eef8" },
+];
+
+const topics = [
+  { href: "/pension-early-defer/", label: "조기수령과 연기연금" },
+  { href: "/severance-tax/", label: "퇴직금 일시금과 연금 세금" },
+  { href: "/health-dependent/", label: "피부양자 탈락 기준" },
+  { href: "/basic-pension-qualify/", label: "기초연금 조건" },
+  { href: "/housing-monthly/", label: "주택연금 월수령액" },
+  { href: "/irp-pension/", label: "IRP 연금수령 세금" },
+];
+
 const jsonLd = [
   {
     "@context": "https://schema.org",
@@ -26,41 +50,118 @@ const jsonLd = [
 ];
 ---
 <Base title={siteConfig.name} description={siteConfig.description} path="/" ogImage={featured[0] ? `/thumb/${featured[0].id}/og.png` : undefined} jsonLd={jsonLd}>
-  <main id="content" class="page home">
-    <h1>퇴직 전후에 꼭 필요한 돈 정보, 쉽고 정확하게</h1>
-    <p class="lede">국민연금과 건강보험, 퇴직금을 공식 자료로 확인한 뒤 쉬운 말로 정리해요.</p>
-    <nav class="pills" aria-label="분류">
-      <a href="/" aria-current="page">전체</a>
-      {siteConfig.categories.map((category) => (
-        <a href={`/category/${category.id}/`}>{category.name}</a>
-      ))}
-    </nav>
-    <h2 class="section-title">이번 주 꼭 읽을 글</h2>
-    <div class="featured">
-      {featured.map((post) => (
-        <a class="feature-card" href={postPath(post.id)}>
-          <img src={`/thumb/${post.id}/feed.png`} alt={`${post.data.title} 썸네일`} width="1200" height="675" />
-          <p class="kicker">{siteConfig.categories.find((item) => item.id === post.data.category)?.name}</p>
-          <h2>{post.data.title}</h2>
-          <p class="summary">{post.data.description}</p>
-          <p class="meta">{formatKo(post.data.date)}</p>
-        </a>
-      ))}
+  <main id="content" class="home-page">
+    <div class="home-inner">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="hero-kicker">기준일과 출처가 있는 안내</p>
+          <h1>퇴직 전후에 꼭 필요한 돈 정보, 쉽고 정확하게</h1>
+          <p class="hero-lede">국민연금과 건강보험, 퇴직금을 공식 자료로 확인한 뒤 쉬운 말로 정리해요.</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <svg viewBox="0 0 240 200" fill="none">
+            <circle cx="168" cy="104" r="78" fill="#d9e5f6" />
+            <rect x="28" y="28" width="128" height="146" rx="18" fill="#fff" stroke="#1b3a6b" stroke-width="2.5" />
+            <rect x="46" y="50" width="72" height="12" rx="6" fill="#1b3a6b" />
+            <rect x="46" y="74" width="92" height="8" rx="4" fill="#d5dbe6" />
+            <rect x="46" y="90" width="76" height="8" rx="4" fill="#d5dbe6" />
+            <rect x="46" y="122" width="18" height="32" rx="4" fill="#1b3a6b" />
+            <rect x="72" y="110" width="18" height="44" rx="4" fill="#1f5fbf" />
+            <rect x="98" y="128" width="18" height="26" rx="4" fill="#0f6e6b" />
+            <rect x="156" y="36" width="68" height="58" rx="14" fill="#fff" stroke="#1b3a6b" stroke-width="2.5" />
+            <path d="M156 52h68" stroke="#1b3a6b" stroke-width="2.5" />
+            <path d="M156 36h68v16H156z" fill="#1b3a6b" />
+            <circle cx="176" cy="72" r="4" fill="#1f5fbf" />
+            <circle cx="192" cy="72" r="4" fill="#d5dbe6" />
+            <circle cx="208" cy="72" r="4" fill="#0f6e6b" />
+            <circle cx="188" cy="148" r="32" fill="#fff" stroke="#7a2e3a" stroke-width="2.5" />
+            <circle cx="188" cy="148" r="22" fill="none" stroke="#7a2e3a" stroke-width="2" />
+            <circle cx="188" cy="148" r="8" fill="#f8ecee" stroke="#7a2e3a" stroke-width="2" />
+          </svg>
+        </div>
+      </section>
+
+      <section class="home-block" aria-labelledby="topics-title">
+        <h2 id="topics-title" class="block-title">주제별로 보기</h2>
+        <ul class="topic-grid">
+          {tiles.map((tile) => (
+            <li>
+              <a class="topic-tile" href={tile.href} style={`--ink: ${tile.ink}; --wash: ${tile.wash}`}>
+                <span class="topic-icon"><TopicIcon name={tile.icon} /></span>
+                <span class="topic-label">{tile.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <div class="home-layout">
+        <div class="home-main">
+          {featured.length > 0 && (
+            <section aria-labelledby="featured-title">
+              <div class="section-head">
+                <h2 id="featured-title" class="block-title">추천 글</h2>
+              </div>
+              <div class="post-grid">
+                {featured.map((post) => (
+                  <PostCard post={post} />
+                ))}
+              </div>
+            </section>
+          )}
+          <section id="latest" aria-labelledby="latest-title">
+            <div class="section-head">
+              <h2 id="latest-title" class="block-title">최근 글</h2>
+              <p>{posts.length}편</p>
+            </div>
+            <div class="post-grid">
+              {posts.map((post) => (
+                <PostCard post={post} />
+              ))}
+            </div>
+          </section>
+        </div>
+
+        <aside class="home-side" aria-label="안내 칸">
+          <form class="side-search" action="/search/" method="get" role="search">
+            <label for="home-q">글 검색</label>
+            <div class="search-row">
+              <input id="home-q" name="q" type="search" placeholder="연금, 퇴직금, 보험료" required />
+              <button type="submit">검색</button>
+            </div>
+          </form>
+
+          <section class="side-card" aria-labelledby="hot-title">
+            <h2 id="hot-title" class="side-title">많이 찾는 주제</h2>
+            <ul class="side-links">
+              {topics.map((topic) => (
+                <li><a href={topic.href}>{topic.label}</a></li>
+              ))}
+            </ul>
+          </section>
+
+          <section class="side-shortcut" aria-labelledby="plan-title">
+            <span class="shortcut-icon" aria-hidden="true"><TopicIcon name="calendar" /></span>
+            <h2 id="plan-title" class="side-title">퇴직 일정</h2>
+            <p>퇴직 전과 당일, 한 달 뒤에 볼 일을 순서대로 적었어요. 생활비 빈칸과 주택연금 표는 이 페이지에서 계산해요.</p>
+            <a class="shortcut-btn" href="/roadmap/">일정 보기</a>
+          </section>
+
+          <section class="side-card" aria-labelledby="cats-title">
+            <h2 id="cats-title" class="side-title">분류</h2>
+            <ul class="side-counts">
+              {categoriesInMenu().map((category) => (
+                <li>
+                  <a href={`/category/${category.id}/`}>
+                    <span>{category.name}</span>
+                    <span class="count">{counts.get(category.id) ?? 0}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        </aside>
+      </div>
     </div>
-    <h2 class="section-title">최신 글</h2>
-    <div class="feed">
-      {posts.map((post) => (
-        <a class="feed-item" href={postPath(post.id)}>
-          <img src={`/thumb/${post.id}/feed.png`} alt={`${post.data.title} 썸네일`} width="1200" height="675" />
-          <div>
-            <p class="kicker">{siteConfig.categories.find((item) => item.id === post.data.category)?.name}</p>
-            <h2>{post.data.title}</h2>
-            <p class="summary">{post.data.description}</p>
-            <p class="meta">{formatKo(post.data.date)}</p>
-          </div>
-        </a>
-      ))}
-    </div>
-    <p><a class="btn more" href="/category/pension/">글 더 보기</a></p>
   </main>
 </Base>

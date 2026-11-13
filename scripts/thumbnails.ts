@@ -149,6 +149,7 @@ async function main() {
         const discover = await renderThumb({ ...base, style, width: 1200, height: 675 });
         writeFileSync(path.join(dir, "discover.png"), discover);
         writeFileSync(path.join(dir, "feed.png"), discover);
+        writeFileSync(path.join(dir, "feed.webp"), await sharp(discover).webp({ quality: 78 }).toBuffer());
         writeArtifact(artifactDir, `${id}-og.png`, png);
         if (artifactDir) writeArtifact(artifactDir, `${id}-w300.png`, await sharp(png).resize(300).png().toBuffer());
       }

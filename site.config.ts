@@ -41,7 +41,7 @@ export const siteConfig = {
     colorOkBg: "#e7f6f1",
     colorFooter: "#f6f5f2",
     contentMax: "680px",
-    pageMax: "1080px",
+    pageMax: "1160px",
     bodySizeMobile: "20px",
     bodySizeDesktop: "21px",
     lineHeight: "1.85",
@@ -115,6 +115,15 @@ export const siteConfig = {
       description: "퇴직 뒤 작은 사업을 시작할 때 보는 제도와 세금입니다. 지원 금액은 공식 안내를 확인하기 전에는 적지 않습니다.",
     },
   ] as Category[],
+  // 상단, 홈 타일, 바닥 메뉴에서 뺍니다. 글과 /category/job/ 주소는 유지합니다.
+  menuHiddenCategoryIds: ["job"],
+  primaryNav: [
+    { href: "/category/pension/", label: "국민연금" },
+    { href: "/category/severance/", label: "퇴직금·연금저축" },
+    { href: "/category/health/", label: "건강보험" },
+    { href: "/category/tax/", label: "세금·자산" },
+    { href: "/#latest", label: "전체 글" },
+  ],
   adsense: {
     publisherId: "",
     slots: {
@@ -165,6 +174,11 @@ export type CategoryId = (typeof siteConfig.categories)[number]["id"];
 
 export function categoryById(id: string): Category | undefined {
   return siteConfig.categories.find((c) => c.id === id);
+}
+
+export function categoriesInMenu(): Category[] {
+  const hidden = new Set<string>(siteConfig.menuHiddenCategoryIds);
+  return siteConfig.categories.filter((category) => !hidden.has(category.id));
 }
 
 export function absoluteUrl(path: string): string {
