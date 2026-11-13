@@ -2,6 +2,7 @@ import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import sharp from "sharp";
+import { motifFor } from "../src/thumbnails/art";
 import { renderCaption, renderExplainer, renderThumb, type ThumbInput } from "../src/thumbnails/render";
 
 const postsDir = path.join(process.cwd(), "src/content/posts");
@@ -115,6 +116,7 @@ async function main() {
   if (!artifactDir) console.log("ARTIFACTS_DIR is unset; skipping extra artifact copies");
   const sheetCells: { caption: string; png: Buffer }[] = [];
   const smallCells: { caption: string; png: Buffer }[] = [];
+  const published: { caption: string; png: Buffer }[] = [];
 
   for (const file of readdirSync(postsDir).filter((name) => name.endsWith(".mdx")).sort()) {
     const id = file.replace(/\.mdx$/, "");
@@ -136,6 +138,7 @@ async function main() {
       keyword: data.검색어,
       category: data.category,
       number: data.thumbNumber,
+      motif: motifFor(id, data.category),
       ...cards[id],
     };
     for (const style of styles) {
@@ -150,8 +153,12 @@ async function main() {
         writeFileSync(path.join(dir, "discover.png"), discover);
         writeFileSync(path.join(dir, "feed.png"), discover);
         writeFileSync(path.join(dir, "feed.webp"), await sharp(discover).webp({ quality: 78 }).toBuffer());
-        writeArtifact(artifactDir, `${id}-og.png`, png);
-        if (artifactDir) writeArtifact(artifactDir, `${id}-w300.png`, await sharp(png).resize(300).png().toBuffer());
+        published.push({ caption: data.검색어, png: discover });
+        const examples = new Set(["pension-early-defer", "health-dependent", "housing-monthly", "severance-tax", "unemployment-benefit"]);
+        if (examples.has(id)) {
+          writeArtifact(artifactDir, `example-${id}.png`, discover);
+          if (artifactDir) writeArtifact(artifactDir, `example-${id}-360.png`, await sharp(discover).resize(360).png().toBuffer());
+        }
       }
     }
     const diagram = explainers[id];
@@ -169,6 +176,7 @@ async function main() {
       category: "prepare",
       style: "timeline",
       lines: ["퇴직 전후", "돈의 순서"],
+      caption: "기한 있는 일부터",
       steps: ["퇴직 전", "퇴직 당일", "다음 달", "그 이후"],
       width: 1200,
       height: 630,
@@ -177,7 +185,11 @@ async function main() {
 
   const contact = await sheet(sheetCells, 5, 680);
   writeFileSync(path.join(outDir, "contact-sheet.png"), contact);
-  writeArtifact(artifactDir, "contact-sheet.png", contact);
+  writeArtifact(artifactDir, "contact-sheet-styles.png", contact);
+  if (published.length) {
+    const postsSheet = await sheet(published, 4, 560);
+    writeArtifact(artifactDir, "contact-sheet.png", postsSheet);
+  }
   if (artifactDir && smallCells.length) {
     writeArtifact(artifactDir, "contact-sheet-300.png", await sheet(smallCells, 5, 300));
   }

@@ -15,6 +15,15 @@ test("썸네일 제목은 한 줄 14자, 두 줄", () => {
   assert.ok(lines.every((line) => [...line].length <= 14));
 });
 
+test("짧은 제목은 한 줄, 긴 제목은 같은 말로 두 줄", () => {
+  assert.deepEqual(thumbLines("집값 3억이면 얼마"), ["집값 3억이면 얼마"]);
+  assert.deepEqual(thumbLines("50세 이상 최대 270일"), ["50세 이상", "최대 270일"]);
+  assert.equal(thumbLines("50세 이상 최대 270일").join(" "), "50세 이상 최대 270일");
+  const wrapped = thumbLines("임의계속가입 최대 36개월");
+  assert.equal(wrapped.length, 2);
+  assert.ok(wrapped.every((line) => [...line].length <= 14));
+});
+
 test("비교 숫자는 부호와 방향을 적음", () => {
   assert.deepEqual(figurePanels("6% / 7.2%", "국민연금 조기수령"), [
     { label: "1년 일찍", figure: "−6% / 년", tone: "minus" },
