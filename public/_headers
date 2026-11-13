@@ -3,3 +3,6 @@
 
 /thumb/*
   Cache-Control: public, max-age=604800
+
+https://todaymoneytip.pages.dev/*
+  X-Robots-Tag: noindex

@@ -10,8 +10,19 @@ interface Props {
   published?: string;
   modified?: string;
   jsonLd?: unknown[];
+  robots?: string;
 }
-const { title, description, canonical, ogImage, type = "website", published, modified, jsonLd = [] } = Astro.props;
+const {
+  title,
+  description,
+  canonical,
+  ogImage,
+  type = "website",
+  published,
+  modified,
+  jsonLd = [],
+  robots = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+} = Astro.props;
 const envGa = import.meta.env.PUBLIC_GA_ID?.trim();
 const ga4Id = envGa || siteConfig.ga4Id;
 const image = ogImage ? absoluteUrl(ogImage) : absoluteUrl("/thumb/default/og.png");
@@ -20,7 +31,7 @@ const fullTitle = title === siteConfig.name ? title : `${title} | ${siteConfig.n
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<meta name="robots" content={robots} />
 <meta property="og:type" content={type} />
 <meta property="og:locale" content={siteConfig.locale} />
 <meta property="og:site_name" content={siteConfig.name} />
