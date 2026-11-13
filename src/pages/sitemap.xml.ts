@@ -9,7 +9,7 @@ function escapeXml(value: string): string {
 
 export async function GET(_context: APIContext) {
   const posts = await allPublished();
-  const staticPages = ["/", "/roadmap/", "/about/", "/author/", "/privacy/", "/terms/", "/contact/", "/search/"];
+  const staticPages = ["/", "/roadmap/", "/about/", "/privacy/", "/terms/", "/contact/", "/search/"];
   const urls = [
     ...staticPages.map((path) => ({ loc: absoluteUrl(path), lastmod: siteConfig.legalUpdated, images: [] as { loc: string; caption: string }[] })),
     ...siteConfig.categories.map((category) => ({ loc: absoluteUrl(`/category/${category.id}/`), lastmod: siteConfig.legalUpdated, images: [] as { loc: string; caption: string }[] })),

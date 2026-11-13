@@ -19,15 +19,12 @@ export const siteConfig = {
     "퇴직 전후 돈 문제를, 기준일과 출처를 붙여 먼저 답하는 안내서입니다. 국민연금, 퇴직금, 건강보험, 기초연금을 쉬운 말로 정리합니다.",
   lang: "ko",
   locale: "ko_KR",
-  contactEmail: "contact@todaymoneytip.com",
+  contactEmail: "baekhyun071500@gmail.com",
   legalUpdated: "2026-10-28",
   postsPerPage: 10,
   indexNowKey: "b7e4c1a09f6d4823a5c8e7d14f20b6aa",
   author: {
     name: "백현",
-    slug: "baek-hyeon",
-    role: "글쓴이",
-    bio: "백현은 퇴직과 노후 돈 정보를 공식 자료 기준으로 쉬운 말로 정리합니다. 자격이나 경력을 내세우지 않습니다. 특정 상품 가입을 권하지 않습니다.",
   },
   design: {
     fontFamily: '"Pretendard Variable", Pretendard, system-ui, sans-serif',
