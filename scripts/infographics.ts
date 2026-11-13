@@ -89,9 +89,13 @@ async function main() {
 
   const contact = await contactSheet(sheet);
   writeFileSync(path.join(outDir, "contact-sheet.png"), contact);
-  const artifactDir = artifactsDir() ?? "/opt/cursor/artifacts";
-  mkdirSync(artifactDir, { recursive: true });
-  writeFileSync(path.join(artifactDir, "infographics-contact-sheet.png"), contact);
+  const artifactDir = artifactsDir();
+  if (artifactDir) {
+    mkdirSync(artifactDir, { recursive: true });
+    writeFileSync(path.join(artifactDir, "infographics-contact-sheet.png"), contact);
+  } else {
+    console.log("ARTIFACTS_DIR is unset; skipping extra artifact copies");
+  }
   console.log(`contact ${sheet.length} images, ${contact.length} bytes`);
 }
 
