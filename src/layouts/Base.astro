@@ -12,8 +12,9 @@ interface Props {
   jsonLd?: unknown[];
   published?: string;
   modified?: string;
+  robots?: string;
 }
-const { title, description, path, ogImage, type = "website", jsonLd = [], published, modified } = Astro.props;
+const { title, description, path, ogImage, type = "website", jsonLd = [], published, modified, robots } = Astro.props;
 const canonical = absoluteUrl(path);
 ---
 <html lang={siteConfig.lang}>
@@ -35,6 +36,7 @@ const canonical = absoluteUrl(path);
       published={published}
       modified={modified}
       jsonLd={jsonLd}
+      robots={robots}
     />
   </head>
   <body>

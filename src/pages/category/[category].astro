@@ -28,7 +28,7 @@ const jsonLd = {
   })),
 };
 ---
-<Base title={meta?.name ?? "분류"} description={meta?.description ?? siteConfig.description} path={`/category/${category}/`} jsonLd={[jsonLd]}>
+<Base title={meta?.name ?? "분류"} description={meta?.description ?? siteConfig.description} path={`/category/${category}/`} jsonLd={[jsonLd]} robots={posts.length === 0 ? "noindex,follow" : undefined}>
   <main id="content" class="page home">
     <h1>{meta?.name}</h1>
     <p class="lede">{meta?.description}</p>
