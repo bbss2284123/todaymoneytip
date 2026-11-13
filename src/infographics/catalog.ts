@@ -787,6 +787,53 @@ export const figures: Record<string, Figure[]> = {
       caption: "전화는 1577-1000입니다.",
     },
   ],
+  "health-insurance-adjustment": [
+    {
+      id: "health-insurance-adjustment-timing-calendar",
+      kind: "timeline",
+      ratio: "4:5",
+      title: "신청일과 시작월",
+      marks: [
+        { label: "매달 1일", detail: "그 달부터" },
+        { label: "11.1~12.10", detail: "11월분" },
+        { label: "12.11~1.10", detail: "12월분" },
+        { label: "그 밖의 날", detail: "다음 달" },
+      ],
+      source: nhis,
+      alt: "건강보험료 조정신청 시기별 적용 시작월 달력",
+      caption: "12.10까지 신청하면 11월분부터예요.",
+    },
+    {
+      id: "health-insurance-adjustment-settlement-flow",
+      kind: "steps",
+      ratio: "4:5",
+      title: "조정 뒤 정산",
+      steps: [
+        { title: "신청", detail: "12.10까지면 11월분" },
+        { title: "낮춘 고지", detail: "그 해는 적게 냄" },
+        { title: "다음 해 11월", detail: "확인소득으로 다시 계산" },
+        { title: "차액", detail: "더 내거나 돌려받음" },
+      ],
+      source: nhis,
+      alt: "건강보험료 조정신청 후 다음 해 정산 흐름도",
+      caption: "다음 해 11월에 차액을 다시 맞춰요.",
+    },
+    {
+      id: "health-insurance-adjustment-documents",
+      kind: "summary",
+      ratio: "1:1",
+      kicker: "신청 서류",
+      lead: "동의서",
+      rows: [
+        { label: "공통", value: "동의서·신분증", tone: "base" },
+        { label: "퇴직·폐업", value: "증명서", tone: "base" },
+        { label: "해촉", value: "증빙 없음", tone: "base" },
+      ],
+      source: nhis,
+      alt: "건강보험료 조정신청 서류 체크 카드",
+      caption: "해촉은 증명서 없이 실시간 소득으로 맞춰요.",
+    },
+  ],
   "housing-monthly": [
     {
       id: "lead",

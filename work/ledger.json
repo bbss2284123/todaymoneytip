@@ -609,6 +609,38 @@
         }
       ],
       "factsHashAtStyleEdit": "b5ed8d5385476ea9ef37ec8e1cc3b436facafb28e1b816b3105835272c7d706c"
+    },
+    "health-insurance-adjustment": {
+      "stage": "scheduled",
+      "keyword": "건강보험료 조정신청",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-11-13T20:43:46.188Z",
+          "note": "키워드 대기열"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-11-13T20:43:46.190Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-11-13T20:43:46.190Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-11-13T20:43:46.190Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-11-13T20:43:46.191Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-11-13T20:43:46.191Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "8287297ee81c8df1c4085102b66d8d81b499f18ae46b8fb1c801a2a963ac93c4"
     }
   }
 }
