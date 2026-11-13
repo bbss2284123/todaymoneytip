@@ -11,7 +11,9 @@
 
 `title`, `serpTitle`, `description`, `date`, `updated`, `publishAt`, `category`, `tags`, `sources`, `featured`, `구성`, `제목틀`, `검색어`, `근거`.
 
-선택: `series`, `baseDate`, `applyPeriod`, `status`, `faq`, `thumbStyle`, `thumbNumber`, `thumbImage`, `author`.
+선택: `series`, `baseDate`, `applyPeriod`, `status`, `faq`, `thumbStyle`, `thumbTitle`, `thumbNumber`, `thumbImage`, `author`.
+
+썸네일은 짙은 기울기 바탕, 왼쪽 제목, 오른쪽 평면 그림입니다. 판형과 분류 색은 `STYLE.md`를 따릅니다. `thumbTitle`은 한 줄 약 14자의 두 줄 제목이고, `thumbNumber`는 밝은 숫자 알약입니다.
 
 `author`를 비우면 백현입니다. 실명을 쓰지 않습니다.
 

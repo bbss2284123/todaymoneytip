@@ -2,7 +2,9 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import satori from "satori";
 import sharp from "sharp";
+import { illustrationSvg, motifFor, type Motif } from "./art";
 import { thumbLines } from "./fit";
+import { BADGE, THEME, type ThumbTheme } from "./theme";
 
 export interface ThumbCompare {
   leftLabel: string;
@@ -20,34 +22,21 @@ export interface ThumbInput {
   number?: string;
   width: number;
   height: number;
-  lines?: [string, string];
+  lines?: [string, string] | string[];
   caption?: string;
   hero?: string;
   heroLabel?: string;
   compare?: ThumbCompare;
   checks?: [string, string, string];
   steps?: string[];
+  motif?: Motif;
 }
 
-const THEME: Record<string, { accent: string; wash: string; icons: string[] }> = {
-  prepare: { accent: "#1b3a6b", wash: "#e7eef8", icons: ["calendar", "landmark"] },
-  pension: { accent: "#1b3a6b", wash: "#e7eef8", icons: ["landmark", "coins"] },
-  severance: { accent: "#7a2e3a", wash: "#f8ecee", icons: ["receipt", "banknote"] },
-  basic: { accent: "#0f6e6b", wash: "#e5f4f3", icons: ["users", "shield"] },
-  health: { accent: "#0f6e6b", wash: "#e5f4f3", icons: ["heart-pulse", "shield"] },
-  job: { accent: "#1f6b45", wash: "#e7f4ec", icons: ["briefcase", "calendar"] },
-  housing: { accent: "#7a2e3a", wash: "#f8ecee", icons: ["house", "coins"] },
-  tax: { accent: "#1f6b45", wash: "#e7f4ec", icons: ["banknote", "receipt"] },
-  assets: { accent: "#1f6b45", wash: "#e7f4ec", icons: ["coins", "landmark"] },
-  business: { accent: "#7a2e3a", wash: "#f8ecee", icons: ["briefcase", "shield"] },
-};
-
-const PAPER = "#f6f5f2";
 const INK = "#111111";
-const MINUS = "#b42318";
-const PLUS = "#1f5fbf";
+const PAPER = "#f6f5f2";
 const fonts = new Map<number, Buffer>();
 const iconCache = new Map<string, string>();
+const artCache = new Map<string, string>();
 
 function font(weight: 700 | 800): Buffer {
   const cached = fonts.get(weight);
@@ -71,10 +60,20 @@ async function iconSrc(name: string, color: string): Promise<string> {
   if (cached) return cached;
   const svg = readFileSync(path.join(process.cwd(), "src/thumbnails/icons", `${name}.svg`), "utf8")
     .replace(/currentColor/g, color)
-    .replace(/stroke-width="2"/g, 'stroke-width="1.5"');
-  const png = await sharp(Buffer.from(svg)).resize(128, 128).png().toBuffer();
+    .replace(/stroke-width="2"/g, 'stroke-width="2.4"');
+  const png = await sharp(Buffer.from(svg)).resize(96, 96).png().toBuffer();
   const uri = `data:image/png;base64,${png.toString("base64")}`;
   iconCache.set(key, uri);
+  return uri;
+}
+
+async function artSrc(motif: Motif, theme: ThumbTheme): Promise<string> {
+  const key = `${motif}:${theme.from}`;
+  const cached = artCache.get(key);
+  if (cached) return cached;
+  const png = await sharp(Buffer.from(illustrationSvg(motif, theme.art))).png().toBuffer();
+  const uri = `data:image/png;base64,${png.toString("base64")}`;
+  artCache.set(key, uri);
   return uri;
 }
 
@@ -83,11 +82,6 @@ function el(style: Record<string, unknown>, children: unknown): unknown {
 }
 
 type Tone = "minus" | "plus" | "neutral";
-const TONE = {
-  minus: { bg: "#f8d4ce", fg: "#6e1b12" },
-  plus: { bg: "#d9e7ff", fg: "#0d3d86" },
-  neutral: { bg: "#ffffff", fg: "#111111" },
-} as const;
 
 export function figurePanels(number: string | undefined, keyword: string): { label: string; figure: string; tone: Tone }[] {
   if (!number?.trim()) return [];
@@ -112,29 +106,69 @@ function signedFigure(raw: string, tone: "minus" | "plus", perYear: boolean): st
   return perYear ? `${sign}${body} / 년` : `${sign}${body}`;
 }
 
-function titlePx(lines: string[], width: number): number {
-  const longest = Math.max(...lines.map((line) => [...line].length), 1);
-  const fitted = Math.round((width * 0.6) / longest);
-  return Math.max(84, Math.min(96, fitted));
-}
-
-function pillTone(figure: string): "minus" | "plus" | "neutral" {
+function pillTone(figure: string): Tone {
   if (/^[−-]/.test(figure)) return "minus";
   if (/^\+/.test(figure)) return "plus";
   return "neutral";
 }
 
-function pillBg(tone: "minus" | "plus" | "neutral", accent: string): string {
-  if (tone === "minus") return MINUS;
-  if (tone === "plus") return PLUS;
-  return accent;
+interface Badge {
+  label: string;
+  figure: string;
+  tone: Tone;
+}
+
+function badgesFor(input: ThumbInput): Badge[] {
+  if (input.style === "compare" && input.compare) {
+    return [
+      { label: input.compare.leftLabel, figure: input.compare.left, tone: input.compare.signed ? "minus" : "neutral" },
+      { label: input.compare.rightLabel, figure: input.compare.right, tone: input.compare.signed ? "plus" : "neutral" },
+    ];
+  }
+  if (input.number?.includes("/")) {
+    return figurePanels(input.number, input.keyword).map((panel) => ({
+      label: panel.label,
+      figure: panel.figure.replace(" / 년", ""),
+      tone: panel.tone,
+    }));
+  }
+  if (input.hero) return [{ label: input.heroLabel ?? "", figure: input.hero, tone: pillTone(input.hero) }];
+  return figurePanels(input.number, input.keyword).map((panel) => ({
+    label: panel.tone === "neutral" ? "" : panel.label,
+    figure: panel.figure,
+    tone: panel.tone,
+  }));
+}
+
+function subtitleFor(input: ThumbInput, lines: string[]): string {
+  const raw = (input.caption || input.keyword || "").replace(/\s+/g, " ").trim();
+  if (!raw) return "";
+  const title = lines.join(" ");
+  if (title.includes(raw)) return "";
+  return raw;
+}
+
+/** 한 줄 글자 수에 맞춰 제목 크기를 고릅니다. 48px 아래로 내리지 않습니다. */
+export function titleSize(lines: string[], textWidth: number): number {
+  const longest = Math.max(...lines.map((line) => [...line].length), 1);
+  const tracking = 0.045;
+  const factor = longest - tracking * Math.max(longest - 1, 0);
+  return Math.max(48, Math.min(86, Math.floor(textWidth / factor)));
+}
+
+function figureSize(text: string): number {
+  const n = [...text].length;
+  if (n <= 4) return 56;
+  if (n <= 7) return 48;
+  return 42;
 }
 
 export async function renderThumb(input: ThumbInput): Promise<Buffer> {
   const theme = THEME[input.category] ?? THEME.pension;
-  const icons = await Promise.all(theme.icons.map((name) => iconSrc(name, theme.accent)));
-  const lines = input.lines ?? (thumbLines(input.title).slice(0, 2) as [string, string]);
-  const svg = await satori(layout(input, theme, icons, lines) as React.ReactNode, {
+  const motif = input.motif ?? motifFor("", input.category);
+  const [icon, art] = await Promise.all([iconSrc(theme.pillIcon, theme.pillFg), artSrc(motif, theme)]);
+  const lines = (input.lines?.length ? input.lines : thumbLines(input.title)).slice(0, 2);
+  const svg = await satori(layout(input, theme, icon, art, lines) as React.ReactNode, {
     width: input.width,
     height: input.height,
     fonts: satoriFonts(),
@@ -142,120 +176,174 @@ export async function renderThumb(input: ThumbInput): Promise<Buffer> {
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
 
-function layout(
-  input: ThumbInput,
-  theme: { accent: string; wash: string },
-  icons: string[],
-  lines: string[],
-): unknown {
-  const size = titlePx(lines, input.width);
-  const rail = 10;
-  const art = 280;
-  return el({ width: input.width, height: input.height, background: PAPER, fontFamily: "Pretendard", color: INK }, [
-    el({ width: rail, height: input.height, background: theme.accent }, " "),
-    el(
-      {
-        width: input.width - rail - art,
-        height: input.height,
-        boxSizing: "border-box",
-        padding: "36px 24px 32px 40px",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      },
-      [
-        el({ flexDirection: "column" }, [
-          el({ fontSize: 32, fontWeight: 800, color: theme.accent, marginBottom: 14 }, input.keyword),
-          ...lines.map((line) =>
-            el(
-              { fontSize: size, fontWeight: 800, color: INK, letterSpacing: -2.5, lineHeight: 1.15, whiteSpace: "nowrap" },
-              line,
-            ),
+function layout(input: ThumbInput, theme: ThumbTheme, icon: string, art: string, lines: string[]): unknown {
+  const padL = 52;
+  const padR = 28;
+  const artSize = Math.round(Math.min(input.height * 0.7, 460));
+  const textWidth = input.width - padL - padR - artSize - 8;
+  const size = titleSize(lines, textWidth);
+  const subtitle = subtitleFor(input, lines);
+  const badges = badgesFor(input);
+  return el(
+    {
+      width: input.width,
+      height: input.height,
+      position: "relative",
+      overflow: "hidden",
+      backgroundImage: `linear-gradient(108deg, ${theme.from} 0%, ${theme.from} 46%, ${theme.to} 100%)`,
+      backgroundColor: theme.from,
+      fontFamily: "Pretendard",
+      color: "#ffffff",
+    },
+    [
+      circle(input.width - 380, 20, 460, theme.glow),
+      circle(-140, input.height - 280, 520, theme.glow),
+      circle(36, 26, 14, "rgba(255,255,255,0.7)"),
+      el(
+        {
+          width: input.width,
+          height: input.height,
+          padding: `44px ${padR}px 36px ${padL}px`,
+          flexDirection: "row",
+          alignItems: "center",
+          boxSizing: "border-box",
+        },
+        [
+          el(
+            { width: textWidth, height: input.height - 80, flexDirection: "column", justifyContent: "center" },
+            [
+              pill(theme, icon),
+              el({ height: 26 }, " "),
+              ...lines.map((line) =>
+                el(
+                  {
+                    fontSize: size,
+                    fontWeight: 800,
+                    color: "#ffffff",
+                    letterSpacing: -2,
+                    lineHeight: 1.12,
+                    whiteSpace: "nowrap",
+                  },
+                  line,
+                ),
+              ),
+              el({ width: 72, height: 6, borderRadius: 3, background: "#ffffff", marginTop: 20, marginBottom: subtitle ? 16 : 18 }, " "),
+              subtitle
+                ? el(
+                    { fontSize: subtitle.length > 16 ? 32 : 36, fontWeight: 700, color: "#e7eef6", marginBottom: 18, whiteSpace: "nowrap" },
+                    subtitle,
+                  )
+                : el({}, " "),
+              badgeRow(badges),
+              extras(input),
+            ],
           ),
-          el({ marginTop: 20 }, variant(input, theme.accent)),
+          el({ width: artSize, height: artSize, alignItems: "center", justifyContent: "center" }, [
+            { type: "img", props: { src: art, width: artSize, height: artSize } },
+          ]),
+        ],
+      ),
+      el(
+        {
+          position: "absolute",
+          top: 18,
+          left: input.width - 168,
+          fontSize: 16,
+          fontWeight: 700,
+          color: "#ffffff",
+          opacity: 0.55,
+        },
+        "오늘의 머니팁",
+      ),
+    ],
+  );
+}
+
+function circle(left: number, top: number, size: number, color: string): unknown {
+  return el(
+    {
+      position: "absolute",
+      left,
+      top,
+      width: size,
+      height: size,
+      borderRadius: size / 2,
+      background: color,
+    },
+    " ",
+  );
+}
+
+function pill(theme: ThumbTheme, icon: string): unknown {
+  return el(
+    {
+      alignSelf: "flex-start",
+      alignItems: "center",
+      background: theme.pillBg,
+      color: theme.pillFg,
+      borderRadius: 999,
+      padding: "8px 18px 8px 12px",
+    },
+    [
+      { type: "img", props: { src: icon, width: 34, height: 34 } },
+      el({ fontSize: 32, fontWeight: 800, color: theme.pillFg, marginLeft: 8 }, theme.label),
+    ],
+  );
+}
+
+function badgeRow(badges: Badge[]): unknown {
+  if (!badges.length) return el({}, " ");
+  return el(
+    { gap: 12, alignItems: "flex-end" },
+    badges.map((badge) => {
+      const tone = BADGE[badge.tone];
+      const figure = figureSize(badge.figure);
+      return el(
+        {
+          flexDirection: "column",
+          alignSelf: "flex-start",
+          background: tone.bg,
+          borderRadius: 18,
+          padding: badge.label ? "10px 18px 12px" : "12px 20px",
+        },
+        [
+          badge.label
+            ? el({ fontSize: 26, fontWeight: 700, color: tone.fg, marginBottom: 2 }, badge.label)
+            : el({}, " "),
+          el({ fontSize: figure, fontWeight: 800, color: tone.fg, letterSpacing: -1, lineHeight: 1.05 }, badge.figure),
+        ],
+      );
+    }),
+  );
+}
+
+function extras(input: ThumbInput): unknown {
+  if (input.style === "checklist" && input.checks?.length) {
+    return el(
+      { flexDirection: "column", gap: 10, marginTop: 16 },
+      input.checks.map((item) =>
+        el({ alignItems: "center" }, [
+          el(
+            { width: 28, height: 28, borderRadius: 8, background: "#ffffff", alignItems: "center", justifyContent: "center", marginRight: 10 },
+            el({ width: 8, height: 14, borderBottom: "3px solid #14202c", borderRight: "3px solid #14202c", transform: "rotate(40deg)", marginBottom: 4 }, " "),
+          ),
+          el({ fontSize: 30, fontWeight: 700, color: "#ffffff" }, item),
         ]),
-        el({ fontSize: 26, fontWeight: 700, color: "#333333" }, "오늘의 머니팁"),
-      ],
-    ),
-    el({ width: art, height: input.height, alignItems: "center", justifyContent: "center" }, [
-      iconCircle(theme, icons, input.style),
-    ]),
-  ]);
-}
-
-function variant(input: ThumbInput, accent: string): unknown {
-  if (input.style === "compare" && input.compare) return comparePills(input.compare, accent);
-  if (input.style === "checklist") {
-    return el({ flexDirection: "column", gap: 12 }, [
-      input.hero ? pill(input.heroLabel ?? input.keyword, input.hero, pillBg(pillTone(input.hero), accent), 44) : el({}, " "),
-      ...(input.checks ?? []).map((item) => checkRow(item, accent)),
-    ]);
+      ),
+    );
   }
-  if (input.style === "timeline") {
-    return el({ flexDirection: "column", gap: 16 }, [
-      input.hero ? pill(input.heroLabel ?? input.keyword, input.hero, pillBg(pillTone(input.hero), accent), 44) : el({}, " "),
-      stepsRow(input.steps ?? ["퇴직 전", "당일", "이후"], accent),
-    ]);
+  if (input.style === "timeline" && input.steps?.length) {
+    return el(
+      { gap: 10, marginTop: 16, flexWrap: "wrap" },
+      input.steps.map((step) =>
+        el(
+          { background: "rgba(255,255,255,0.16)", borderRadius: 999, padding: "8px 14px", fontSize: 28, fontWeight: 700, color: "#ffffff" },
+          step,
+        ),
+      ),
+    );
   }
-  const figure = input.hero ?? input.number ?? "";
-  if (!figure) return el({ fontSize: 28, fontWeight: 700, color: "#333333" }, input.caption ?? " ");
-  return el({ flexDirection: "column", gap: 14 }, [
-    pill(input.heroLabel ?? input.keyword, figure, pillBg(pillTone(figure), accent), input.style === "number" ? 52 : 48),
-    input.caption ? el({ fontSize: 26, fontWeight: 700, color: "#333333" }, input.caption) : el({}, " "),
-  ]);
-}
-
-function comparePills(compare: ThumbCompare, accent: string): unknown {
-  const leftTone = compare.signed ? "minus" : "neutral";
-  return el({ gap: 14 }, [
-    pill(compare.leftLabel, compare.left, pillBg(leftTone, accent), 48),
-    pill(compare.rightLabel, compare.right, compare.signed ? PLUS : "#111111", 48),
-  ]);
-}
-
-function pill(label: string, figure: string, bg: string, figureSize: number): unknown {
-  return el({ flexDirection: "column", alignSelf: "flex-start", background: bg, borderRadius: 18, padding: "12px 20px" }, [
-    el({ fontSize: 26, fontWeight: 700, color: "#ffffff" }, label),
-    el({ fontSize: figureSize, fontWeight: 800, color: "#ffffff", letterSpacing: -1, lineHeight: 1.05 }, figure),
-  ]);
-}
-
-function checkRow(text: string, accent: string): unknown {
-  return el({ alignItems: "center", gap: 12 }, [
-    el({ width: 28, height: 28, borderRadius: 8, background: accent, alignItems: "center", justifyContent: "center" }, [
-      el({ width: 8, height: 14, borderBottom: "3px solid #ffffff", borderRight: "3px solid #ffffff", transform: "rotate(40deg)", marginBottom: 4 }, " "),
-    ]),
-    el({ fontSize: 28, fontWeight: 700, color: INK }, text),
-  ]);
-}
-
-function stepsRow(steps: string[], accent: string): unknown {
-  const last = steps.length - 1;
-  const slot = 188;
-  const line = (on: boolean) => el({ flexGrow: 1, height: 4, background: on ? accent : "transparent" }, " ");
-  return el({ alignItems: "flex-start", marginTop: 4, width: slot * steps.length }, steps.map((label, index) =>
-    el({ width: slot, flexDirection: "column", alignItems: "center" }, [
-      el({ width: slot, alignItems: "center" }, [
-        line(index > 0),
-        el({ width: 18, height: 18, borderRadius: 9, background: accent, margin: "0 6px" }, " "),
-        line(index < last),
-      ]),
-      el({ width: slot, justifyContent: "center", marginTop: 10 }, [
-        el({ fontSize: 26, fontWeight: 700, color: INK }, label),
-      ]),
-    ]),
-  ));
-}
-
-function iconCircle(theme: { accent: string; wash: string }, icons: string[], style: string): unknown {
-  return el({ width: 240, height: 240, borderRadius: 120, background: theme.wash, alignItems: "center", justifyContent: "center" }, [
-    el({ flexDirection: "column", alignItems: "center" }, [
-      style === "question" ? el({ fontSize: 64, fontWeight: 800, color: theme.accent, marginBottom: -8 }, "?") : el({}, " "),
-      { type: "img", props: { src: icons[0], width: 88, height: 88 } },
-      icons[1]
-        ? el({ marginTop: -28, marginLeft: 64 }, { type: "img", props: { src: icons[1], width: 64, height: 64 } })
-        : el({}, " "),
-    ]),
-  ]);
+  return el({}, " ");
 }
 
 export async function renderExplainer(title: string, rows: { left: string; right: string }[]): Promise<Buffer> {
