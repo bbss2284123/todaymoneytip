@@ -3,7 +3,7 @@ import housing from "../../data/housing-pension-2026-03-01.json";
 import { formulaMeta } from "../../lib/formulas";
 
 interface Props {
-  preset: "pension-timing" | "severance" | "health" | "housing" | "living-gap";
+  preset: "pension-timing" | "severance" | "health" | "housing" | "living-gap" | "pension-credit";
 }
 const { preset } = Astro.props;
 const meta = formulaMeta[preset];
@@ -82,11 +82,39 @@ const prices = housing.pricesWon.join(",");
       <button type="button" data-field="spend" data-step="100000">+</button>
     </div>
   )}
+  {preset === "pension-credit" && (
+    <>
+      <label class="calc-field">연금저축 납입액
+        <input inputmode="numeric" data-input="savings" value="2000000" />
+      </label>
+      <div class="stepper">
+        <button type="button" data-field="savings" data-step="-100000">−</button>
+        <output data-show="savings">200만 원</output>
+        <button type="button" data-field="savings" data-step="100000">+</button>
+      </div>
+      <label class="calc-field">IRP 납입액
+        <input inputmode="numeric" data-input="irp" value="0" />
+      </label>
+      <div class="stepper">
+        <button type="button" data-field="irp" data-step="-100000">−</button>
+        <output data-show="irp">0원</output>
+        <button type="button" data-field="irp" data-step="100000">+</button>
+      </div>
+      <label class="calc-field">총급여
+        <input inputmode="numeric" data-input="salary" value="50000000" />
+      </label>
+      <div class="stepper">
+        <button type="button" data-field="salary" data-step="-1000000">−</button>
+        <output data-show="salary">5,000만 원</output>
+        <button type="button" data-field="salary" data-step="1000000">+</button>
+      </div>
+    </>
+  )}
   <p class="calc-result" data-result></p>
   <p>{meta.meaning}</p>
 </section>
 <script>
-  import { healthPremium, housingPension, livingGap, pensionTiming, plainMoney, severanceTax } from "../../lib/formulas";
+  import { healthPremium, housingPension, livingGap, pensionCredit, pensionTiming, plainMoney, severanceTax } from "../../lib/formulas";
 
   const money = (value: number) => plainMoney(value);
 
@@ -102,11 +130,15 @@ const prices = housing.pricesWon.join(",");
       age: 70,
       price: 300_000_000,
       spend: 2_500_000,
+      savings: 2_000_000,
+      irp: 0,
+      salary: 50_000_000,
     };
+    type MoneyKey = "monthly" | "income" | "annual" | "spend" | "savings" | "irp" | "salary";
     const result = box.querySelector("[data-result]");
     const paint = () => {
       box.querySelectorAll<HTMLInputElement>("[data-input]").forEach((input) => {
-        const key = input.dataset.input as "monthly" | "income" | "annual" | "spend" | undefined;
+        const key = input.dataset.input as MoneyKey | undefined;
         if (!key || document.activeElement === input) return;
         input.value = String(state[key]);
       });
@@ -116,6 +148,9 @@ const prices = housing.pricesWon.join(",");
         if (key === "income") node.textContent = money(state.income);
         if (key === "annual") node.textContent = money(state.annual);
         if (key === "spend") node.textContent = `생활비 ${money(state.spend)}`;
+        if (key === "savings") node.textContent = money(state.savings);
+        if (key === "irp") node.textContent = money(state.irp);
+        if (key === "salary") node.textContent = money(state.salary);
       });
       if (!result) return;
       if (preset === "pension-timing") result.textContent = pensionTiming(state).sentence;
@@ -131,12 +166,19 @@ const prices = housing.pricesWon.join(",");
           other: 0,
         }).sentence;
       }
+      if (preset === "pension-credit") {
+        result.textContent = pensionCredit({
+          savings: state.savings,
+          irp: state.irp,
+          salary: state.salary,
+        }).sentence;
+      }
     };
     box.addEventListener("input", (event) => {
       const target = event.target as HTMLInputElement;
       const field = target.dataset.input;
       if (!field || !(field in state)) return;
-      const key = field as "monthly" | "income" | "annual" | "spend";
+      const key = field as MoneyKey;
       state[key] = Math.max(0, Number(String(target.value).replace(/[^\d]/g, "")) || 0);
       paint();
     });
@@ -145,7 +187,7 @@ const prices = housing.pricesWon.join(",");
       const step = target.dataset.step;
       const field = target.dataset.field;
       if (step && field && field in state) {
-        const key = field as "monthly" | "income" | "annual" | "spend";
+        const key = field as MoneyKey;
         state[key] = Math.max(0, state[key] + Number(step));
       }
       if (target.dataset.months) {

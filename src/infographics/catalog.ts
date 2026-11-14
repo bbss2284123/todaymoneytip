@@ -1077,6 +1077,57 @@ export const figures: Record<string, Figure[]> = {
       caption: "네 칸을 하루에 끝내지 않아도 됩니다.",
     },
   ],
+  "pension-savings-december-31": [
+    {
+      id: "pension-savings-december-31-steps",
+      kind: "steps",
+      ratio: "4:5",
+      title: "올해 채우는 순서",
+      steps: [
+        { title: "납입액 적기", detail: "연금저축과 IRP를 나눔" },
+        { title: "한도에서 빼기", detail: "600만 원, 합산 900만 원" },
+        { title: "12월 31일", detail: "그날까지 넣은 돈" },
+        { title: "이체 전", detail: "금융사 마감 시각 확인" },
+      ],
+      source: nts,
+      alt: "연금저축 12월 31일 전에 남은 세액공제 한도를 채우는 순서. 600만 원과 합산 900만 원에서 이미 넣은 돈을 뺍니다.",
+      caption: "마감 시각은 가입한 금융사에 확인하세요.",
+    },
+    {
+      id: "pension-savings-irp-limit-bars",
+      kind: "bar",
+      ratio: "1:1",
+      title: "세액공제 한도",
+      bars: [
+        { label: "연금저축", value: "600만 원", amount: 600, tone: "base" },
+        { label: "IRP로 더", value: "300만 원", amount: 300, tone: "up" },
+      ],
+      source: nts,
+      alt: "연금저축 12월 31일 세액공제 한도 그래프. 연금저축 600만 원에 IRP 300만 원을 더하면 합산 900만 원입니다.",
+      caption: "두 칸을 더하면 합산 900만 원이에요.",
+    },
+    {
+      id: "pension-savings-tax-credit-rates",
+      kind: "compare",
+      ratio: "4:5",
+      title: "소득세 공제율",
+      leftTitle: "5,500만 원 이하",
+      rightTitle: "그 금액을 넘으면",
+      left: [
+        { text: "공제율 15%", ok: true },
+        { text: "600만 원은 90만 원", ok: true },
+        { text: "900만 원은 135만 원", ok: true },
+      ],
+      right: [
+        { text: "공제율 12%", ok: true },
+        { text: "600만 원은 72만 원", ok: true },
+        { text: "900만 원은 108만 원", ok: true },
+      ],
+      source: nts,
+      alt: "연금저축 12월 31일 납입의 세액공제율 비교. 총급여 5,500만 원 이하는 15%, 넘으면 12%입니다.",
+      caption: "금액은 소득세만이에요. 지방소득세는 빠졌어요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {
