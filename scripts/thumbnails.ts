@@ -149,6 +149,9 @@ async function main() {
       if (artifactDir) smallCells.push({ caption, png: await sharp(png).resize(300).png().toBuffer() });
       if (style === (data.thumbStyle ?? "question")) {
         writeFileSync(path.join(dir, "og.png"), png);
+        if (id === "year-end-tax-refund-december") {
+          writeFileSync(path.join(dir, "year-end-tax-refund-december-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
+        }
         const discover = await renderThumb({ ...base, style, width: 1200, height: 675 });
         writeFileSync(path.join(dir, "discover.png"), discover);
         writeFileSync(path.join(dir, "feed.png"), discover);

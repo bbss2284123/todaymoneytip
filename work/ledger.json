@@ -642,6 +642,37 @@
       ],
       "factsHashAtStyleEdit": "8287297ee81c8df1c4085102b66d8d81b499f18ae46b8fb1c801a2a963ac93c4"
     },
+    "year-end-tax-refund-december": {
+      "stage": "scheduled",
+      "keyword": "연말정산 환급 많이 받는 법",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-11-15T05:40:00.000Z",
+          "note": "국세청·조세특례제한법·재정경제부 확인"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-11-15T05:50:00.000Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-11-15T05:50:00.000Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-11-15T05:50:00.000Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-11-15T05:50:00.000Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-11-15T05:50:00.000Z"
+        }
+      ]
+    },
     "pension-savings-december-31": {
       "stage": "scheduled",
       "keyword": "연금저축 12월 31일",
