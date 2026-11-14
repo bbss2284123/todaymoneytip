@@ -9,8 +9,8 @@ import { loadFacts } from "../src/lib/check";
 test("글마다 그림 2~4장이고 숫자는 원장에 있다", () => {
   const dir = path.join(process.cwd(), "src/content/posts");
   const files = readdirSync(dir).filter((name) => name.endsWith(".mdx"));
-  assert.equal(files.length, 21);
-  assert.equal(Object.keys(figures).length, 21);
+  assert.equal(files.length, 22);
+  assert.equal(Object.keys(figures).length, 22);
   for (const file of files) {
     const id = file.replace(/\.mdx$/, "");
     const body = readFileSync(path.join(dir, file), "utf8").split("\n---\n").slice(1).join("\n---\n");

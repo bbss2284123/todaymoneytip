@@ -150,6 +150,40 @@ export function housingPension(input: { age: number; priceWon: number }): {
   };
 }
 
+/** 소득세법 제59조의3. 연금저축 600만 원, 퇴직연금 합산 900만 원. 근로소득만 있으면 총급여 5,500만 원 이하 15%, 그 밖 12%. */
+export const PENSION_SAVINGS_CAP = 6_000_000;
+export const PENSION_COMBINED_CAP = 9_000_000;
+export const PENSION_SALARY_THRESHOLD = 55_000_000;
+export const PENSION_CREDIT_RATE_LOW = 0.15;
+export const PENSION_CREDIT_RATE_HIGH = 0.12;
+
+export function pensionCredit(input: { savings: number; irp: number; salary: number }): {
+  counted: number;
+  savingsLeft: number;
+  totalLeft: number;
+  rate: number;
+  credit: number;
+  sentence: string;
+} {
+  const savings = Math.max(0, Math.floor(input.savings));
+  const irp = Math.max(0, Math.floor(input.irp));
+  const savingsCounted = Math.min(savings, PENSION_SAVINGS_CAP);
+  const counted = Math.min(PENSION_COMBINED_CAP, savingsCounted + Math.max(0, irp));
+  const savingsLeft = PENSION_SAVINGS_CAP - savingsCounted;
+  const totalLeft = PENSION_COMBINED_CAP - counted;
+  const rate = input.salary <= PENSION_SALARY_THRESHOLD ? PENSION_CREDIT_RATE_LOW : PENSION_CREDIT_RATE_HIGH;
+  const credit = Math.floor(counted * rate);
+  const rateLabel = rate === PENSION_CREDIT_RATE_LOW ? "15%" : "12%";
+  const savingsNote =
+    savingsLeft > 0
+      ? `연금저축에는 ${plainMoney(savingsLeft)} 더 넣을 수 있어요.`
+      : "연금저축 한도는 이미 찼어요.";
+  const totalNote =
+    totalLeft > 0 ? `합산 남은 한도는 ${plainMoney(totalLeft)}이에요.` : "합산 한도까지 찼어요.";
+  const sentence = `공제 대상은 ${plainMoney(counted)}이에요. ${savingsNote} ${totalNote} 소득세 ${rateLabel}로 ${plainMoney(credit)}이에요.`;
+  return { counted, savingsLeft, totalLeft, rate, credit, sentence };
+}
+
 export function livingGap(input: {
   spend: number;
   pension: number;
@@ -189,5 +223,10 @@ export const formulaMeta = {
     baseDate: "2026-10-28",
     oneLiner: "한 달 생활비에서 연금과 다른 소득을 뺍니다.",
     meaning: "평균 생활비는 넣지 않았어요. 우리 집 숫자를 넣어야 빈칸이 나옵니다.",
+  },
+  "pension-credit": {
+    baseDate: "2026-11-14",
+    oneLiner: "연금저축은 600만 원, 퇴직연금과 합치면 900만 원까지 세고, 총급여 5,500만 원 이하면 15%, 넘으면 12%를 곱합니다.",
+    meaning: "근로소득만 있을 때의 소득세예요. 다른 소득이 있으면 종합소득 4,500만 원으로 갈리고, 지방소득세는 연말정산 결과에 따로 나옵니다.",
   },
 } as const;
