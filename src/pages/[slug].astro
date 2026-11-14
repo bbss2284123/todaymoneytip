@@ -20,7 +20,7 @@ import { figuresOf } from "../infographics/catalog";
 import { headingSlug } from "../lib/slug";
 import { siteConfig, categoryById, absoluteUrl } from "../../site.config";
 import { organizationJsonLd } from "../lib/organization";
-import { allPublished, authorName, postPath, readingMinutes, relatedPosts, seriesMates } from "../lib/posts";
+import { allPublished, postPath, relatedPosts, seriesMates } from "../lib/posts";
 import { formatKo, isPastDate, seoulToday } from "../lib/dates";
 
 export async function getStaticPaths() {
@@ -35,7 +35,6 @@ const category = categoryById(post.data.category);
 const related = relatedPosts(post, posts);
 const series = seriesMates(post, posts);
 const closed = post.data.status === "마감" || (post.data.applyPeriod ? isPastDate(post.data.applyPeriod.end, seoulToday()) : false);
-const minutes = readingMinutes(post.body ?? "");
 const toc = [...(post.body ?? "").matchAll(/^##\s+(.+)$/gm)].map((match) => match[1].trim());
 const url = absoluteUrl(postPath(post.id));
 const jsonLd = [
@@ -93,10 +92,6 @@ const jsonLd = [
       <a href={`/category/${post.data.category}/`}>{category?.name}</a>
     </nav>
     <h1>{post.data.title}</h1>
-    <p class="dates">
-      {post.data.baseDate && <>기준일 {formatKo(post.data.baseDate)}. </>}
-      업데이트 {formatKo(post.data.updated)}. 읽는 시간 {minutes}분. {authorName(post)}
-    </p>
     {closed && (
       <p class="answer-box">
         이 안내의 신청 기간은 지났거나 마감이에요.
