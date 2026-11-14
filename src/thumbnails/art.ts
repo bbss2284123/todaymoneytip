@@ -38,6 +38,7 @@ const BY_POST: Record<string, Motif> = {
   "nps-start-age": "ledger",
   "pension-savings-credit": "calculator",
   "pension-savings-december-31": "calendar",
+  "year-end-tax-refund-december": "receipt",
   "retire-checklist": "clipboard",
   "retire-month": "calendar",
   "retire-next-day": "clock",

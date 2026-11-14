@@ -40,7 +40,7 @@ export const CATEGORY_ACCENT: Record<string, string> = {
   health: "#0f6e6b",
   job: "#1f6b45",
   housing: "#7a2e3a",
-  tax: "#1f6b45",
+  tax: "#5a2d92",
   assets: "#1f6b45",
   business: "#7a2e3a",
 };
@@ -53,7 +53,7 @@ const WASH: Record<string, string> = {
   health: "#e3f3f1",
   job: "#e5f3ea",
   housing: "#f8e8ea",
-  tax: "#e5f3ea",
+  tax: "#f3e9fb",
   assets: "#e5f3ea",
   business: "#f8e8ea",
 };
@@ -211,31 +211,33 @@ function compare(fig: CompareFigure, accent: string, wash: string, width: number
 }
 
 function steps(fig: StepsFigure, accent: string, wash: string, width: number, height: number): unknown {
+  const compact = fig.steps.length > 4;
+  const circle = compact ? 64 : 84;
   const last = fig.steps.length - 1;
   return frame(width, height, [
-    el({ fontSize: TITLE, fontWeight: 800, color: accent, marginBottom: 8 }, fig.title),
+    el({ fontSize: compact ? 46 : TITLE, fontWeight: 800, color: accent, marginBottom: compact ? 6 : 8 }, fig.title),
     el({ flexGrow: 1, flexDirection: "column", justifyContent: "space-around" }, fig.steps.map((step, index) =>
       el({ alignItems: "center" }, [
-        el({ width: 88, flexDirection: "column", alignItems: "center", marginRight: 16 }, [
+        el({ width: compact ? 72 : 88, flexDirection: "column", alignItems: "center", marginRight: 16 }, [
           el(
             {
-              width: 84,
-              height: 84,
-              borderRadius: 42,
+              width: circle,
+              height: circle,
+              borderRadius: circle / 2,
               background: accent,
               color: "#ffffff",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 44,
+              fontSize: compact ? 32 : 44,
               fontWeight: 800,
             },
             String(index + 1),
           ),
-          index < last ? el({ width: 6, height: 28, background: wash, marginTop: 6 }, " ") : el({}, " "),
+          index < last ? el({ width: 6, height: compact ? 12 : 28, background: wash, marginTop: compact ? 4 : 6 }, " ") : el({}, " "),
         ]),
-        el({ flex: 1, background: "#ffffff", borderRadius: 24, padding: "14px 18px", flexDirection: "column" }, [
-          el({ fontSize: 44, fontWeight: 800 }, step.title),
-          el({ fontSize: MIN, fontWeight: 700, color: MUTED, marginTop: 4 }, step.detail),
+        el({ flex: 1, background: "#ffffff", borderRadius: 24, padding: compact ? "8px 16px" : "14px 18px", flexDirection: "column" }, [
+          el({ fontSize: compact ? 36 : 44, fontWeight: 800 }, step.title),
+          el({ fontSize: compact ? 32 : MIN, fontWeight: 700, color: MUTED, marginTop: compact ? 2 : 4 }, step.detail),
         ]),
       ]),
     )),

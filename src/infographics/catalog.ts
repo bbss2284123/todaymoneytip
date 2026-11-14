@@ -1128,6 +1128,38 @@ export const figures: Record<string, Figure[]> = {
       caption: "금액은 소득세만이에요. 지방소득세는 빠졌어요.",
     },
   ],
+  "year-end-tax-refund-december": [
+    {
+      id: "year-end-tax-december-checklist",
+      kind: "steps",
+      ratio: "4:5",
+      title: "12월에 할 일",
+      steps: [
+        { title: "연금저축", detail: "한도를 채워요" },
+        { title: "카드", detail: "25% 넘긴 뒤" },
+        { title: "청약통장", detail: "연 300만 원" },
+        { title: "고향사랑", detail: "10만 원 칸" },
+        { title: "영수증", detail: "월세와 기부" },
+        { title: "자료 동의", detail: "홈택스 신청" },
+      ],
+      source: "조세특례제한법",
+      alt: "연말정산 환급 늘리는 12월 할 일 6가지 체크리스트 표",
+      caption: "마감은 12월 31일이에요. 동의만 미리 받아요.",
+    },
+    {
+      id: "year-end-tax-pension-savings-refund-example",
+      kind: "bar",
+      ratio: "1:1",
+      title: "300만 원 추가 예시",
+      bars: [
+        { label: "추가 납입", value: "300만 원", amount: 300, tone: "base" },
+        { label: "소득세", value: "45만 원", amount: 45, tone: "up" },
+      ],
+      source: "소득세법",
+      alt: "연금저축 300만 원 추가 납입 시 연말정산 환급액 변화 예시 그래프",
+      caption: "예시입니다. 15%만 곱했어요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {
