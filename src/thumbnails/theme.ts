@@ -121,6 +121,20 @@ export const THEME: Record<string, ThumbTheme> = {
   },
 };
 
+/** 글마다 분류 색과 다른 바탕이 필요할 때만. 기존 분류 색과 겹치지 않게 둔다. */
+export const POST_THEME: Record<string, ThumbTheme> = {
+  "credit-card-deduction-december": {
+    from: "#1a0812",
+    to: "#8a3058",
+    glow: "rgba(255, 176, 206, 0.22)",
+    pillBg: "#ffe6f0",
+    pillFg: "#5a1434",
+    pillIcon: "receipt",
+    label: "세금",
+    art: { stroke: "#ffd4e4", fill: "#c45b86", deep: "#6e2448", paper: "#fff6fa", accent: "#ffe08a" },
+  },
+};
+
 /** 감소는 밝은 산호, 증가와 그 밖 숫자는 밝은 금색. 어두운 바탕용이다. */
 export const BADGE = {
   minus: { bg: "#ff5340", fg: "#ffffff" },

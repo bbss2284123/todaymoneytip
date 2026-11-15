@@ -1194,6 +1194,51 @@ export const figures: Record<string, Figure[]> = {
       caption: "가입기간을 늘리는 방법과, 월액에 비율을 붙이는 연기를 나눴어요.",
     },
   ],
+  "credit-card-deduction-december": [
+    {
+      id: "credit-card-deduction-25-percent-threshold-table",
+      kind: "summary",
+      ratio: "4:5",
+      kicker: "신용카드 소득공제",
+      lead: "25% 문턱",
+      rows: [
+        { label: "3,000만 원", value: "750만 원", tone: "base" },
+        { label: "5,000만 원", value: "1,250만 원", tone: "base" },
+        { label: "7,000만 원", value: "1,750만 원", tone: "up" },
+      ],
+      source: "국세청 · 2026",
+      alt: "신용카드 소득공제 총급여 25% 문턱 금액 표",
+      caption: "총급여의 25%예요. 이 금액부터 공제가 시작돼요.",
+    },
+    {
+      id: "credit-card-deduction-2026-limit-table",
+      kind: "summary",
+      ratio: "4:5",
+      kicker: "2026년 사용분",
+      lead: "기본 한도",
+      rows: [
+        { label: "자녀 없음", value: "300만 원", tone: "base" },
+        { label: "자녀 1명", value: "350만 원", tone: "up" },
+        { label: "자녀 2명 이상", value: "400만 원", tone: "up" },
+      ],
+      source: "재정경제부 · 2026",
+      alt: "신용카드 소득공제 2026년 자녀 수별 기본 한도 표",
+      caption: "7,000만 원 이하 표예요. 넘으면 250만 원, 275만 원, 300만 원이에요.",
+    },
+    {
+      id: "credit-vs-check-card-deduction-example",
+      kind: "bar",
+      ratio: "1:1",
+      title: "100만 원 사용",
+      bars: [
+        { label: "신용카드", value: "15만 원", amount: 15, tone: "base" },
+        { label: "체크카드", value: "30만 원", amount: 30, tone: "up" },
+      ],
+      source: "국세청 · 2026",
+      alt: "신용카드 15% 체크카드 30% 소득공제 100만원 사용 시 비교 그래프",
+      caption: "같은 100만 원이에요. 공제는 15만 원과 30만 원으로 갈려요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {

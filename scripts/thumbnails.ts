@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import sharp from "sharp";
 import { motifFor } from "../src/thumbnails/art";
 import { renderCaption, renderExplainer, renderThumb, type ThumbInput } from "../src/thumbnails/render";
+import { POST_THEME } from "../src/thumbnails/theme";
 
 const postsDir = path.join(process.cwd(), "src/content/posts");
 const outDir = path.join(process.cwd(), "public/thumb");
@@ -43,6 +44,9 @@ const cards: Record<string, Omit<ThumbInput, "title" | "keyword" | "category" | 
     compare: { leftLabel: "일시금", left: "112만", rightLabel: "10년 연금", right: "78만4천", signed: false },
     checks: ["근속 연수 확인", "10년 안은 70%", "운용수익은 제외"],
     steps: ["퇴직할 때", "일시금", "10년 연금", "20년 이후"],
+  },
+  "credit-card-deduction-december": {
+    caption: "넘기면 체크 30%",
   },
   "health-dependent": {
     lines: ["소득 2,000만", "넘으면 탈락?"],
@@ -139,6 +143,7 @@ async function main() {
       category: data.category,
       number: data.thumbNumber,
       motif: motifFor(id, data.category),
+      theme: POST_THEME[id],
       ...cards[id],
     };
     for (const style of styles) {
@@ -154,6 +159,9 @@ async function main() {
         }
         if (id === "nps-increase-pension") {
           writeFileSync(path.join(dir, "nps-increase-pension-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
+        }
+        if (id === "credit-card-deduction-december") {
+          writeFileSync(path.join(dir, "credit-card-deduction-december-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
         }
         const discover = await renderThumb({ ...base, style, width: 1200, height: 675 });
         writeFileSync(path.join(dir, "discover.png"), discover);

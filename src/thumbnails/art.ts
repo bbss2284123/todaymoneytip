@@ -18,6 +18,7 @@ export const MOTIFS = [
   "split",
   "clipboard",
   "clock",
+  "card",
 ] as const;
 
 export type Motif = (typeof MOTIFS)[number];
@@ -40,6 +41,7 @@ const BY_POST: Record<string, Motif> = {
   "pension-savings-december-31": "calendar",
   "year-end-tax-refund-december": "receipt",
   "nps-increase-pension": "coins",
+  "credit-card-deduction-december": "card",
   "retire-checklist": "clipboard",
   "retire-month": "calendar",
   "retire-next-day": "clock",
@@ -244,6 +246,17 @@ function clipboard(p: ArtPalette): string {
   `);
 }
 
+function card(p: ArtPalette): string {
+  return wrap(`
+    <rect x="78" y="214" width="420" height="270" rx="36" fill="${p.deep}" stroke="${p.stroke}" stroke-width="16"/>
+    <rect x="146" y="124" width="420" height="270" rx="36" fill="${p.fill}" stroke="${p.stroke}" stroke-width="16"/>
+    <rect x="190" y="176" width="84" height="62" rx="12" fill="${p.accent}"/>
+    <rect x="190" y="282" width="240" height="28" rx="14" fill="${p.paper}"/>
+    <rect x="190" y="330" width="150" height="24" rx="12" fill="${p.deep}"/>
+    <circle cx="492" cy="330" r="34" fill="none" stroke="${p.accent}" stroke-width="12"/>
+  `);
+}
+
 function clock(p: ArtPalette): string {
   return wrap(`
     <circle cx="320" cy="320" r="230" fill="${p.fill}" stroke="${p.stroke}" stroke-width="16"/>
@@ -291,5 +304,7 @@ export function illustrationSvg(motif: Motif, palette: ArtPalette): string {
       return clipboard(palette);
     case "clock":
       return clock(palette);
+    case "card":
+      return card(palette);
   }
 }

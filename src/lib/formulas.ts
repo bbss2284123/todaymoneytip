@@ -184,6 +184,71 @@ export function pensionCredit(input: { savings: number; irp: number; salary: num
   return { counted, savingsLeft, totalLeft, rate, credit, sentence };
 }
 
+/** 조세특례제한법 제126조의2. 문턱(총급여 25%)은 신용카드 사용분에서 먼저 15%로 빼고, 남으면 체크·현금영수증 30%로 뺀다. */
+export const CARD_THRESHOLD_PERCENT = 25;
+export const CARD_CREDIT_PERCENT = 15;
+export const CARD_DEBIT_PERCENT = 30;
+export const CARD_TAX_PERCENTS = [6, 15, 24, 35] as const;
+
+function wonShare(amount: number, percent: number): number {
+  return Math.floor((Math.max(0, Math.floor(amount)) * percent) / 100);
+}
+
+export function cardBasicCap(salary: number, children = 0): number {
+  const kids = Math.max(0, Math.floor(children));
+  const over = salary > 70_000_000;
+  if (over) {
+    if (kids >= 2) return 3_000_000;
+    if (kids === 1) return 2_750_000;
+    return 2_500_000;
+  }
+  if (kids >= 2) return 4_000_000;
+  if (kids === 1) return 3_500_000;
+  return 3_000_000;
+}
+
+export function cardDeduction(input: {
+  salary: number;
+  credit: number;
+  debit: number;
+  children?: number;
+  taxRatePercent?: number;
+}): {
+  threshold: number;
+  raw: number;
+  cap: number;
+  deduction: number;
+  tax: number;
+  taxRatePercent: number;
+  sentence: string;
+} {
+  const salary = Math.max(0, Math.floor(input.salary));
+  const credit = Math.max(0, Math.floor(input.credit));
+  const debit = Math.max(0, Math.floor(input.debit));
+  const taxRatePercent = CARD_TAX_PERCENTS.includes(input.taxRatePercent as (typeof CARD_TAX_PERCENTS)[number])
+    ? (input.taxRatePercent as number)
+    : 15;
+  const threshold = wonShare(salary, CARD_THRESHOLD_PERCENT);
+  const creditCut =
+    threshold <= credit
+      ? wonShare(threshold, CARD_CREDIT_PERCENT)
+      : wonShare(credit, CARD_CREDIT_PERCENT) + wonShare(threshold - credit, CARD_DEBIT_PERCENT);
+  const raw = Math.max(0, wonShare(credit, CARD_CREDIT_PERCENT) + wonShare(debit, CARD_DEBIT_PERCENT) - creditCut);
+  const cap = cardBasicCap(salary, input.children ?? 0);
+  const deduction = Math.min(raw, cap);
+  const tax = Math.round((deduction * taxRatePercent) / 100);
+  const taxNote = `세율 ${taxRatePercent}%로 보면 소득세는 약 ${plainMoney(tax)} 줄어요. 지방소득세는 따로예요.`;
+  let sentence: string;
+  if (raw <= 0) {
+    sentence = "총급여의 25%를 아직 못 넘겼어요. 공제액은 0원이에요.";
+  } else if (raw > cap) {
+    sentence = `공제액은 한도 ${plainMoney(deduction)}까지예요. ${taxNote}`;
+  } else {
+    sentence = `공제액은 ${plainMoney(deduction)}이에요. ${taxNote}`;
+  }
+  return { threshold, raw, cap, deduction, tax, taxRatePercent, sentence };
+}
+
 export function livingGap(input: {
   spend: number;
   pension: number;
@@ -228,5 +293,10 @@ export const formulaMeta = {
     baseDate: "2026-11-14",
     oneLiner: "연금저축은 600만 원, 퇴직연금과 합치면 900만 원까지 세고, 총급여 5,500만 원 이하면 15%, 넘으면 12%를 곱합니다.",
     meaning: "근로소득만 있을 때의 소득세예요. 다른 소득이 있으면 종합소득 4,500만 원으로 갈리고, 지방소득세는 연말정산 결과에 따로 나옵니다.",
+  },
+  "card-deduction": {
+    baseDate: "2026-11-16",
+    oneLiner: "총급여의 25%를 넘는 금액만 공제해요. 문턱은 신용카드에서 먼저 빼고, 넘는 신용카드는 15%, 체크카드·현금영수증은 30%예요.",
+    meaning: "기본 한도까지 자른 견적이에요. 세율은 그 구간에 있다고 둔 가정이고, 지방소득세는 빠졌어요. 전통시장·대중교통 40%는 이 칸에 없어요.",
   },
 } as const;
