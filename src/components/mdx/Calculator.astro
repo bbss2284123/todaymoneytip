@@ -3,7 +3,7 @@ import housing from "../../data/housing-pension-2026-03-01.json";
 import { formulaMeta } from "../../lib/formulas";
 
 interface Props {
-  preset: "pension-timing" | "severance" | "health" | "housing" | "living-gap" | "pension-credit";
+  preset: "pension-timing" | "severance" | "health" | "housing" | "living-gap" | "pension-credit" | "card-deduction";
 }
 const { preset } = Astro.props;
 const meta = formulaMeta[preset];
@@ -110,11 +110,50 @@ const prices = housing.pricesWon.join(",");
       </div>
     </>
   )}
+  {preset === "card-deduction" && (
+    <>
+      <label class="calc-field">총급여
+        <input inputmode="numeric" data-input="salary" value="50000000" />
+      </label>
+      <div class="stepper">
+        <button type="button" data-field="salary" data-step="-1000000">−</button>
+        <output data-show="salary">5,000만 원</output>
+        <button type="button" data-field="salary" data-step="1000000">+</button>
+      </div>
+      <label class="calc-field">신용카드 사용액
+        <input inputmode="numeric" data-input="credit" value="15000000" />
+      </label>
+      <div class="stepper">
+        <button type="button" data-field="credit" data-step="-1000000">−</button>
+        <output data-show="credit">1,500만 원</output>
+        <button type="button" data-field="credit" data-step="1000000">+</button>
+      </div>
+      <label class="calc-field">체크카드·현금영수증 사용액
+        <input inputmode="numeric" data-input="debit" value="0" />
+      </label>
+      <div class="stepper">
+        <button type="button" data-field="debit" data-step="-1000000">−</button>
+        <output data-show="debit">0원</output>
+        <button type="button" data-field="debit" data-step="1000000">+</button>
+      </div>
+      <div class="choice-row">
+        <button type="button" class="choice" data-children="0" aria-pressed="true">자녀 없음</button>
+        <button type="button" class="choice" data-children="1">자녀 1명</button>
+        <button type="button" class="choice" data-children="2">자녀 2명 이상</button>
+      </div>
+      <div class="choice-row">
+        <button type="button" class="choice" data-rate="6">6%</button>
+        <button type="button" class="choice" data-rate="15" aria-pressed="true">15%</button>
+        <button type="button" class="choice" data-rate="24">24%</button>
+        <button type="button" class="choice" data-rate="35">35%</button>
+      </div>
+    </>
+  )}
   <p class="calc-result" data-result></p>
   <p>{meta.meaning}</p>
 </section>
 <script>
-  import { healthPremium, housingPension, livingGap, pensionCredit, pensionTiming, plainMoney, severanceTax } from "../../lib/formulas";
+  import { cardDeduction, healthPremium, housingPension, livingGap, pensionCredit, pensionTiming, plainMoney, severanceTax } from "../../lib/formulas";
 
   const money = (value: number) => plainMoney(value);
 
@@ -133,8 +172,12 @@ const prices = housing.pricesWon.join(",");
       savings: 2_000_000,
       irp: 0,
       salary: 50_000_000,
+      credit: 15_000_000,
+      debit: 0,
+      children: 0,
+      taxRate: 15,
     };
-    type MoneyKey = "monthly" | "income" | "annual" | "spend" | "savings" | "irp" | "salary";
+    type MoneyKey = "monthly" | "income" | "annual" | "spend" | "savings" | "irp" | "salary" | "credit" | "debit";
     const result = box.querySelector("[data-result]");
     const paint = () => {
       box.querySelectorAll<HTMLInputElement>("[data-input]").forEach((input) => {
@@ -151,6 +194,8 @@ const prices = housing.pricesWon.join(",");
         if (key === "savings") node.textContent = money(state.savings);
         if (key === "irp") node.textContent = money(state.irp);
         if (key === "salary") node.textContent = money(state.salary);
+        if (key === "credit") node.textContent = money(state.credit);
+        if (key === "debit") node.textContent = money(state.debit);
       });
       if (!result) return;
       if (preset === "pension-timing") result.textContent = pensionTiming(state).sentence;
@@ -171,6 +216,15 @@ const prices = housing.pricesWon.join(",");
           savings: state.savings,
           irp: state.irp,
           salary: state.salary,
+        }).sentence;
+      }
+      if (preset === "card-deduction") {
+        result.textContent = cardDeduction({
+          salary: state.salary,
+          credit: state.credit,
+          debit: state.debit,
+          children: state.children,
+          taxRatePercent: state.taxRate,
         }).sentence;
       }
     };
@@ -213,6 +267,16 @@ const prices = housing.pricesWon.join(",");
       if (target.dataset.price) {
         state.price = Number(target.dataset.price);
         box.querySelectorAll("[data-price]").forEach((button) => button.setAttribute("aria-pressed", "false"));
+        target.setAttribute("aria-pressed", "true");
+      }
+      if (target.dataset.children) {
+        state.children = Number(target.dataset.children);
+        box.querySelectorAll("[data-children]").forEach((button) => button.setAttribute("aria-pressed", "false"));
+        target.setAttribute("aria-pressed", "true");
+      }
+      if (target.dataset.rate) {
+        state.taxRate = Number(target.dataset.rate);
+        box.querySelectorAll("[data-rate]").forEach((button) => button.setAttribute("aria-pressed", "false"));
         target.setAttribute("aria-pressed", "true");
       }
       paint();

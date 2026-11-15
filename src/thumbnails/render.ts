@@ -30,6 +30,7 @@ export interface ThumbInput {
   checks?: [string, string, string];
   steps?: string[];
   motif?: Motif;
+  theme?: ThumbTheme;
 }
 
 const INK = "#111111";
@@ -164,7 +165,7 @@ function figureSize(text: string): number {
 }
 
 export async function renderThumb(input: ThumbInput): Promise<Buffer> {
-  const theme = THEME[input.category] ?? THEME.pension;
+  const theme = input.theme ?? THEME[input.category] ?? THEME.pension;
   const motif = input.motif ?? motifFor("", input.category);
   const [icon, art] = await Promise.all([iconSrc(theme.pillIcon, theme.pillFg), artSrc(motif, theme)]);
   const lines = (input.lines?.length ? input.lines : thumbLines(input.title)).slice(0, 2);
