@@ -152,6 +152,9 @@ async function main() {
         if (id === "year-end-tax-refund-december") {
           writeFileSync(path.join(dir, "year-end-tax-refund-december-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
         }
+        if (id === "nps-increase-pension") {
+          writeFileSync(path.join(dir, "nps-increase-pension-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
+        }
         const discover = await renderThumb({ ...base, style, width: 1200, height: 675 });
         writeFileSync(path.join(dir, "discover.png"), discover);
         writeFileSync(path.join(dir, "feed.png"), discover);

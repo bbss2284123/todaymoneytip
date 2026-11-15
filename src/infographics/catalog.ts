@@ -1160,6 +1160,40 @@ export const figures: Record<string, Figure[]> = {
       caption: "예시입니다. 15%만 곱했어요.",
     },
   ],
+  "nps-increase-pension": [
+    {
+      id: "nps-defer-early-monthly-amount-chart",
+      kind: "bar",
+      ratio: "4:5",
+      title: "월 100만 원 예시",
+      bars: [
+        { label: "5년 조기", value: "70만 원", amount: 70, tone: "down" },
+        { label: "1년 조기", value: "94만 원", amount: 94, tone: "down" },
+        { label: "제때", value: "100만 원", amount: 100, tone: "base" },
+        { label: "1년 연기", value: "107만 원", amount: 107, tone: "up" },
+        { label: "5년 연기", value: "136만 원", amount: 136, tone: "up" },
+      ],
+      source: nps,
+      alt: "국민연금 더 받는 방법 그래프. 월 100만 원 예시로 조기수령 5년은 70만 원, 연기연금 1년은 107만 원, 5년은 136만 원이에요.",
+      caption: "월 100만 원은 예시예요. 1년 연기의 정확한 금액은 107만 2,000원이에요.",
+    },
+    {
+      id: "nps-increase-pension-5-ways-table",
+      kind: "steps",
+      ratio: "4:5",
+      title: "다섯 갈래",
+      steps: [
+        { title: "추납", detail: "최대 119개월" },
+        { title: "반납", detail: "5년 이상은 24회" },
+        { title: "임의계속", detail: "60세 이후" },
+        { title: "연기", detail: "1년에 7.2%" },
+        { title: "크레딧", detail: "첫째 12개월" },
+      ],
+      source: nps,
+      alt: "국민연금 더 받는 방법 비교 표. 추납은 119개월, 반납은 24회, 연기연금은 1년에 7.2%, 크레딧은 12개월이에요.",
+      caption: "가입기간을 늘리는 방법과, 월액에 비율을 붙이는 연기를 나눴어요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {
