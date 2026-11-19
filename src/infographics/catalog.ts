@@ -1239,6 +1239,66 @@ export const figures: Record<string, Figure[]> = {
       caption: "같은 100만 원이에요. 공제는 15만 원과 30만 원으로 갈려요.",
     },
   ],
+  "year-end-tax-preview": [
+    {
+      id: "year-end-tax-preview-period-table",
+      kind: "summary",
+      ratio: "4:5",
+      kicker: "연말정산 미리보기",
+      lead: "12월 18일",
+      rows: [
+        { label: "시작", value: "10월 28일", tone: "base" },
+        { label: "마감", value: "12월 18일", tone: "up" },
+        { label: "소득 연도", value: "2026년", tone: "base" },
+      ],
+      source: "국세청 · 2026",
+      alt: "연말정산 미리보기 운영 기간 표. 2026년 10월 28일부터 12월 18일까지예요.",
+      caption: "수요일에 열려 금요일에 닫혀요.",
+    },
+    {
+      id: "hometax-year-end-tax-preview-menu",
+      kind: "steps",
+      ratio: "4:5",
+      title: "들어가는 길",
+      steps: [
+        { title: "홈택스", detail: "로그인" },
+        { title: "장려금 메뉴", detail: "연말정산·기부금" },
+        { title: "편리한 연말정산", detail: "다음 화면" },
+        { title: "미리보기", detail: "여기서 계산" },
+      ],
+      source: "정책브리핑",
+      alt: "홈택스 연말정산 미리보기 메뉴 들어가는 경로 단계도",
+      caption: "장려금·연말정산·기부금 다음이 편리한 연말정산이에요.",
+    },
+    {
+      id: "year-end-tax-preview-auto-vs-manual-table",
+      kind: "summary",
+      ratio: "4:5",
+      kicker: "연말정산 미리보기",
+      lead: "자동과 직접",
+      rows: [
+        { label: "1~9월 카드", value: "자동", tone: "up" },
+        { label: "작년 급여", value: "자동", tone: "up" },
+        { label: "10~12월", value: "직접", tone: "base" },
+      ],
+      source: "정책브리핑",
+      alt: "연말정산 미리보기 자동 반영 항목과 직접 입력 항목 표",
+      caption: "10월 이후는 예상액이라 직접 넣어요.",
+    },
+    {
+      id: "year-end-tax-preview-pension-example",
+      kind: "bar",
+      ratio: "1:1",
+      title: "300만 원 예시",
+      bars: [
+        { label: "추가 납입", value: "300만 원", amount: 300, tone: "base" },
+        { label: "소득세", value: "45만 원", amount: 45, tone: "up" },
+      ],
+      source: "국세청",
+      alt: "연말정산 미리보기에서 연금저축 300만 원을 더 넣을 때 소득세 45만 원 예시",
+      caption: "가상 예시예요. 15%만 곱했어요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {
