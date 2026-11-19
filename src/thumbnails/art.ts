@@ -42,6 +42,7 @@ const BY_POST: Record<string, Motif> = {
   "year-end-tax-refund-december": "receipt",
   "nps-increase-pension": "coins",
   "credit-card-deduction-december": "card",
+  "year-end-tax-preview": "calendar",
   "retire-checklist": "clipboard",
   "retire-month": "calendar",
   "retire-next-day": "clock",

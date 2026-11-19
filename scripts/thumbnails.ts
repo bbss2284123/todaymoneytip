@@ -48,6 +48,9 @@ const cards: Record<string, Omit<ThumbInput, "title" | "keyword" | "category" | 
   "credit-card-deduction-december": {
     caption: "넘기면 체크 30%",
   },
+  "year-end-tax-preview": {
+    caption: "12월 18일까지 열려요",
+  },
   "health-dependent": {
     lines: ["소득 2,000만", "넘으면 탈락?"],
     caption: "재산 9억 초과도 탈락",
@@ -162,6 +165,9 @@ async function main() {
         }
         if (id === "credit-card-deduction-december") {
           writeFileSync(path.join(dir, "credit-card-deduction-december-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
+        }
+        if (id === "year-end-tax-preview") {
+          writeFileSync(path.join(dir, "year-end-tax-preview-2026-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
         }
         const discover = await renderThumb({ ...base, style, width: 1200, height: 675 });
         writeFileSync(path.join(dir, "discover.png"), discover);
