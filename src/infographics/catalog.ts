@@ -1346,6 +1346,53 @@ export const figures: Record<string, Figure[]> = {
       caption: "약 33만 8천 원이에요. 특정 은행 금리가 아니에요.",
     },
   ],
+  "jongbu-tax-2026-bill": [
+    {
+      id: "jongbu-tax-bill-schedule",
+      kind: "timeline",
+      ratio: "4:5",
+      title: "종부세 고지서",
+      marks: [
+        { label: "6월 1일", detail: "보유 기준" },
+        { label: "11월 22일경", detail: "발송 예정" },
+        { label: "12월 1일", detail: "납부 시작" },
+        { label: "12월 15일", detail: "납부 마감" },
+      ],
+      source: "국세청",
+      alt: "종부세 고지서 일정. 6월 1일 보유 기준, 11월 22일경 발송 예정, 12월 1일부터 12월 15일까지 납부예요.",
+      caption: "발송은 예정이고, 마감은 세무일정에 있어요.",
+    },
+    {
+      id: "jongbu-tax-senior-long-term-credit-matrix",
+      kind: "summary",
+      ratio: "4:5",
+      kicker: "종부세 고지서",
+      lead: "한도 80%",
+      rows: [
+        { label: "60세·5년", value: "40%", tone: "base" },
+        { label: "65세·10년", value: "70%", tone: "base" },
+        { label: "70세·15년", value: "80%", tone: "up" },
+      ],
+      source: "국세청",
+      alt: "종부세 고지서 고령자 장기보유 공제율. 60세·5년은 40%, 65세·10년은 70%, 70세·15년은 한도 80%예요.",
+      caption: "70세·15년은 더하면 90%라 80%로 막혀요.",
+    },
+    {
+      id: "jongbu-tax-installment-payment-rule",
+      kind: "summary",
+      ratio: "1:1",
+      kicker: "종부세 고지서",
+      lead: "250만 원 초과",
+      rows: [
+        { label: "500만 원 이하", value: "초과분", tone: "base" },
+        { label: "500만 원 초과", value: "50% 이하", tone: "up" },
+        { label: "기한 다음", value: "6개월", tone: "base" },
+      ],
+      source: "종합부동산세법",
+      alt: "종부세 고지서 분납 기준. 500만 원 이하는 250만 원 초과분, 500만 원 초과는 50% 이하, 기한 다음 6개월이에요.",
+      caption: "250만 원을 뺀 금액이 초과분이에요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {
