@@ -797,6 +797,37 @@
         }
       ],
       "factsHashAtStyleEdit": "152d030f2a53661e3bd94410ff5c68d75e6bf1c2740607365ceaebea3ff13292"
+    },
+    "jongbu-tax-2026-bill": {
+      "stage": "scheduled",
+      "keyword": "종부세 고지서",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-11-20T20:40:00.000Z",
+          "note": "국세청 세무일정·합산배제 안내·종부세 안내·종합부동산세법 확인"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-11-20T20:50:00.000Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-11-20T20:50:00.000Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-11-20T20:50:00.000Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-11-20T20:50:00.000Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-11-20T20:50:00.000Z"
+        }
+      ]
     }
   }
 }
