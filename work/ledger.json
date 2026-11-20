@@ -765,6 +765,38 @@
           "at": "2026-11-19T21:40:00.000Z"
         }
       ]
+    },
+    "deposit-rate-compare": {
+      "stage": "scheduled",
+      "keyword": "정기예금 금리 비교",
+      "history": [
+        {
+          "stage": "facts",
+          "at": "2026-11-20T02:40:00.000Z",
+          "note": "금융상품한눈에·은행연합회·저축은행중앙회·예금보험공사·소득세법·지방세법 확인"
+        },
+        {
+          "stage": "draft",
+          "at": "2026-11-20T01:54:06.930Z"
+        },
+        {
+          "stage": "content-edit",
+          "at": "2026-11-20T01:54:07.169Z"
+        },
+        {
+          "stage": "style-edit",
+          "at": "2026-11-20T01:54:07.408Z"
+        },
+        {
+          "stage": "check",
+          "at": "2026-11-20T01:54:07.644Z"
+        },
+        {
+          "stage": "scheduled",
+          "at": "2026-11-20T01:54:07.881Z"
+        }
+      ],
+      "factsHashAtStyleEdit": "152d030f2a53661e3bd94410ff5c68d75e6bf1c2740607365ceaebea3ff13292"
     }
   }
 }

@@ -249,6 +249,25 @@ export function cardDeduction(input: {
   return { threshold, raw, cap, deduction, tax, taxRatePercent, sentence };
 }
 
+/** 이자소득 14% + 지방소득세 1.4% = 15.4%. 단리, 원 미만 절사. rateTenth 10 = 1.0%. */
+export const DEPOSIT_TAX_PER_MILLE = 154;
+
+export function depositInterest(input: { principal: number; rateTenth: number; months: number }): {
+  pretax: number;
+  tax: number;
+  afterTax: number;
+  sentence: string;
+} {
+  const principal = Math.max(0, Math.round(input.principal));
+  const rateTenth = Math.max(0, Math.round(input.rateTenth));
+  const months = Math.max(0, Math.round(input.months));
+  const pretax = Math.floor((principal * rateTenth * months) / 12_000);
+  const tax = Math.floor((pretax * DEPOSIT_TAX_PER_MILLE) / 1000);
+  const afterTax = pretax - tax;
+  const sentence = `세전 이자는 ${plainMoney(pretax)}이에요. 15.4%를 빼면 세후 이자는 ${plainMoney(afterTax)}이에요.`;
+  return { pretax, tax, afterTax, sentence };
+}
+
 export function livingGap(input: {
   spend: number;
   pension: number;
@@ -298,5 +317,10 @@ export const formulaMeta = {
     baseDate: "2026-11-16",
     oneLiner: "총급여의 25%를 넘는 금액만 공제해요. 문턱은 신용카드에서 먼저 빼고, 넘는 신용카드는 15%, 체크카드·현금영수증은 30%예요.",
     meaning: "기본 한도까지 자른 견적이에요. 세율은 그 구간에 있다고 둔 가정이고, 지방소득세는 빠졌어요. 전통시장·대중교통 40%는 이 칸에 없어요.",
+  },
+  deposit: {
+    baseDate: "2026-11-20",
+    oneLiner: "원금에 금리와 맡긴 기간을 곱해 세전 이자를 구하고, 15.4%를 빼 세후 이자를 구해요.",
+    meaning: "단리예요. 복리, 우대조건, 중도해지는 빠져 있어요. 가입 전 금융회사 금액을 다시 확인하세요.",
   },
 } as const;
