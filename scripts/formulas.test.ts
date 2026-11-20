@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { cardDeduction, housingPension, pensionCredit, pensionTiming, severanceTax } from "../src/lib/formulas";
+import { cardDeduction, depositInterest, housingPension, pensionCredit, pensionTiming, severanceTax } from "../src/lib/formulas";
 
 test("퇴직소득 1억 원 20년 예시", () => {
   const tax = severanceTax({ income: 100_000_000, years: 20 });
@@ -29,6 +29,13 @@ test("합산 900만 원과 총급여 초과는 12%", () => {
   const high = pensionCredit({ savings: 6_000_000, irp: 3_000_000, salary: 55_000_001 });
   assert.equal(high.rate, 0.12);
   assert.equal(high.credit, 1_080_000);
+});
+
+test("예금 1억 원, 0.4%포인트, 1년은 세후 338,400원", () => {
+  const row = depositInterest({ principal: 100_000_000, rateTenth: 4, months: 12 });
+  assert.equal(row.pretax, 400_000);
+  assert.equal(row.tax, 61_600);
+  assert.equal(row.afterTax, 338_400);
 });
 
 test("신용카드 1,500만 원과 12월 체크 100만 원", () => {

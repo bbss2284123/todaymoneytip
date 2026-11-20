@@ -3,7 +3,7 @@ import housing from "../../data/housing-pension-2026-03-01.json";
 import { formulaMeta } from "../../lib/formulas";
 
 interface Props {
-  preset: "pension-timing" | "severance" | "health" | "housing" | "living-gap" | "pension-credit" | "card-deduction";
+  preset: "pension-timing" | "severance" | "health" | "housing" | "living-gap" | "pension-credit" | "card-deduction" | "deposit";
 }
 const { preset } = Astro.props;
 const meta = formulaMeta[preset];
@@ -149,11 +149,33 @@ const prices = housing.pricesWon.join(",");
       </div>
     </>
   )}
+  {preset === "deposit" && (
+    <>
+      <label class="calc-field">원금
+        <input inputmode="numeric" data-input="principal" value="100000000" />
+      </label>
+      <div class="stepper">
+        <button type="button" data-field="principal" data-step="-10000000">−</button>
+        <output data-show="principal">1억 원</output>
+        <button type="button" data-field="principal" data-step="10000000">+</button>
+      </div>
+      <div class="stepper">
+        <button type="button" data-field="rateTenth" data-step="-1">−</button>
+        <output data-show="rateTenth">금리 1.0%</output>
+        <button type="button" data-field="rateTenth" data-step="1">+</button>
+      </div>
+      <div class="choice-row">
+        <button type="button" class="choice" data-months="6">6개월</button>
+        <button type="button" class="choice" data-months="12" aria-pressed="true">12개월</button>
+        <button type="button" class="choice" data-months="24">24개월</button>
+      </div>
+    </>
+  )}
   <p class="calc-result" data-result></p>
   <p>{meta.meaning}</p>
 </section>
 <script>
-  import { cardDeduction, healthPremium, housingPension, livingGap, pensionCredit, pensionTiming, plainMoney, severanceTax } from "../../lib/formulas";
+  import { cardDeduction, depositInterest, healthPremium, housingPension, livingGap, pensionCredit, pensionTiming, plainMoney, severanceTax } from "../../lib/formulas";
 
   const money = (value: number) => plainMoney(value);
 
@@ -176,8 +198,10 @@ const prices = housing.pricesWon.join(",");
       debit: 0,
       children: 0,
       taxRate: 15,
+      principal: 100_000_000,
+      rateTenth: 10,
     };
-    type MoneyKey = "monthly" | "income" | "annual" | "spend" | "savings" | "irp" | "salary" | "credit" | "debit";
+    type MoneyKey = "monthly" | "income" | "annual" | "spend" | "savings" | "irp" | "salary" | "credit" | "debit" | "principal" | "rateTenth";
     const result = box.querySelector("[data-result]");
     const paint = () => {
       box.querySelectorAll<HTMLInputElement>("[data-input]").forEach((input) => {
@@ -196,6 +220,8 @@ const prices = housing.pricesWon.join(",");
         if (key === "salary") node.textContent = money(state.salary);
         if (key === "credit") node.textContent = money(state.credit);
         if (key === "debit") node.textContent = money(state.debit);
+        if (key === "principal") node.textContent = money(state.principal);
+        if (key === "rateTenth") node.textContent = `금리 ${(state.rateTenth / 10).toFixed(1)}%`;
       });
       if (!result) return;
       if (preset === "pension-timing") result.textContent = pensionTiming(state).sentence;
@@ -225,6 +251,13 @@ const prices = housing.pricesWon.join(",");
           debit: state.debit,
           children: state.children,
           taxRatePercent: state.taxRate,
+        }).sentence;
+      }
+      if (preset === "deposit") {
+        result.textContent = depositInterest({
+          principal: state.principal,
+          rateTenth: state.rateTenth,
+          months: state.months,
         }).sentence;
       }
     };

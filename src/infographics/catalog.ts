@@ -1299,6 +1299,53 @@ export const figures: Record<string, Figure[]> = {
       caption: "가상 예시예요. 15%만 곱했어요.",
     },
   ],
+  "deposit-rate-compare": [
+    {
+      id: "deposit-rate-compare-sites-table",
+      kind: "summary",
+      ratio: "4:5",
+      kicker: "정기예금 금리 비교",
+      lead: "공식 화면 세 곳",
+      rows: [
+        { label: "한눈에", value: "세 권역", tone: "base" },
+        { label: "은행연합회", value: "은행만", tone: "base" },
+        { label: "저축중앙회", value: "저축만", tone: "up" },
+      ],
+      source: "금융감독원",
+      alt: "정기예금 금리 비교 사이트 세 곳. 금융상품한눈에는 은행·저축은행·신협, 은행연합회는 은행, 저축은행중앙회는 저축은행이에요.",
+      caption: "새마을금고는 금융상품한눈에 권역에 없어요.",
+    },
+    {
+      id: "deposit-rate-compare-steps",
+      kind: "steps",
+      ratio: "4:5",
+      title: "12개월 고르기",
+      steps: [
+        { title: "금융상품한눈에", detail: "첫 화면" },
+        { title: "정기예금", detail: "저축 메뉴" },
+        { title: "12개월", detail: "저축 예정기간" },
+        { title: "세전 이자율", detail: "기본금리 칸" },
+      ],
+      source: "금융감독원",
+      alt: "정기예금 금리 비교 순서. 금융상품한눈에에서 정기예금을 고르고 12개월, 세전 이자율 칸을 봐요.",
+      caption: "세전 이자율은 우대 없는 기본금리예요.",
+    },
+    {
+      id: "deposit-rate-compare-after-tax",
+      kind: "summary",
+      ratio: "1:1",
+      kicker: "1억 원, 1년 예시",
+      lead: "세후 33만 8천 원",
+      rows: [
+        { label: "금리 차이", value: "0.4%포인트", tone: "base" },
+        { label: "세전 이자", value: "40만 원", tone: "base" },
+        { label: "세후 이자", value: "33만 8,400원", tone: "up" },
+      ],
+      source: "소득세법",
+      alt: "정기예금 금리 비교 예시. 1억 원을 1년 맡길 때 금리 0.4%포인트 차이의 세후 이자는 33만 8,400원이에요.",
+      caption: "약 33만 8천 원이에요. 특정 은행 금리가 아니에요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {
