@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { cardDeduction, depositInterest, housingPension, pensionCredit, pensionTiming, severanceTax } from "../src/lib/formulas";
+import { cardDeduction, depositInterest, housingPension, kpassRefund, pensionCredit, pensionTiming, severanceTax } from "../src/lib/formulas";
 
 test("퇴직소득 1억 원 20년 예시", () => {
   const tax = severanceTax({ income: 100_000_000, years: 20 });
@@ -65,6 +65,19 @@ test("문턱 아래는 0원이고 기본 한도에서 잘림", () => {
   assert.equal(cardDeduction({ salary: 50_000_000, credit: 40_000_000, debit: 0, children: 2 }).deduction, 4_000_000);
   assert.equal(cardDeduction({ salary: 70_000_001, credit: 40_000_000, debit: 0, children: 0 }).cap, 2_500_000);
   assert.equal(cardDeduction({ salary: 80_000_000, credit: 40_000_000, debit: 0, children: 1 }).cap, 2_750_000);
+});
+
+test("모두의카드 수도권 일반 9만 원은 정액 2만 8천 원", () => {
+  const row = kpassRefund({ fare: 90_000, rides: 15, region: "capital", group: "general", card: "normal" });
+  assert.equal(row.rateRefund, 18_000);
+  assert.equal(row.flatRefund, 28_000);
+  assert.equal(row.best, 28_000);
+  const under = kpassRefund({ fare: 90_000, rides: 14, region: "capital", group: "general", card: "normal" });
+  assert.equal(under.best, 0);
+  const three = kpassRefund({ fare: 60_000, rides: 15, region: "capital", group: "three", card: "normal" });
+  assert.equal(three.rateRefund, 30_000);
+  assert.equal(three.flatRefund, 15_000);
+  assert.equal(three.best, 30_000);
 });
 
 test("주택연금 표의 70세 3억 원", () => {

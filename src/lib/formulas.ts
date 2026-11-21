@@ -282,6 +282,50 @@ export function livingGap(input: {
   return { gap: 0, sentence: "버는 돈과 쓰는 돈이 같아요." };
 }
 
+/** K-패스 기본형 비율. 천분율. 저소득 533 = 53.3%. */
+export const KPASS_RATE_PER_MILLE = {
+  general: 200,
+  youth: 300,
+  three: 500,
+  low: 533,
+} as const;
+
+/** [일반형, 플러스형] 원. 3자녀는 저소득과 같은 기준액. */
+export const KPASS_THRESHOLD = {
+  capital: { general: [62_000, 100_000], youth: [55_000, 90_000], low: [45_000, 80_000] },
+  local: { general: [55_000, 95_000], youth: [50_000, 85_000], low: [40_000, 75_000] },
+  prefer: { general: [50_000, 90_000], youth: [45_000, 80_000], low: [35_000, 70_000] },
+  special: { general: [45_000, 85_000], youth: [40_000, 75_000], low: [30_000, 65_000] },
+} as const;
+
+export const KPASS_MIN_RIDES = 15;
+
+export type KpassGroup = keyof typeof KPASS_RATE_PER_MILLE;
+export type KpassRegion = keyof typeof KPASS_THRESHOLD;
+export type KpassCard = "normal" | "plus";
+
+export function kpassRefund(input: {
+  fare: number;
+  rides: number;
+  region: KpassRegion;
+  group: KpassGroup;
+  card: KpassCard;
+}): { rateRefund: number; flatRefund: number; best: number; sentence: string } {
+  const fare = Math.max(0, Math.round(input.fare));
+  const rides = Math.max(0, Math.round(input.rides));
+  if (rides < KPASS_MIN_RIDES) {
+    return { rateRefund: 0, flatRefund: 0, best: 0, sentence: "이용이 15회 미만이라 예상 환급은 0원이에요." };
+  }
+  const band = input.group === "general" ? "general" : input.group === "youth" ? "youth" : "low";
+  const pair = KPASS_THRESHOLD[input.region][band];
+  const threshold = pair[input.card === "plus" ? 1 : 0];
+  const rateRefund = Math.floor((fare * KPASS_RATE_PER_MILLE[input.group]) / 1000);
+  const flatRefund = Math.max(0, fare - threshold);
+  const best = Math.max(rateRefund, flatRefund);
+  const sentence = `정률은 ${plainMoney(rateRefund)}이에요. 정액은 ${plainMoney(flatRefund)}이에요. 예상 환급은 더 큰 ${plainMoney(best)}이에요.`;
+  return { rateRefund, flatRefund, best, sentence };
+}
+
 export const formulaMeta = {
   "pension-timing": {
     baseDate: "2026-10-28",
@@ -322,5 +366,10 @@ export const formulaMeta = {
     baseDate: "2026-11-20",
     oneLiner: "원금에 금리와 맡긴 기간을 곱해 세전 이자를 구하고, 15.4%를 빼 세후 이자를 구해요.",
     meaning: "단리예요. 복리, 우대조건, 중도해지는 빠져 있어요. 가입 전 금융회사 금액을 다시 확인하세요.",
+  },
+  kpass: {
+    baseDate: "2026-11-21",
+    oneLiner: "월 교통비와 이용 횟수로, 비율 환급과 기준액을 넘긴 금액 중 더 큰 쪽을 구해요.",
+    meaning: "일반형은 한 번 요금이 3,000원 미만인 금액만 넣으세요. 플러스형은 전체예요. 시차출퇴근과 가입 첫 달 예외는 빠져 있어요.",
   },
 } as const;
