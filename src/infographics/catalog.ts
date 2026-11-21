@@ -1393,6 +1393,51 @@ export const figures: Record<string, Figure[]> = {
       caption: "250만 원을 뺀 금액이 초과분이에요.",
     },
   ],
+  "kpass-modu-card": [
+    {
+      id: "kpass-modu-card-refund-threshold-table",
+      kind: "summary",
+      ratio: "4:5",
+      kicker: "모두의카드 환급",
+      lead: "수도권 기준액",
+      rows: [
+        { label: "일반 국민", value: "6만 2천·10만", tone: "base" },
+        { label: "청년 등", value: "5만 5천·9만", tone: "base" },
+        { label: "3자녀·저소득", value: "4만 5천·8만", tone: "up" },
+      ],
+      source: "국토교통부",
+      alt: "모두의카드 환급 기준액 표. 수도권 일반 국민은 일반형 6만 2천 원, 플러스형 10만 원이에요.",
+      caption: "앞이 일반형, 뒤가 플러스예요. 청년 등에는 2자녀와 어르신이 들어가요.",
+    },
+    {
+      id: "kpass-modu-card-refund-example-chart",
+      kind: "bar",
+      ratio: "1:1",
+      title: "월 9만 원 예시",
+      bars: [
+        { label: "정률 20%", value: "1만 8천 원", amount: 18000, tone: "base" },
+        { label: "정액", value: "2만 8천 원", amount: 28000, tone: "up" },
+      ],
+      source: "국토교통부",
+      alt: "모두의카드 환급 예시 그래프. 월 9만 원이면 정률 1만 8천 원, 정액 2만 8천 원이에요.",
+      caption: "수도권 일반 국민, 일반형, 15회 이상 예시예요.",
+    },
+    {
+      id: "kpass-modu-card-apply-steps",
+      kind: "steps",
+      ratio: "4:5",
+      title: "신청 순서",
+      steps: [
+        { title: "카드 발급", detail: "K-패스 카드" },
+        { title: "앱·누리집", detail: "주소 접속" },
+        { title: "카드 등록", detail: "회원가입" },
+        { title: "타고 다니기", detail: "다음 달 환급" },
+      ],
+      source: "한국교통안전공단",
+      alt: "모두의카드 환급 신청 순서. 카드를 발급하고 앱에서 등록한 뒤 타고 다녀요.",
+      caption: "이미 카드가 있으면 등록만 확인하면 돼요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {
