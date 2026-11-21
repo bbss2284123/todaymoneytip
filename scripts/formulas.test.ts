@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { cardDeduction, depositInterest, housingPension, kpassRefund, pensionCredit, pensionTiming, severanceTax } from "../src/lib/formulas";
+import { cardDeduction, depositInterest, housingPension, isaTransfer, kpassRefund, pensionCredit, pensionTiming, severanceTax } from "../src/lib/formulas";
 
 test("퇴직소득 1억 원 20년 예시", () => {
   const tax = severanceTax({ income: 100_000_000, years: 20 });
@@ -82,4 +82,23 @@ test("모두의카드 수도권 일반 9만 원은 정액 2만 8천 원", () => 
 
 test("주택연금 표의 70세 3억 원", () => {
   assert.equal(housingPension({ age: 70, priceWon: 300_000_000 }).monthly, 923_000);
+});
+
+test("ISA 3천만 원 이전은 추가 한도 300만 원", () => {
+  const low = isaTransfer({ amount: 30_000_000, salary: 50_000_000 });
+  assert.equal(low.extra, 3_000_000);
+  assert.equal(low.incomeTax, 450_000);
+  assert.equal(low.local, 45_000);
+  assert.equal(low.combined, 495_000);
+  const high = isaTransfer({ amount: 30_000_000, salary: 55_000_001 });
+  assert.equal(high.rate, 0.12);
+  assert.equal(high.incomeTax, 360_000);
+  assert.equal(high.local, 36_000);
+  assert.equal(high.combined, 396_000);
+  const edge = isaTransfer({ amount: 30_000_000, salary: 55_000_000 });
+  assert.equal(edge.rate, 0.15);
+  const small = isaTransfer({ amount: 10_000_000, salary: 40_000_000 });
+  assert.equal(small.extra, 1_000_000);
+  const capped = isaTransfer({ amount: 80_000_000, salary: 40_000_000 });
+  assert.equal(capped.extra, 3_000_000);
 });
