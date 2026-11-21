@@ -3,7 +3,7 @@ import housing from "../../data/housing-pension-2026-03-01.json";
 import { formulaMeta } from "../../lib/formulas";
 
 interface Props {
-  preset: "pension-timing" | "severance" | "health" | "housing" | "living-gap" | "pension-credit" | "card-deduction" | "deposit" | "kpass";
+  preset: "pension-timing" | "severance" | "health" | "housing" | "living-gap" | "pension-credit" | "card-deduction" | "deposit" | "kpass" | "isa-transfer";
 }
 const { preset } = Astro.props;
 const meta = formulaMeta[preset];
@@ -185,6 +185,26 @@ const prices = housing.pricesWon.join(",");
       </div>
     </>
   )}
+  {preset === "isa-transfer" && (
+    <>
+      <label class="calc-field">이전 금액
+        <input inputmode="numeric" data-input="transfer" value="30000000" />
+      </label>
+      <div class="stepper">
+        <button type="button" data-field="transfer" data-step="-1000000">−</button>
+        <output data-show="transfer">3,000만 원</output>
+        <button type="button" data-field="transfer" data-step="1000000">+</button>
+      </div>
+      <label class="calc-field">총급여
+        <input inputmode="numeric" data-input="salary" value="50000000" />
+      </label>
+      <div class="stepper">
+        <button type="button" data-field="salary" data-step="-1000000">−</button>
+        <output data-show="salary">5,000만 원</output>
+        <button type="button" data-field="salary" data-step="1000000">+</button>
+      </div>
+    </>
+  )}
   {preset === "deposit" && (
     <>
       <label class="calc-field">원금
@@ -211,7 +231,7 @@ const prices = housing.pricesWon.join(",");
   <p>{meta.meaning}</p>
 </section>
 <script>
-  import { cardDeduction, depositInterest, healthPremium, housingPension, kpassRefund, livingGap, pensionCredit, pensionTiming, plainMoney, severanceTax } from "../../lib/formulas";
+  import { cardDeduction, depositInterest, healthPremium, housingPension, isaTransfer, kpassRefund, livingGap, pensionCredit, pensionTiming, plainMoney, severanceTax } from "../../lib/formulas";
   import type { KpassCard, KpassGroup, KpassRegion } from "../../lib/formulas";
 
   const money = (value: number) => plainMoney(value);
@@ -239,11 +259,12 @@ const prices = housing.pricesWon.join(",");
       rateTenth: 10,
       fare: 90_000,
       rides: 15,
+      transfer: 30_000_000,
       kgroup: "general" as KpassGroup,
       kregion: "capital" as KpassRegion,
       kcard: "normal" as KpassCard,
     };
-    type MoneyKey = "monthly" | "income" | "annual" | "spend" | "savings" | "irp" | "salary" | "credit" | "debit" | "principal" | "rateTenth" | "fare" | "rides";
+    type MoneyKey = "monthly" | "income" | "annual" | "spend" | "savings" | "irp" | "salary" | "credit" | "debit" | "principal" | "rateTenth" | "fare" | "rides" | "transfer";
     const result = box.querySelector("[data-result]");
     const paint = () => {
       box.querySelectorAll<HTMLInputElement>("[data-input]").forEach((input) => {
@@ -266,6 +287,7 @@ const prices = housing.pricesWon.join(",");
         if (key === "rateTenth") node.textContent = `금리 ${(state.rateTenth / 10).toFixed(1)}%`;
         if (key === "fare") node.textContent = money(state.fare);
         if (key === "rides") node.textContent = `${state.rides}회`;
+        if (key === "transfer") node.textContent = money(state.transfer);
       });
       if (!result) return;
       if (preset === "pension-timing") result.textContent = pensionTiming(state).sentence;
@@ -312,6 +334,9 @@ const prices = housing.pricesWon.join(",");
           group: state.kgroup,
           card: state.kcard,
         }).sentence;
+      }
+      if (preset === "isa-transfer") {
+        result.textContent = isaTransfer({ amount: state.transfer, salary: state.salary }).sentence;
       }
     };
     box.addEventListener("input", (event) => {

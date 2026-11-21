@@ -184,6 +184,29 @@ export function pensionCredit(input: { savings: number; irp: number; salary: num
   return { counted, savingsLeft, totalLeft, rate, credit, sentence };
 }
 
+/** 소득세법 제59조의3 제4항. 전환금액의 10%와 300만 원 중 적은 금액. 지방소득세는 그 공제액의 10%. */
+export const ISA_TRANSFER_CAP = 3_000_000;
+export const LOCAL_CREDIT_ON_INCOME_TAX = 0.1;
+
+export function isaTransfer(input: { amount: number; salary: number }): {
+  extra: number;
+  rate: number;
+  incomeTax: number;
+  local: number;
+  combined: number;
+  sentence: string;
+} {
+  const amount = Math.max(0, Math.floor(input.amount));
+  const extra = Math.min(ISA_TRANSFER_CAP, Math.floor(amount / 10));
+  const rate = input.salary <= PENSION_SALARY_THRESHOLD ? PENSION_CREDIT_RATE_LOW : PENSION_CREDIT_RATE_HIGH;
+  const incomeTax = Math.floor(extra * rate);
+  const local = Math.floor(incomeTax * LOCAL_CREDIT_ON_INCOME_TAX);
+  const combined = incomeTax + local;
+  const rateLabel = rate === PENSION_CREDIT_RATE_LOW ? "15%" : "12%";
+  const sentence = `추가 한도는 ${plainMoney(extra)}이에요. 소득세 ${rateLabel}는 ${plainMoney(incomeTax)}이고, 지방소득세까지 더하면 ${plainMoney(combined)}이에요.`;
+  return { extra, rate, incomeTax, local, combined, sentence };
+}
+
 /** 조세특례제한법 제126조의2. 문턱(총급여 25%)은 신용카드 사용분에서 먼저 15%로 빼고, 남으면 체크·현금영수증 30%로 뺀다. */
 export const CARD_THRESHOLD_PERCENT = 25;
 export const CARD_CREDIT_PERCENT = 15;
@@ -371,5 +394,10 @@ export const formulaMeta = {
     baseDate: "2026-11-21",
     oneLiner: "월 교통비와 이용 횟수로, 비율 환급과 기준액을 넘긴 금액 중 더 큰 쪽을 구해요.",
     meaning: "일반형은 한 번 요금이 3,000원 미만인 금액만 넣으세요. 플러스형은 전체예요. 시차출퇴근과 가입 첫 달 예외는 빠져 있어요.",
+  },
+  "isa-transfer": {
+    baseDate: "2026-11-22",
+    oneLiner: "옮긴 금액의 10%와 300만 원 중 작은 금액에, 총급여 5,500만 원 이하면 15%, 넘으면 12%를 곱해요.",
+    meaning: "추가 한도만 계산해요. 연금저축 600만 원 한도는 빠졌어요. 근로소득만 있을 때이고, 다른 소득이 있으면 종합소득 4,500만 원으로 갈려요. 낼 세금보다 많이 빠지지는 않아요.",
   },
 } as const;

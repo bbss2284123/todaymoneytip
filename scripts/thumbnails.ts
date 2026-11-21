@@ -175,6 +175,9 @@ async function main() {
         if (id === "kpass-modu-card") {
           writeFileSync(path.join(dir, "kpass-modu-card-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
         }
+        if (id === "isa-maturity-pension") {
+          writeFileSync(path.join(dir, "isa-maturity-pension-transfer-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
+        }
         const discover = await renderThumb({ ...base, style, width: 1200, height: 675 });
         writeFileSync(path.join(dir, "discover.png"), discover);
         writeFileSync(path.join(dir, "feed.png"), discover);

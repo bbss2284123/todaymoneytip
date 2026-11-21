@@ -1438,6 +1438,53 @@ export const figures: Record<string, Figure[]> = {
       caption: "이미 카드가 있으면 등록만 확인하면 돼요.",
     },
   ],
+  "isa-maturity-pension": [
+    {
+      id: "isa-maturity-options-comparison",
+      kind: "summary",
+      ratio: "4:5",
+      kicker: "ISA 만기",
+      lead: "고르는 길",
+      rows: [
+        { label: "해지", value: "세금 정산", tone: "base" },
+        { label: "연장", value: "만기 전", tone: "base" },
+        { label: "연금 이전", value: "60일·300만", tone: "up" },
+      ],
+      source: "조세특례제한법",
+      alt: "ISA 만기 해지, 연장, 연금 이전 비교 표. 연금 이전은 60일 안에 넣고 추가 한도는 300만 원이에요.",
+      caption: "연금 이전만 60일과 300만 원 한도가 있어요.",
+    },
+    {
+      id: "isa-maturity-pension-transfer-60-days",
+      kind: "timeline",
+      ratio: "4:5",
+      title: "ISA 만기 후 60일",
+      marks: [
+        { label: "만기일", detail: "계약기간 끝" },
+        { label: "60일", detail: "연금계좌 납입" },
+        { label: "10%", detail: "추가 한도" },
+        { label: "300만 원", detail: "한도 상한" },
+      ],
+      source: "소득세법",
+      alt: "ISA 만기 후 60일 안에 연금계좌로 옮기는 순서. 추가 한도는 옮긴 금액의 10%이고 상한은 300만 원이에요.",
+      caption: "만기일부터 60일을 세요. 300만 원을 넘기지 않아요.",
+    },
+    {
+      id: "isa-maturity-transfer-steps",
+      kind: "steps",
+      ratio: "4:5",
+      title: "이전 순서",
+      steps: [
+        { title: "만기일 확인", detail: "계약이 끝난 날" },
+        { title: "60일 계산", detail: "그 날부터" },
+        { title: "연금계좌 납입", detail: "전부 또는 일부" },
+        { title: "확인서 제출", detail: "연말정산" },
+      ],
+      source: "소득세법 시행령",
+      alt: "ISA 만기 후 연금계좌 이전 순서. 만기일부터 60일 안에 넣고 납입확인서를 내요.",
+      caption: "앱 버튼 이름은 금융회사 화면에서 확인하세요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {
