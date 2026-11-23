@@ -1485,6 +1485,57 @@ export const figures: Record<string, Figure[]> = {
       caption: "앱 버튼 이름은 금융회사 화면에서 확인하세요.",
     },
   ],
+  "pension-savings-irp-order": [
+    {
+      id: "pension-savings-irp-900-limit-diagram",
+      kind: "bar",
+      ratio: "1:1",
+      title: "세액공제 한도",
+      bars: [
+        { label: "연금저축", value: "600만 원", amount: 600, tone: "base" },
+        { label: "이어서 IRP", value: "300만 원", amount: 300, tone: "up" },
+      ],
+      source: "소득세법",
+      alt: "연금저축 IRP 순서 한도 도식. 연금저축 600만 원에 IRP 300만 원을 더하면 합산 900만 원이에요.",
+      caption: "두 칸을 더하면 900만 원이에요.",
+    },
+    {
+      id: "pension-savings-vs-irp-comparison",
+      kind: "compare",
+      ratio: "4:5",
+      title: "연금저축과 IRP",
+      leftTitle: "연금저축",
+      rightTitle: "IRP",
+      left: [
+        { text: "한도 600만 원", ok: true },
+        { text: "일부 인출 가능", ok: true },
+        { text: "빼면 소득세 15%", ok: false },
+      ],
+      right: [
+        { text: "합산 900만 원", ok: true },
+        { text: "중도인출은 사유", ok: false },
+        { text: "위험자산 70%", ok: false },
+      ],
+      source: "소득세법·퇴직급여법",
+      alt: "연금저축 IRP 차이 비교. 연금저축은 일부 인출이 되고 IRP는 중도인출 사유와 위험자산 70%가 있어요.",
+      caption: "공제 대상 금액이 같아도 빼는 조건이 달라요.",
+    },
+    {
+      id: "pension-savings-irp-order-steps",
+      kind: "steps",
+      ratio: "4:5",
+      title: "넣는 순서",
+      steps: [
+        { title: "쓸 돈 확인", detail: "중간에 필요한지" },
+        { title: "연금저축 먼저", detail: "600만 원까지" },
+        { title: "이어서 IRP", detail: "300만 원" },
+        { title: "퇴직금은 따로", detail: "900만 원 밖" },
+      ],
+      source: "소득세법",
+      alt: "연금저축 IRP 순서. 600만 원을 연금저축에 먼저 넣고 300만 원은 IRP에 넣어요.",
+      caption: "중간에 쓸 돈이 있으면 IRP는 비워요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {
