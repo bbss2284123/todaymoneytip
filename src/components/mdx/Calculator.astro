@@ -3,7 +3,7 @@ import housing from "../../data/housing-pension-2026-03-01.json";
 import { formulaMeta } from "../../lib/formulas";
 
 interface Props {
-  preset: "pension-timing" | "severance" | "health" | "housing" | "living-gap" | "pension-credit" | "card-deduction" | "deposit" | "kpass" | "isa-transfer";
+  preset: "pension-timing" | "severance" | "health" | "housing" | "living-gap" | "pension-credit" | "card-deduction" | "deposit" | "kpass" | "isa-transfer" | "monthly-dividend";
 }
 const { preset } = Astro.props;
 const meta = formulaMeta[preset];
@@ -205,6 +205,29 @@ const prices = housing.pricesWon.join(",");
       </div>
     </>
   )}
+  {preset === "monthly-dividend" && (
+    <>
+      <label class="calc-field">목표 월액
+        <input inputmode="numeric" data-input="goal" value="500000" />
+      </label>
+      <div class="stepper">
+        <button type="button" data-field="goal" data-step="-100000">−</button>
+        <output data-show="goal">50만 원</output>
+        <button type="button" data-field="goal" data-step="100000">+</button>
+      </div>
+      <div class="stepper">
+        <button type="button" data-field="yieldTenth" data-step="-10">−</button>
+        <output data-show="yieldTenth">분배율 5.0%</output>
+        <button type="button" data-field="yieldTenth" data-step="10">+</button>
+      </div>
+      <div class="choice-row">
+        <button type="button" class="choice" data-yield="40">4%</button>
+        <button type="button" class="choice" data-yield="50" aria-pressed="true">5%</button>
+        <button type="button" class="choice" data-yield="60">6%</button>
+        <button type="button" class="choice" data-yield="70">7%</button>
+      </div>
+    </>
+  )}
   {preset === "deposit" && (
     <>
       <label class="calc-field">원금
@@ -231,7 +254,7 @@ const prices = housing.pricesWon.join(",");
   <p>{meta.meaning}</p>
 </section>
 <script>
-  import { cardDeduction, depositInterest, healthPremium, housingPension, isaTransfer, kpassRefund, livingGap, pensionCredit, pensionTiming, plainMoney, severanceTax } from "../../lib/formulas";
+  import { cardDeduction, depositInterest, healthPremium, housingPension, isaTransfer, kpassRefund, livingGap, monthlyDividendPrincipal, pensionCredit, pensionTiming, plainMoney, severanceTax } from "../../lib/formulas";
   import type { KpassCard, KpassGroup, KpassRegion } from "../../lib/formulas";
 
   const money = (value: number) => plainMoney(value);
@@ -260,11 +283,13 @@ const prices = housing.pricesWon.join(",");
       fare: 90_000,
       rides: 15,
       transfer: 30_000_000,
+      goal: 500_000,
+      yieldTenth: 50,
       kgroup: "general" as KpassGroup,
       kregion: "capital" as KpassRegion,
       kcard: "normal" as KpassCard,
     };
-    type MoneyKey = "monthly" | "income" | "annual" | "spend" | "savings" | "irp" | "salary" | "credit" | "debit" | "principal" | "rateTenth" | "fare" | "rides" | "transfer";
+    type MoneyKey = "monthly" | "income" | "annual" | "spend" | "savings" | "irp" | "salary" | "credit" | "debit" | "principal" | "rateTenth" | "fare" | "rides" | "transfer" | "goal" | "yieldTenth";
     const result = box.querySelector("[data-result]");
     const paint = () => {
       box.querySelectorAll<HTMLInputElement>("[data-input]").forEach((input) => {
@@ -288,6 +313,11 @@ const prices = housing.pricesWon.join(",");
         if (key === "fare") node.textContent = money(state.fare);
         if (key === "rides") node.textContent = `${state.rides}회`;
         if (key === "transfer") node.textContent = money(state.transfer);
+        if (key === "goal") node.textContent = money(state.goal);
+        if (key === "yieldTenth") node.textContent = `분배율 ${(state.yieldTenth / 10).toFixed(1)}%`;
+      });
+      box.querySelectorAll("[data-yield]").forEach((button) => {
+        button.setAttribute("aria-pressed", button.getAttribute("data-yield") === String(state.yieldTenth) ? "true" : "false");
       });
       if (!result) return;
       if (preset === "pension-timing") result.textContent = pensionTiming(state).sentence;
@@ -338,6 +368,12 @@ const prices = housing.pricesWon.join(",");
       if (preset === "isa-transfer") {
         result.textContent = isaTransfer({ amount: state.transfer, salary: state.salary }).sentence;
       }
+      if (preset === "monthly-dividend") {
+        result.textContent = monthlyDividendPrincipal({
+          monthlyAfterTax: state.goal,
+          yieldTenth: state.yieldTenth,
+        }).sentence;
+      }
     };
     box.addEventListener("input", (event) => {
       const target = event.target as HTMLInputElement;
@@ -374,6 +410,9 @@ const prices = housing.pricesWon.join(",");
         state.age = Number(target.dataset.age);
         box.querySelectorAll("[data-age]").forEach((button) => button.setAttribute("aria-pressed", "false"));
         target.setAttribute("aria-pressed", "true");
+      }
+      if (target.dataset.yield) {
+        state.yieldTenth = Math.max(0, Number(target.dataset.yield));
       }
       if (target.dataset.price) {
         state.price = Number(target.dataset.price);

@@ -25,7 +25,7 @@
 
 `AtAGlance`, `Term`, `EligibilityChecklist`, `WorkedExample`, `Calculator`, `ApplyBox`, `AdSlot`, `Figure`.
 
-계산기 `preset`은 `pension-timing`, `severance`, `health`, `housing`, `living-gap`, `pension-credit`, `card-deduction`, `deposit`.
+계산기 `preset`은 `pension-timing`, `severance`, `health`, `housing`, `living-gap`, `pension-credit`, `card-deduction`, `deposit`, `monthly-dividend`.
 
 광고는 섹션 사이에만, 글당 3개 이하. `example`이 붙은 계산 상자는 예시 숫자로 치고 사실 원장 검사에서 뺍니다.
 
