@@ -66,6 +66,9 @@ const cards: Record<string, Omit<ThumbInput, "title" | "keyword" | "category" | 
   "monthly-dividend-etf": {
     caption: "분배율 5% 가정",
   },
+  "cardpoint-lookup": {
+    caption: "1점은 1원",
+  },
 };
 
 const explainers: Record<string, { title: string; rows: { left: string; right: string }[] }> = {
@@ -186,6 +189,9 @@ async function main() {
         }
         if (id === "monthly-dividend-etf") {
           writeFileSync(path.join(dir, "monthly-dividend-etf-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
+        }
+        if (id === "cardpoint-lookup") {
+          writeFileSync(path.join(dir, "cardpoint-lookup-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
         }
         const discover = await renderThumb({ ...base, style, width: 1200, height: 675 });
         writeFileSync(path.join(dir, "discover.png"), discover);
