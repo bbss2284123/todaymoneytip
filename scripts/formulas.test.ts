@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { cardDeduction, depositInterest, housingPension, isaTransfer, kpassRefund, pensionCredit, pensionTiming, severanceTax } from "../src/lib/formulas";
+import { cardDeduction, depositInterest, housingPension, isaTransfer, kpassRefund, monthlyDividendPrincipal, pensionCredit, pensionTiming, severanceTax } from "../src/lib/formulas";
 
 test("퇴직소득 1억 원 20년 예시", () => {
   const tax = severanceTax({ income: 100_000_000, years: 20 });
@@ -82,6 +82,17 @@ test("모두의카드 수도권 일반 9만 원은 정액 2만 8천 원", () => 
 
 test("주택연금 표의 70세 3억 원", () => {
   assert.equal(housingPension({ age: 70, priceWon: 300_000_000 }).monthly, 923_000);
+});
+
+test("세후 월 50만 원, 분배율 5% 가정의 원금", () => {
+  const row = monthlyDividendPrincipal({ monthlyAfterTax: 500_000, yieldTenth: 50 });
+  assert.equal(row.annualAfterTax, 6_000_000);
+  assert.equal(row.annualBeforeTax, 7_092_199);
+  assert.equal(row.principal, 141_843_980);
+  assert.equal(monthlyDividendPrincipal({ monthlyAfterTax: 500_000, yieldTenth: 40 }).principal, 177_304_975);
+  assert.equal(monthlyDividendPrincipal({ monthlyAfterTax: 500_000, yieldTenth: 60 }).principal, 118_203_317);
+  assert.equal(monthlyDividendPrincipal({ monthlyAfterTax: 500_000, yieldTenth: 70 }).principal, 101_317_129);
+  assert.equal(monthlyDividendPrincipal({ monthlyAfterTax: 500_000, yieldTenth: 0 }).principal, 0);
 });
 
 test("ISA 3천만 원 이전은 추가 한도 300만 원", () => {

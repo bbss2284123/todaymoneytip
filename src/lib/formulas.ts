@@ -349,6 +349,34 @@ export function kpassRefund(input: {
   return { rateRefund, flatRefund, best, sentence };
 }
 
+/** 배당소득 14% + 지방소득세 1.4% = 15.4%. yieldTenth 50 = 5.0%. */
+export const MONTHLY_DIVIDEND_TAX_PER_MILLE = 154;
+
+export function monthlyDividendPrincipal(input: { monthlyAfterTax: number; yieldTenth: number }): {
+  annualAfterTax: number;
+  annualBeforeTax: number;
+  principal: number;
+  sentence: string;
+} {
+  const monthly = Math.max(0, Math.round(input.monthlyAfterTax));
+  const yieldTenth = Math.max(0, Math.round(input.yieldTenth));
+  const annualAfterTax = monthly * 12;
+  const keep = 1000 - MONTHLY_DIVIDEND_TAX_PER_MILLE;
+  const annualBeforeTax = Math.round((annualAfterTax * 1000) / keep);
+  if (yieldTenth <= 0) {
+    return {
+      annualAfterTax,
+      annualBeforeTax,
+      principal: 0,
+      sentence: "분배율을 0보다 크게 넣어야 원금이 나와요.",
+    };
+  }
+  const principal = Math.round((annualBeforeTax * 1000) / yieldTenth);
+  const rateLabel = (yieldTenth / 10).toFixed(1);
+  const sentence = `세후 연 ${plainMoney(annualAfterTax)}이에요. 15.4%를 빼기 전은 ${plainMoney(annualBeforeTax)}이에요. 분배율 ${rateLabel}%면 원금은 ${plainMoney(principal)}이에요.`;
+  return { annualAfterTax, annualBeforeTax, principal, sentence };
+}
+
 export const formulaMeta = {
   "pension-timing": {
     baseDate: "2026-10-28",
@@ -399,5 +427,10 @@ export const formulaMeta = {
     baseDate: "2026-11-22",
     oneLiner: "옮긴 금액의 10%와 300만 원 중 작은 금액에, 총급여 5,500만 원 이하면 15%, 넘으면 12%를 곱해요.",
     meaning: "추가 한도만 계산해요. 연금저축 600만 원 한도는 빠졌어요. 근로소득만 있을 때이고, 다른 소득이 있으면 종합소득 4,500만 원으로 갈려요. 낼 세금보다 많이 빠지지는 않아요.",
+  },
+  "monthly-dividend": {
+    baseDate: "2026-11-27",
+    oneLiner: "세후 월액으로 1년 금액을 만들고, 15.4%를 되돌린 뒤 분배율로 나눠요.",
+    meaning: "분배율은 가정이에요. 수익률이 아니고, 원금이 줄 수 있어요. 금융소득이 2,000만 원을 넘으면 15.4%로 끝나지 않아요.",
   },
 } as const;

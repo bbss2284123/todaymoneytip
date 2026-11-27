@@ -1536,6 +1536,38 @@ export const figures: Record<string, Figure[]> = {
       caption: "중간에 쓸 돈이 있으면 IRP는 비워요.",
     },
   ],
+  "monthly-dividend-etf": [
+    {
+      id: "monthly-dividend-etf-required-principal-chart",
+      kind: "bar",
+      ratio: "4:5",
+      title: "필요 원금",
+      bars: [
+        { label: "4%", value: "1.77억", amount: 177, tone: "base" },
+        { label: "5%", value: "1.42억", amount: 142, tone: "up" },
+        { label: "6%", value: "1.18억", amount: 118, tone: "base" },
+        { label: "7%", value: "1.01억", amount: 101, tone: "base" },
+      ],
+      source: "계산 가정",
+      alt: "월배당 ETF 월 50만원 받으려면 분배율별 필요 원금 그래프",
+      caption: "세후 월 50만 원, 세금 15.4% 가정이에요.",
+    },
+    {
+      id: "monthly-dividend-etf-tax-by-account-table",
+      kind: "summary",
+      ratio: "4:5",
+      kicker: "계좌별 세금",
+      lead: "분배금",
+      rows: [
+        { label: "일반계좌", value: "15.4%", tone: "base" },
+        { label: "ISA", value: "9.9%", tone: "up" },
+        { label: "연금계좌", value: "뺄 때", tone: "base" },
+      ],
+      source: "소득세법·조세특례제한법",
+      alt: "월배당 ETF 분배금 세금 일반계좌 ISA 연금저축 비교 표",
+      caption: "ISA는 200만 원 또는 400만 원까지 비과세예요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {
