@@ -1568,6 +1568,59 @@ export const figures: Record<string, Figure[]> = {
       caption: "ISA는 200만 원 또는 400만 원까지 비과세예요.",
     },
   ],
+  "cardpoint-lookup": [
+    {
+      id: "cardpoint-or-kr-steps",
+      kind: "steps",
+      ratio: "4:5",
+      title: "신청 순서",
+      steps: [
+        { title: "주소 접속", detail: "cardpoint.or.kr" },
+        { title: "동의", detail: "약관과 개인정보" },
+        { title: "본인 인증", detail: "휴대폰·카드·아이핀" },
+        { title: "계좌 신청", detail: "내 명의 통장" },
+      ],
+      source: "여신금융협회",
+      alt: "여신금융협회 카드포인트 통합조회 신청 순서. 주소 접속, 동의, 본인 인증, 내 계좌 신청이에요.",
+      caption: "비회원도 이 순서로 볼 수 있어요.",
+    },
+    {
+      id: "cardpoint-deposit-timing",
+      kind: "summary",
+      ratio: "1:1",
+      kicker: "포인트 계좌입금",
+      lead: "1점은 1원",
+      rows: [
+        { label: "바로", value: "비씨·신한·우리 등", tone: "up" },
+        { label: "시간 확인", value: "현대·하나", tone: "base" },
+        { label: "다음 영업일", value: "삼성·롯데 등", tone: "base" },
+      ],
+      source: "여신금융협회",
+      alt: "카드포인트 통합조회 계좌입금. 1점은 1원이고, 카드사마다 바로 또는 다음 영업일이에요.",
+      caption: "포인트는 신청한 순간에 빠져요.",
+    },
+    {
+      id: "cardpoint-official-url-check",
+      kind: "compare",
+      ratio: "4:5",
+      title: "주소 확인",
+      leftTitle: "공식 화면",
+      rightTitle: "의심 문자",
+      left: [
+        { text: "cardpoint.or.kr", ok: true },
+        { text: "수수료를 안 물음", ok: true },
+        { text: "비밀번호를 안 물음", ok: true },
+      ],
+      right: [
+        { text: "문자 속 링크", ok: false },
+        { text: "수수료를 요구", ok: false },
+        { text: "비밀번호를 요구", ok: false },
+      ],
+      source: "금융위원회",
+      alt: "카드포인트 공식 사이트 주소 확인 안내. 카드포인트 통합조회는 cardpoint.or.kr을 직접 쳐요.",
+      caption: "문자 링크와 비밀번호를 묻는 안내는 아니에요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {
