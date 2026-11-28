@@ -53,6 +53,7 @@ const BY_POST: Record<string, Motif> = {
   "basic-pension-apply": "calendar",
   "basic-pension-qualify": "shield",
   "unemployment-benefit": "briefcase",
+  "hidden-insurance-money": "shield",
 };
 
 const BY_CATEGORY: Record<string, Motif> = {

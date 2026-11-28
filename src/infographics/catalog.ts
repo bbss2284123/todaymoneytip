@@ -1621,6 +1621,58 @@ export const figures: Record<string, Figure[]> = {
       caption: "문자 링크와 비밀번호를 묻는 안내는 아니에요.",
     },
   ],
+  "hidden-insurance-money": [
+    {
+      id: "hidden-insurance-money-types-chart",
+      kind: "bar",
+      ratio: "1:1",
+      title: "2025년 말 규모",
+      bars: [
+        { label: "중도", value: "7조 7,667억", amount: 77667, tone: "base" },
+        { label: "만기", value: "1조 9,235억", amount: 19235, tone: "base" },
+        { label: "휴면", value: "6,237억", amount: 6237, tone: "base" },
+      ],
+      source: "금융위원회",
+      alt: "숨은 보험금 찾기 규모 그래프. 2025년 말 중도보험금 7조 7,667억 원, 만기보험금 1조 9,235억 원, 휴면보험금 6,237억 원이에요.",
+      caption: "2025년 말 금액이에요. 내 몫은 조회 화면에서 봐요.",
+    },
+    {
+      id: "insurance-finder-search-steps",
+      kind: "steps",
+      ratio: "4:5",
+      title: "조회 순서",
+      steps: [
+        { title: "주소 입력", detail: "cont.insure.or.kr" },
+        { title: "본인 인증", detail: "공동인증서·휴대폰" },
+        { title: "내역 조회", detail: "생명·손해 한 화면" },
+        { title: "청구", detail: "생존자는 그 화면" },
+      ],
+      source: "금융위원회",
+      alt: "숨은 보험금 찾기 조회 순서. 내보험찾아줌 주소 입력, 본인 인증, 내역 조회, 청구예요.",
+      caption: "문자 속 주소는 누르지 말고 직접 쳐요.",
+    },
+    {
+      id: "hidden-insurance-money-call-check",
+      kind: "compare",
+      ratio: "4:5",
+      title: "주소 확인",
+      leftTitle: "협회 화면",
+      rightTitle: "다른 안내",
+      left: [
+        { text: "cont.insure.or.kr", ok: true },
+        { text: "영업 전화에 안 씀", ok: true },
+        { text: "본인이 인증 후 청구", ok: true },
+      ],
+      right: [
+        { text: "다른 주소의 안내", ok: false },
+        { text: "보험 가입을 권함", ok: false },
+        { text: "개인정보를 모음", ok: false },
+      ],
+      source: "금융위원회",
+      alt: "숨은 보험금 찾기 공식 주소와 다른 안내 비교. 내보험찾아줌은 cont.insure.or.kr을 직접 쳐요.",
+      caption: "안내가 와도 주소부터 확인해요.",
+    },
+  ],
 };
 
 export function figuresOf(postId: string): Figure[] {

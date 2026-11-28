@@ -472,6 +472,16 @@ th { font-weight: 800; }
   background: #fff;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
+@media (max-width: 720px) {
+  .term-pop:not([hidden]) {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    top: auto;
+    bottom: 16px;
+    width: auto;
+  }
+}
 .check label, .choice, .stepper button, .apply .btn {
   min-height: var(--choice);
 }
