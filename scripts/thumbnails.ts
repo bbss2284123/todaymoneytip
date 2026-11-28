@@ -69,6 +69,10 @@ const cards: Record<string, Omit<ThumbInput, "title" | "keyword" | "category" | 
   "cardpoint-lookup": {
     caption: "1점은 1원",
   },
+  "hidden-insurance-money": {
+    lines: ["숨은 보험금 찾기", "내 몫을 조회해요"],
+    caption: "2025년 말 규모",
+  },
 };
 
 const explainers: Record<string, { title: string; rows: { left: string; right: string }[] }> = {
@@ -192,6 +196,9 @@ async function main() {
         }
         if (id === "cardpoint-lookup") {
           writeFileSync(path.join(dir, "cardpoint-lookup-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
+        }
+        if (id === "hidden-insurance-money") {
+          writeFileSync(path.join(dir, "hidden-insurance-money-og.webp"), await sharp(png).webp({ quality: 78 }).toBuffer());
         }
         const discover = await renderThumb({ ...base, style, width: 1200, height: 675 });
         writeFileSync(path.join(dir, "discover.png"), discover);

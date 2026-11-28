@@ -123,6 +123,16 @@ export const THEME: Record<string, ThumbTheme> = {
 
 /** 글마다 분류 색과 다른 바탕이 필요할 때만. 기존 분류 색과 겹치지 않게 둔다. */
 export const POST_THEME: Record<string, ThumbTheme> = {
+  "hidden-insurance-money": {
+    from: "#0b1c2c",
+    to: "#1d5f86",
+    glow: "rgba(176, 214, 236, 0.20)",
+    pillBg: "#e5f3fb",
+    pillFg: "#0c3348",
+    pillIcon: "shield",
+    label: "보험",
+    art: { stroke: "#d6ecf8", fill: "#3d88b0", deep: "#12384e", paper: "#f4fbff", accent: "#ffe08a" },
+  },
   "credit-card-deduction-december": {
     from: "#1a0812",
     to: "#8a3058",
